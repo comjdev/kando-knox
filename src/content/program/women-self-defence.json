@@ -1,0 +1,82 @@
+{
+  "id": 6,
+  "title": "Women's Self-Defense",
+  "slug": "womens-self-defence-knox",
+  "shortDescription": "Empowering self-defense classes designed specifically for women. Learn practical techniques to protect yourself.",
+  "ageGroup": "16+",
+  "bearCave": false,
+  "schedule": [
+    {
+      "day": "Monday",
+      "timeFrom": "6:00 PM",
+      "timeTo": "6:45 PM",
+      "className": "Women's Self-Defense",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Thursday",
+      "timeFrom": "6:00 PM",
+      "timeTo": "6:45 PM",
+      "className": "Women's Self-Defense",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    }
+  ],
+  "features": [
+    "Practical self-defense techniques",
+    "Situational awareness",
+    "Confidence building",
+    "Women-only environment"
+  ],
+  "image": "/img/women-self-defence.JPG",
+  "description": [
+    "Empowering self-defense classes designed specifically for women, based on the proven techniques from our Adult Martial Arts program but optimized for women's unique needs and situations.",
+    "Our Women's Self-Defense program draws from the powerful striking of Shukokai Karate, the effective grappling and ground skills of Brazilian Jiu-Jitsu, and the practical flow techniques of Philippine Martial Arts — all adapted and simplified to be easy to learn, remember, and apply when you need them most.",
+    "We focus on techniques that work regardless of size or strength differences, teaching you how to use leverage, body mechanics, and strategic targeting to defend yourself effectively. Every technique is broken down into simple, memorable steps that you can recall even under pressure.",
+    "Learn in a supportive, women-only environment where you can practice comfortably, build confidence, and develop the awareness and skills needed to stay safe. Whether you're a complete beginner or looking to enhance your existing skills, our program is designed to help you feel empowered and prepared.",
+    "Join our welcoming community of women in Knox who are committed to empowerment, fitness, and personal safety."
+  ],
+  "content": [
+    {
+      "title": "Proven Techniques, Simplified for You.",
+      "description": "Our Women's Self-Defense program uses the same effective techniques from our Adult Martial Arts program — Shukokai Karate, Brazilian Jiu-Jitsu, and Philippine Martial Arts — but adapted specifically for women. We've simplified every technique to be easy to learn, remember, and use when it matters most.",
+      "image": "/img/kando-knox-women-self-defence-1.jpg"
+    },
+    {
+      "title": "Defend Yourself Against Anyone, Regardless of Size.",
+      "description": "Learn techniques that work against bigger, stronger attackers. We teach you how to use leverage and body mechanics — not brute strength — to protect yourself effectively. Every technique is broken down into simple, memorable steps you can recall under pressure.",
+      "image": "/img/kando-knox-women-self-defence-2.jpg"
+    },
+    {
+      "title": "Train in a Safe, Supportive Women-Only Environment.",
+      "description": "Our women-only classes create a comfortable space where you can learn and build confidence without feeling self-conscious. You'll train alongside other women who share your goals, creating a powerful sense of empowerment and mutual support.",
+      "image": "/img/kando-knox-women-self-defence-3.jpg"
+    }
+  ],
+  "faq": [
+    {
+      "question": "I'm not very sporty or coordinated. Will that be a problem?",
+      "answer": "Not at all! Our Women's Self-Defense program is designed for women of all fitness levels and abilities. You don't need any prior experience or exceptional coordination to start. Our instructors work with each student at their own pace, focusing on practical techniques that work regardless of your athletic background. Many women who join us have never done martial arts before and find that the supportive, women-only environment makes learning comfortable and empowering."
+    },
+    {
+      "question": "I hate doing gym workouts, I find them boring. Will this be similar?",
+      "answer": "Our self-defense classes are completely different from traditional gym workouts! Instead of repetitive exercises, you'll learn practical skills that could save your life. Every class is dynamic, engaging, and focused on real-world scenarios. You'll be so focused on learning techniques and building confidence that you won't even realize you're getting an incredible workout. Plus, the supportive community and sense of empowerment make each session something to look forward to."
+    },
+    {
+      "question": "Will I actually be able to defend myself against someone bigger and stronger?",
+      "answer": "Yes! Our program specifically teaches techniques designed to work against larger, stronger attackers. We focus on practical self-defense methods that use leverage, body mechanics, and strategic targeting rather than brute strength. You'll learn how to use an attacker's size and momentum against them, target vulnerable areas, and create opportunities to escape safely. These are real-world techniques that have been proven effective, regardless of size differences."
+    },
+    {
+      "question": "What makes your women-only environment different?",
+      "answer": "Our women-only classes create a safe, supportive space where you can learn and practice without feeling self-conscious or intimidated. Many women find they're more comfortable asking questions, trying new techniques, and pushing their limits in this environment. The camaraderie and mutual support among students creates a powerful sense of empowerment. You'll train alongside other women who share similar goals and concerns, making the journey both safer and more enjoyable."
+    }
+  ],
+  "trial": {
+    "weeks": 2,
+    "cost": false,
+    "value": 170,
+    "unlimitedClasses": true,
+    "freeGi": false
+  }
+}

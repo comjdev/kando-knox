@@ -1,0 +1,22 @@
+---
+import BlogGrid from "../shared/BlogGrid.astro";
+import PrimaryButton from "../shared/PrimaryButton";
+---
+
+<section class="bg-white dark:bg-gray-900">
+  <div
+    class="flex flex-col items-center justify-center max-w-7xl px-4 py-8 mx-auto lg:px-6 sm:py-16 lg:py-24"
+  >
+    <h2 class="text-4xl font-bold text-gray-900 dark:text-white">
+      Martial Arts Blog
+    </h2>
+    <p class="text-gray-500 dark:text-gray-400">
+      Read our latest blog posts about martial arts, karate, Brazilian
+      Jiu-Jitsu, and more.
+    </p>
+    <BlogGrid limit={3} />
+    <div class="flex justify-center mt-8">
+      <PrimaryButton client:load href="/blog"> View all posts </PrimaryButton>
+    </div>
+  </div>
+</section>

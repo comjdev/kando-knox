@@ -1,0 +1,244 @@
+{
+  "id": 1,
+  "title": "Pre-School Martial Arts",
+  "slug": "pre-school-martial-arts-karate-knox",
+  "shortDescription": "Introduction to martial arts for young children. Fun, safe classes that teach basic movements and build confidence.",
+  "ageGroup": "3-6",
+  "bearCave": false,
+  "schedule": [
+    {
+      "day": "Monday",
+      "timeFrom": "4:10 PM",
+      "timeTo": "4:40 PM",
+      "className": "Kinder Ninjas (3-4 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Monday",
+      "timeFrom": "4:50 PM",
+      "timeTo": "5:20 PM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Monday",
+      "timeFrom": "5:30 PM",
+      "timeTo": "6:00 PM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Tuesday",
+      "timeFrom": "8:50 AM",
+      "timeTo": "9:20 AM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": null
+    },
+    {
+      "day": "Tuesday",
+      "timeFrom": "4:10 PM",
+      "timeTo": "4:40 PM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": null
+    },
+    {
+      "day": "Tuesday",
+      "timeFrom": "4:50 PM",
+      "timeTo": "5:20 PM",
+      "className": "Kinder Ninjas (3-4 years)",
+      "beltRank": null,
+      "instructor": null
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "4:10 PM",
+      "timeTo": "4:40 PM",
+      "className": "Kinder Ninjas (3-4 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "4:50 PM",
+      "timeTo": "5:20 PM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "5:30 PM",
+      "timeTo": "6:00 PM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Thursday",
+      "timeFrom": "4:10 PM",
+      "timeTo": "4:40 PM",
+      "className": "Kinder Ninjas (3-4 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Thursday",
+      "timeFrom": "4:50 PM",
+      "timeTo": "5:20 PM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Thursday",
+      "timeFrom": "5:30 PM",
+      "timeTo": "6:00 PM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Friday",
+      "timeFrom": "4:10 PM",
+      "timeTo": "4:40 PM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Friday",
+      "timeFrom": "4:50 PM",
+      "timeTo": "5:20 PM",
+      "className": "Kinder Ninjas (3-4 years)",
+      "beltRank": null,
+      "instructor": null
+    },
+    {
+      "day": "Friday",
+      "timeFrom": "5:30 PM",
+      "timeTo": "6:00 PM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Jade"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "8:50 AM",
+      "timeTo": "9:20 AM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Irene"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "8:50 AM",
+      "timeTo": "9:20 AM",
+      "className": "Kinder Ninjas (3-4 years)",
+      "beltRank": null,
+      "instructor": "Sempai Irene"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "9:30 AM",
+      "timeTo": "10:00 AM",
+      "className": "Kinder Ninjas (3-4 years)",
+      "beltRank": null,
+      "instructor": "Sempai Irene"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "10:10 AM",
+      "timeTo": "10:40 AM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Irene"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "10:50 AM",
+      "timeTo": "11:20 AM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Irene"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "11:30 AM",
+      "timeTo": "12:00 PM",
+      "className": "Kinder Ninjas (3-4 years)",
+      "beltRank": null,
+      "instructor": "Sempai Irene"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "12:10 PM",
+      "timeTo": "12:40 PM",
+      "className": "Little Dragons (5-6 years)",
+      "beltRank": null,
+      "instructor": "Sempai Irene"
+    }
+  ],
+  "features": [
+    "Age-appropriate activities",
+    "Basic motor skills",
+    "Listening and following directions",
+    "Fun and engaging"
+  ],
+  "image": "/img/pre-school-martial-arts.jpg",
+  "description": [
+    "The first step in creating a successful preschool martial arts program is to understand the unique needs of young children and their parents. Are you looking for a program that helps your child develop physical coordination and motor skills, or one that focuses on building confidence and social skills? What specific developmental milestones do you want to see your child achieve? Understanding your child's individual needs and learning style will help determine how our program can best support their growth and development.",
+    "We use fun, engaging activities, games, and visual demonstrations to help children quickly understand and master basic martial arts movements, making sure all instructions are age-appropriate and clearly explained. Our instructors use positive reinforcement and creative teaching methods to keep young minds engaged and excited about learning.",
+    "We continuously evaluate our program with parents and observe children's progress to ensure that our classes are meeting developmental needs, building confidence, and providing a safe, enjoyable experience that children look forward to each week."
+  ],
+  "content": [
+    {
+      "title": "So Much More Than Punches & Kicks! Martial Arts Changes Lives",
+      "description": "Martial arts is so much more than karate moves. It’s a proven way to help kids grow into confident young leaders. Hundreds of parents across Knox have seen the incredible transformation that happens on our mats.",
+      "image": "/img/kando-knox-pre-school-martail-arts-1.jpg"
+    },
+    {
+      "title": "Serious fun! While Teaching Respect, Discipline & Focus",
+      "description": "Our classes are full of energy, excitement and smiles. We keep our rules simple, but we follow them closely — and kids quickly learn healthy boundaries, respect for others, and the discipline they need to thrive in and out of class.",
+      "image": "/img/kando-knox-pre-school-martail-arts-2.jpg"
+    },
+    {
+      "title": "Setting Your Child Up for Success in Life",
+      "description": "Children who train in martial arts often perform better at school because they learn focus, discipline, goal-setting and perseverance. Every karate class helps build these powerful traits. That’s why our Knox preschool martial arts program is loved by parents. Real confidence and respect start growing within just a few weeks.",
+      "image": "/img/kando-knox-pre-school-martail-arts-3.jpg"
+    }
+  ],
+  "faq": [
+    {
+      "question": "Will My Child Become A Bully?",
+      "answer": "We find that our students become more confident to stand up to bullies and have more humility and kindness to others through their martial arts lessons."
+    },
+    {
+      "question": "What Do I Need To Bring To My First Lesson?",
+      "answer": "Make sure you wear comfortable clothes you can do sport in! Not really suitable to practice kicks in a skirt. 😳 Be sure to bring a water bottle to your martial arts classes. You will find Kando Martial Arts in Knox have martial arts classes for kids and adults that are a great workout and lots of fun! Most students are grinning from ear to ear by the end of the class. I am sure you will be too!"
+    },
+    {
+      "question": "My Child Has Autism, Will Martial Arts Help?",
+      "answer": "Yes! One of the great things about martial arts classes, is that it's an individual sport, done in a group environment. We find all our students improve in their focus, self control, discipline and social skills. But the best part is…. They don't even realise that is what our highly trained Kids Martial Arts Instructors are actually doing. They just think they are having fun! The best way to find out for yourself, is to take advantage of our limited time offer. You'll find our team so helpful and dedicated to helping your child become the best version of themselves. Book it now! You will be glad you did!"
+    },
+    {
+      "question": "My Child Is Not Athletic, Will They Feel Left Out?",
+      "answer": "Not at all. You will find that martial arts classes are the PERFECT sport for kids who are not good at sport. Kids martial arts classes really are an individual after school activity, that they do in a group. The journey from white belt to black belt is different for each student. But what is the same…. They improve coordination, balance, motor skills, focus and discipline. Plus, they makes lots of great friends! Our instructors are highly skilled in teaching martial arts for kids. Really… It's their PASSION!"
+    },
+    {
+      "question": "My Child Is Addicted To Computer Games, Will This Be Suitable?",
+      "answer": "This is probably the BEST kids activity for children who sit a lot! Getting them active, without them realising they are learning, is our skill. Kicking and punching pads is such a great stress relief, that kids blossom in all areas – because of their martial arts training. Many Knox parents find that once their kids start martial arts classes, they see a happier, more social child develop right before their eyes. You'll be glad they started classes! PLUS…. Most kids LOVE being a ninja!"
+    }
+  ],
+  "trial": {
+    "weeks": 4,
+    "cost": 49.95,
+    "value": 170,
+    "unlimitedClasses": false,
+    "freeGi": true
+  }
+}

@@ -1,0 +1,51 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { SITE_CONFIG } from "../../config";
+import ProgramHeader from "../../components/program/ProgramHeader.astro";
+import ProgramIntro from "../../components/program/ProgramIntro.astro";
+import ProgramContent from "../../components/program/ProgramContent.astro";
+import ProgramFAQs from "../../components/program/ProgramFAQs.astro";
+import BookTrial from "../../components/shared/BookTrial.astro";
+import ProgramTimetable from "../../components/shared/Timetable.astro";
+
+export async function getStaticPaths() {
+  const programs = Object.values(
+    import.meta.glob("../../content/program/*.json", { eager: true })
+  );
+
+  return programs.map((program: any) => ({
+    params: { slug: program.default.slug },
+    props: { program: program.default },
+  }));
+}
+
+const { program } = Astro.props;
+const pageTitle = `${program.title} | ${SITE_CONFIG.title}`;
+---
+
+<Layout title={program.title}>
+  <ProgramHeader
+    title={program.title}
+    image={program.image}
+    description={program.description}
+    shortDescription={program.shortDescription}
+    ageGroup={program.ageGroup}
+  />
+
+  <ProgramIntro
+    title={program.title}
+    description={program.description}
+    shortDescription={program.shortDescription}
+    features={program.features}
+    schedule={program.schedule}
+    bearCave={program.bearCave}
+  />
+
+  <ProgramContent content={program.content} />
+
+  <BookTrial trial={program.trial} title={program.title} />
+
+  <ProgramTimetable schedule={program.schedule} title={program.title} />
+
+  <ProgramFAQs faq={program.faq} />
+</Layout>

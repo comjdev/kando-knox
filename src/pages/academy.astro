@@ -1,0 +1,39 @@
+---
+import { SITE_CONFIG } from "../config";
+---
+
+<!doctype html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Online Academy | {SITE_CONFIG.title}</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      iframe {
+        width: 100%;
+        height: 100vh;
+        border: none;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe
+      src={SITE_CONFIG.academyUrl}
+      title="Kando Martial Arts Online Academy"
+      allow="fullscreen"
+      allowfullscreen></iframe>
+  </body>
+</html>

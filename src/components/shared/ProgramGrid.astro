@@ -1,0 +1,63 @@
+---
+import PrimaryButton from "./PrimaryButton";
+
+interface Props {
+  limit?: number;
+}
+
+const { limit } = Astro.props;
+
+const allPrograms = Object.values(
+  import.meta.glob("../../content/program/*.json", { eager: true })
+).map((program: any) => program.default);
+
+const sortedPrograms = allPrograms.sort((a, b) => a.id - b.id);
+const programs = limit ? sortedPrograms.slice(0, limit) : sortedPrograms;
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+  {
+    programs.map((program) => (
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col">
+        {program.image && (
+          <a href={`/programs/${program.slug}`}>
+            <img
+              src={program.image}
+              alt={program.title}
+              class="w-full h-64 object-cover"
+              transition:name={`program-image-${program.slug}`}
+            />
+          </a>
+        )}
+        <div class="p-6 flex flex-col flex-1">
+          <h3 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
+            {program.title}
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">
+            {program.shortDescription || program.description.slice(0, 125)}...
+          </p>
+          {program.ageGroup && (
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+              Age Group: {program.ageGroup}
+            </p>
+          )}
+
+          {program.features && program.features.length > 0 && (
+            <ul class="list-disc list-inside mb-4 text-sm text-gray-600 dark:text-gray-300">
+              {program.features.map((feature: string) => (
+                <li>{feature}</li>
+              ))}
+            </ul>
+          )}
+          <PrimaryButton
+            client:load
+            href={`/programs/${program.slug}`}
+            className="w-fit mt-auto"
+          >
+            Learn More
+          </PrimaryButton>
+        </div>
+      </div>
+    ))
+  }
+</div>

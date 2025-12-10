@@ -1,0 +1,106 @@
+{
+  "id": 3,
+  "title": "Teen & Adult Martial Arts",
+  "slug": "adult-martial-arts-karate-knox",
+  "shortDescription": "Comprehensive martial arts training for adults. Build strength, confidence, and self-defense skills.",
+  "ageGroup": "13+",
+  "bearCave": false,
+  "schedule": [
+    {
+      "day": "Monday",
+      "timeFrom": "7:00 PM",
+      "timeTo": "8:00 PM",
+      "className": "Teen & Adult Martial Arts",
+      "beltRank": "All Belts",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "12:00 PM",
+      "timeTo": "1:00 PM",
+      "className": "Teen & Adult Martial Arts",
+      "beltRank": "All Belts",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "6:15 PM",
+      "timeTo": "7:00 PM",
+      "className": "Teen & Adult Martial Arts",
+      "beltRank": "Fundamentals",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "7:00 PM",
+      "timeTo": "8:00 PM",
+      "className": "Teen & Adult Martial Arts",
+      "beltRank": "Intermediate",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "8:00 PM",
+      "timeTo": "9:00 PM",
+      "className": "Teen & Adult Martial Arts",
+      "beltRank": "Advanced",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Thursday",
+      "timeFrom": "7:00 PM",
+      "timeTo": "8:00 PM",
+      "className": "Teen & Adult Martial Arts",
+      "beltRank": "All Belts",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "1:15 PM",
+      "timeTo": "2:15 PM",
+      "className": "Teen & Adult Martial Arts",
+      "beltRank": "All Belts",
+      "instructor": "Sensei Andy"
+    }
+  ],
+  "features": [
+    "Self-defense techniques",
+    "Physical fitness",
+    "Mental discipline",
+    "Traditional martial arts forms"
+  ],
+  "image": "/img/adult-martial-arts.JPG",
+  "description": [
+    "Practical Martial Arts for Fitness, Confidence & Real-World Self-Defence",
+    "Our Adult & Teen Program at Kando Martial Arts is built on effective, real-world techniques designed to help students of all experience levels grow stronger, fitter, and more confident.",
+    "This program brings together the powerful striking of Shukokai Karate, the grappling and ground skills of Brazilian Jiu-Jitsu, and the flow and weapon awareness of Philippine Martial Arts — giving adults and teens a complete and practical martial arts foundation.",
+    "Whether your goal is fitness, self-defence, stress relief, or personal growth, our structured training provides a supportive environment where you can push your limits while progressing at your own pace.",
+    "With more than 25 years of teaching experience and recognition through the Australian Karate Federation (AKF) and Karate Victoria, Kando Martial Arts offers authentic, high-quality training backed by a long-standing reputation.",
+    "Build strength, skill, and confidence — and become the best version of yourself with Kando Martial Arts Knox."
+  ],
+  "content": [
+    {
+      "title": "Burn Fat. Build Strength. Feel Amazing.",
+      "description": "Our Knox Teen & Adult Martial Arts program delivers a full-body workout that pushes your fitness to new levels. Martial arts training activates muscles you rarely use in everyday life, helping you burn fat, build lean muscle, and feel stronger than ever. That’s why adults in Knox choose Kando Martial Arts for real, visible RESULTS.",
+      "image": "/img/kando-knox-adult-martial-arts-1.jpg"
+    },
+    {
+      "title": "Practical Self-Defence That Works.",
+      "description": "This is more than fitness — it’s real-world protection. Learn practical martial arts and karate techniques that help you stay safe, even against a bigger or stronger attacker. Our proven approach is why so many adults and teens in Knox trust Kando Martial Arts for effective, confidence-building self-defence training.",
+      "image": "/img/kando-knox-adult-martial-arts-2.jpg"
+    },
+    {
+      "title": "Train With a Supportive Community.",
+      "description": "At Kando Martial Arts, you’re not just joining a class — you’re joining a friendly, encouraging community in Knox. We push each other, motivate each other, and celebrate every milestone together. The training is powerful, but the connections and camaraderie make it truly unforgettable.",
+      "image": "/img/kando-knox-adult-martial-arts-3.jpg"
+    }
+  ],
+  "faq": [],
+  "trial": {
+    "weeks": 4,
+    "cost": 49.95,
+    "value": 270,
+    "unlimitedClasses": true,
+    "freeGi": true
+  }
+}

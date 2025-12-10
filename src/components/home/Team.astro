@@ -1,0 +1,75 @@
+---
+import { getCollection } from "astro:content";
+import PrimaryButton from "../shared/PrimaryButton";
+
+const teamMembers = await getCollection("team");
+// Sort by order field if present, otherwise by name
+const team = teamMembers.sort((a, b) => {
+  const orderA = a.data.order ?? 999;
+  const orderB = b.data.order ?? 999;
+  return orderA - orderB;
+});
+---
+
+<section class="bg-gray-100 dark:bg-gray-800 antialiased">
+  <div class="max-w-7xl px-4 py-8 mx-auto lg:px-6 sm:py-16 lg:py-24">
+    <div
+      class="flex flex-col gap-8 sm:gap-12 xl:gap-16 xl:flex-row xl:items-start"
+    >
+      <div>
+        <h2
+          class="text-3xl font-extrabold leading-tight tracking-tight text-gray-800 sm:text-4xl dark:text-white"
+        >
+          Our people make us great
+        </h2>
+        <p
+          class="mt-4 text-base font-normal text-gray-600 sm:text-xl dark:text-gray-300"
+        >
+          Our experienced instructors are dedicated to helping you achieve your
+          martial arts goals, whether you're just starting out or looking to
+          advance your skills.
+        </p>
+        <p
+          class="mt-4 text-base font-normal text-gray-600 sm:text-xl dark:text-gray-300"
+        >
+          You'll train with a passionate team of instructors and assistants who
+          are committed to creating a supportive and challenging learning
+          environment for students of all ages and skill levels.
+        </p>
+        <div class="mt-4">
+          <PrimaryButton
+            client:load
+            href="/contact"
+            className="inline-flex items-center justify-center"
+          >
+            Contact us
+          </PrimaryButton>
+        </div>
+      </div>
+
+      <div
+        class="grid w-full grid-cols-1 gap-4 xl:max-w-3xl shrink-0 sm:grid-cols-2 md:grid-cols-3"
+      >
+        {
+          team.map((member) => (
+            <div class="relative overflow-hidden rounded-lg group">
+              <img
+                class="object-cover w-full h-[320px] lg:h-auto scale-100 ease-in duration-300 group-hover:scale-125"
+                src={member.data.image}
+                alt={member.data.name}
+              />
+              <div class="absolute inset-0 grid items-end justify-center p-4 bg-linear-to-b from-transparent to-black/60">
+                <div class="text-center">
+                  <p class="text-xl font-bold text-white">{member.data.name}</p>
+                  <p class="text-base font-medium text-gray-300">
+                    {member.data.role}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

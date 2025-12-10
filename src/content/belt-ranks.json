@@ -1,0 +1,50 @@
+{
+  "Fundamentals": [
+    { "name": "white", "color": "#FFFFFF", "borderColor": "#000000" },
+    { "name": "red", "color": "#EF4444" },
+    { "name": "yellow", "color": "#FCD34D" }
+  ],
+  "Intermediate": [
+    { "name": "orange", "color": "#F97316" },
+    { "name": "green", "color": "#22C55E" },
+    { "name": "blue", "color": "#3B82F6" },
+    { "name": "purple", "color": "#A855F7" }
+  ],
+  "Advanced": [
+    { "name": "brown", "color": "#92400E" },
+    { "name": "black", "color": "#000000", "borderColor": "#000000" }
+  ],
+  "Junior Beginner": [
+    { "name": "white", "color": "#FFFFFF", "borderColor": "#000000" }
+  ],
+  "Junior Novice": [
+    { "name": "red", "color": "#EF4444" },
+    { "name": "yellow", "color": "#FCD34D" }
+  ],
+  "Junior Intermediate": [
+    { "name": "orange", "color": "#F97316" },
+    { "name": "green", "color": "#22C55E" }
+  ],
+  "Junior Advanced Intermediate": [
+    { "name": "blue", "color": "#3B82F6" },
+    { "name": "purple", "color": "#A855F7" }
+  ],
+  "Junior Advanced": [
+    { "name": "brown", "color": "#92400E" },
+    { "name": "black", "color": "#000000", "borderColor": "#000000" }
+  ],
+  "Junior Black Belt": [
+    { "name": "black", "color": "#000000", "borderColor": "#000000" }
+  ],
+  "All Belts": [
+    { "name": "white", "color": "#FFFFFF", "borderColor": "#000000" },
+    { "name": "red", "color": "#EF4444" },
+    { "name": "yellow", "color": "#FCD34D" },
+    { "name": "orange", "color": "#F97316" },
+    { "name": "green", "color": "#22C55E" },
+    { "name": "blue", "color": "#3B82F6" },
+    { "name": "purple", "color": "#A855F7" },
+    { "name": "brown", "color": "#92400E" },
+    { "name": "black", "color": "#000000", "borderColor": "#000000" }
+  ]
+}

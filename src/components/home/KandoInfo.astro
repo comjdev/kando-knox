@@ -1,0 +1,48 @@
+---
+import PrimaryButton from "../shared/PrimaryButton";
+---
+
+<section class="bg-white dark:bg-gray-900">
+  <div
+    class="gap-16 items-center py-8 px-4 mx-auto max-w-7xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6"
+  >
+    <div class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+      <h1
+        class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"
+      >
+        Kando Martial Arts Knox
+      </h1>
+      <p class="mb-4">
+        At Kando Martial Arts Knox, we are dedicated to changing the lives of
+        people one person at a time through martial arts, education and
+        coaching. We strive to provide a safe, comfortable and welcoming
+        atmosphere for all students and families in the Knox community. We take
+        pride in creating an environment where individuals can grow, develop and
+        succeed in their personal goals.
+      </p>
+      <p>
+        We strongly believe martial arts is for everyone, regardless of age,
+        gender or experience. Across all our programs, students learn the skills
+        they need to protect themselves while building confidence, discipline
+        and resilience. Our realistic and practical approach helps every member
+        strive for greatness and live their best life.
+      </p>
+
+      <PrimaryButton client:load href="/contact" className="mt-6">
+        Get in touch
+      </PrimaryButton>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mt-8">
+      <img
+        class="w-full rounded-lg"
+        src="/img/kando-knox-karate-man.jpg"
+        alt="Kando Martial Arts Knox | Martial Arts, Karate, Brazilian Jiu-Jitsu"
+      />
+      <img
+        class="mt-4 w-full lg:mt-10 rounded-lg"
+        src="/img/kando-knox-karate-girl.jpg"
+        alt="Kando Martial Arts Knox | Martial Arts, Karate, Brazilian Jiu-Jitsu"
+      />
+    </div>
+  </div>
+</section>

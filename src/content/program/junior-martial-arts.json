@@ -1,0 +1,230 @@
+{
+  "id": 2,
+  "title": "Junior Martial Arts",
+  "slug": "junior-martial-arts-karate-knox",
+  "shortDescription": "Martial arts classes for kids and teens. Develop discipline, respect, and self-defense skills in a supportive environment.",
+  "ageGroup": "7-12",
+  "bearCave": false,
+  "schedule": [
+    {
+      "day": "Monday",
+      "timeFrom": "4:00 PM",
+      "timeTo": "4:40 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Beginner",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Monday",
+      "timeFrom": "4:45 PM",
+      "timeTo": "5:25 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Novice",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Monday",
+      "timeFrom": "5:30 PM",
+      "timeTo": "6:10 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Advanced Intermediate",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Monday",
+      "timeFrom": "6:15 PM",
+      "timeTo": "7:00 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Advanced",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Tuesday",
+      "timeFrom": "4:00 PM",
+      "timeTo": "4:40 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Intermediate",
+      "instructor": "Sempai Sonya"
+    },
+    {
+      "day": "Tuesday",
+      "timeFrom": "4:45 PM",
+      "timeTo": "5:25 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Beginner",
+      "instructor": "Sempai Sonya"
+    },
+    {
+      "day": "Tuesday",
+      "timeFrom": "5:30 PM",
+      "timeTo": "6:10 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Advanced Intermediate",
+      "instructor": "Sempai Sonya"
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "4:00 PM",
+      "timeTo": "4:40 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Advanced Intermediate",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "4:45 PM",
+      "timeTo": "5:25 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Advanced",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "5:30 PM",
+      "timeTo": "6:10 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Intermediate",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Thurday",
+      "timeFrom": "4:00 PM",
+      "timeTo": "4:40 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Novice",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Thurday",
+      "timeFrom": "4:45 PM",
+      "timeTo": "5:25 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Intermediate",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Thurday",
+      "timeFrom": "5:30 PM",
+      "timeTo": "6:10 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Beginner",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Friday",
+      "timeFrom": "4:00 PM",
+      "timeTo": "4:40 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Beginner",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Friday",
+      "timeFrom": "4:45 PM",
+      "timeTo": "5:25 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Advanced Intermediate",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Friday",
+      "timeFrom": "5:30 PM",
+      "timeTo": "6:10 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Advanced",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Friday",
+      "timeFrom": "6:10 PM",
+      "timeTo": "6:30 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Black Belt",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "9:30 AM",
+      "timeTo": "10:10 AM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Beginner",
+      "instructor": "Sempai Sonya"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "10:15 AM",
+      "timeTo": "10:55 AM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Novice",
+      "instructor": "Sempai Sonya"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "11:00 AM",
+      "timeTo": "11:40 AM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Intermediate",
+      "instructor": "Sempai Sonya"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "11:45 AM",
+      "timeTo": "12:25 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Advanced Intermediate",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "12:30 PM",
+      "timeTo": "1:10 PM",
+      "className": "Junior Martial Arts",
+      "beltRank": "Junior Advanced",
+      "instructor": "Sensei Andy"
+    }
+  ],
+  "features": [
+    "Traditional martial arts",
+    "Character development",
+    "Physical fitness",
+    "Self-defense techniques"
+  ],
+  "image": "/img/junior-martial-arts.JPG",
+  "description": [
+    "At Kando Martial Arts in Knox, our Junior Program is designed specifically for children. We don’t just teach karate for kids or taekwondo for kids — instead, we’ve carefully combined the most effective elements from multiple martial arts to create a program that truly works for smaller students facing bigger, stronger opponents.",
+    "Our curriculum blends traditional Shukokai Karate, Brazilian Jiu-Jitsu, and Philippine Martial Arts, giving kids practical self-defence skills while keeping classes fun, safe, and highly engaging.",
+    "But Kando is about more than just punching and kicking. We help children develop discipline, respect, focus, confidence, and a positive attitude that carries into school and home life.",
+    "With over 25 years of experience and as part of the Australian Karate Federation (AKF) and Karate Victoria, we are trusted by hundreds of Knox families who have seen life-changing improvements in their children.",
+    "Give your child the confidence and character to thrive — on and off the mats."
+  ],
+  "content": [
+    {
+      "title": "More Than Punches & Kicks — Martial Arts That Shapes Kids' Lives.",
+      "description": "Our Kids Martial Arts Program in Knox goes far beyond basic karate training. We use martial arts as a powerful tool to help children grow into confident, respectful young leaders. Hundreds of Knox parents have seen remarkable transformations in their kids through our supportive and structured classes.",
+      "image": "/img/kando-knox-junior-martial-arts-1.jpg"
+    },
+    {
+      "title": "Fun Classes That Teach Respect, Discipline & Focus.",
+      "description": "At Kando Martial Arts, kids have an amazing time — while learning the values that matter. Through clear expectations and positive reinforcement, children develop strong boundaries, better behaviour, and improved focus. It’s no wonder parents in Knox love our kids martial arts and karate classes.",
+      "image": "/img/kando-knox-junior-martial-arts-2.jpg"
+    },
+    {
+      "title": "Setting Your Child Up For Lifelong Success.",
+      "description": "Children who train in martial arts learn discipline, goal setting, perseverance, and confidence — skills that transfer directly into school and everyday life. That’s what makes our Knox Kids Martial Arts Program so powerful and why families trust us to help their children become their best selves.",
+      "image": "/img/kando-knox-junior-martial-arts-3.jpg"
+    }
+  ],
+  "faq": [
+    {
+      "question": "What is martial arts?",
+      "answer": "Martial arts is a system of physical skills that are used for self-defense and physical combat."
+    }
+  ],
+  "trial": {
+    "weeks": 4,
+    "cost": 49.95,
+    "value": 270,
+    "unlimitedClasses": true,
+    "freeGi": true
+  }
+}

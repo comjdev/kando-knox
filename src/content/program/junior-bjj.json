@@ -1,0 +1,88 @@
+{
+  "id": 4,
+  "title": "Junior Brazilian Jiu-Jitsu",
+  "slug": "junior-bjj-bear-cave-knox",
+  "shortDescription": "Brazilian Jiu-Jitsu classes designed specifically for kids and pre-teens. Learn self-defense while having fun.",
+  "ageGroup": "7-12",
+  "bearCave": true,
+  "schedule": [
+    {
+      "day": "Tuesday",
+      "timeFrom": "4:00 PM",
+      "timeTo": "5:00 PM",
+      "className": "Junior Brazilian Jiu-Jitsu",
+      "beltRank": null,
+      "instructor": null
+    },
+    {
+      "day": "Thursday",
+      "timeFrom": "4:00 PM",
+      "timeTo": "5:00 PM",
+      "className": "Junior Brazilian Jiu-Jitsu",
+      "beltRank": null,
+      "instructor": null
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "10:00 AM",
+      "timeTo": "11:00 AM",
+      "className": "Junior Brazilian Jiu-Jitsu",
+      "beltRank": null,
+      "instructor": null
+    }
+  ],
+  "features": [
+    "Age-appropriate techniques",
+    "Fun and engaging classes",
+    "Self-defense skills",
+    "Confidence building"
+  ],
+  "image": "/img/junior-bjj.jpg",
+  "description": [
+    "Brazilian Jiu-Jitsu classes designed specifically for kids and teens. Learn self-defense while having fun in a safe and supportive environment.",
+    "Our program teaches age-appropriate BJJ techniques that help children develop physical coordination, mental focus, and self-confidence.",
+    "Join our growing community of young practitioners who are learning valuable life skills through the art of Brazilian Jiu-Jitsu."
+  ],
+  "content": [
+    {
+      "title": "Build Confidence Through Brazilian Jiu-Jitsu",
+      "description": "Brazilian Jiu-Jitsu is more than just a martial art—it's a confidence-building journey. Kids learn to overcome challenges, set goals, and achieve them through consistent practice. Our junior BJJ program helps children develop self-assurance that extends far beyond the mat.",
+      "image": "/img/kando-knox-junior-bjj-1.jpg"
+    },
+    {
+      "title": "Learn Self-Defense in a Fun Environment",
+      "description": "Our classes are designed to be engaging and enjoyable while teaching practical self-defense techniques. Kids learn how to protect themselves using leverage and technique rather than strength, making BJJ perfect for children of all sizes.",
+      "image": "/img/kando-knox-junior-bjj-2.jpg"
+    },
+    {
+      "title": "Develop Discipline and Respect",
+      "description": "Brazilian Jiu-Jitsu instills important values like discipline, respect, and perseverance. Children learn to respect their training partners, follow instructions, and work hard to improve. These lessons translate to better behavior at home and school.",
+      "image": "/img/kando-knox-junior-bjj-3.jpg"
+    }
+  ],
+  "faq": [
+    {
+      "question": "What is Brazilian Jiu-Jitsu?",
+      "answer": "Brazilian Jiu-Jitsu (BJJ) is a martial art that focuses on grappling and ground fighting. It emphasizes technique and leverage, making it effective for people of all sizes and strengths."
+    },
+    {
+      "question": "Is BJJ safe for children?",
+      "answer": "Yes! Our junior BJJ program is specifically designed with safety in mind. We use age-appropriate techniques, proper supervision, and a controlled environment to ensure your child learns in a safe and supportive setting."
+    },
+    {
+      "question": "What should my child wear to class?",
+      "answer": "For trial classes, comfortable athletic clothing is fine. Once enrolled, students will need a BJJ gi (uniform). We offer free gi options with our trial program, so you can get started right away!"
+    },
+    {
+      "question": "Will my child get hurt?",
+      "answer": "Safety is our top priority. BJJ is actually one of the safest martial arts because it focuses on control and technique rather than striking. Our instructors are trained to ensure proper technique and prevent injuries."
+    }
+  ],
+  "trial": {
+    "weeks": 4,
+    "cost": 49.95,
+    "value": 270,
+    "unlimitedClasses": true,
+    "freeGi": true
+  }
+}

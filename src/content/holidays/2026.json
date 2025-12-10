@@ -1,0 +1,112 @@
+{
+  "year": 2026,
+  "closures": [
+    {
+      "type": "public-holiday",
+      "name": "New Year's Day",
+      "date": "2026-01-01",
+      "description": "Public holiday - Dojo closed"
+    },
+    {
+      "type": "public-holiday",
+      "name": "Australia Day",
+      "date": "2026-01-26",
+      "description": "Public holiday - Dojo closed"
+    },
+    {
+      "type": "school-holiday-closure",
+      "name": "Summer Holidays (Second Half)",
+      "startDate": "2026-01-03",
+      "endDate": "2026-01-27",
+      "description": "Dojo closed during second half of summer school holidays"
+    },
+    {
+      "type": "public-holiday",
+      "name": "Labour Day",
+      "date": "2026-03-09",
+      "description": "Public holiday - Dojo closed"
+    },
+    {
+      "type": "public-holiday",
+      "name": "Good Friday",
+      "date": "2026-04-03",
+      "description": "Public holiday - Dojo closed"
+    },
+    {
+      "type": "public-holiday",
+      "name": "Easter Monday",
+      "date": "2026-04-06",
+      "description": "Public holiday - Dojo closed"
+    },
+    {
+      "type": "school-holiday-closure",
+      "name": "Autumn Holidays (Second Half)",
+      "startDate": "2026-04-11",
+      "endDate": "2026-04-19",
+      "description": "Dojo closed during second half of autumn school holidays"
+    },
+    {
+      "type": "public-holiday",
+      "name": "ANZAC Day",
+      "date": "2026-04-25",
+      "description": "Public holiday - Dojo closed"
+    },
+    {
+      "type": "public-holiday",
+      "name": "King's Birthday",
+      "date": "2026-06-08",
+      "description": "Public holiday - Dojo closed"
+    },
+    {
+      "type": "school-holiday-closure",
+      "name": "Winter Holidays (Second Half)",
+      "startDate": "2026-07-03",
+      "endDate": "2026-07-12",
+      "description": "Dojo closed during second half of winter school holidays"
+    },
+    {
+      "type": "public-holiday",
+      "name": "Friday before AFL Grand Final",
+      "date": "2026-09-25",
+      "description": "Public holiday - Dojo closed (date subject to AFL schedule confirmation)"
+    },
+    {
+      "type": "school-holiday-closure",
+      "name": "Spring Holidays (Second Half)",
+      "startDate": "2026-09-26",
+      "endDate": "2026-10-04",
+      "description": "Dojo closed during second half of spring school holidays"
+    },
+    {
+      "type": "public-holiday",
+      "name": "Melbourne Cup Day",
+      "date": "2026-11-03",
+      "description": "Public holiday - Dojo closed"
+    },
+    {
+      "type": "public-holiday",
+      "name": "Christmas Day",
+      "date": "2026-12-25",
+      "description": "Public holiday - Dojo closed"
+    },
+    {
+      "type": "public-holiday",
+      "name": "Boxing Day",
+      "date": "2026-12-26",
+      "description": "Public holiday - Dojo closed"
+    },
+    {
+      "type": "public-holiday",
+      "name": "Boxing Day Holiday",
+      "date": "2026-12-28",
+      "description": "Additional public holiday - Dojo closed"
+    },
+    {
+      "type": "school-holiday-closure",
+      "name": "Summer Holidays (Second Half)",
+      "startDate": "2027-01-02",
+      "endDate": "2027-01-26",
+      "description": "Dojo closed during second half of summer school holidays"
+    }
+  ]
+}

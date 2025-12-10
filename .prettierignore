@@ -1,0 +1,14 @@
+node_modules
+dist
+.astro
+build
+.next
+.nuxt
+.cache
+
+
+
+
+
+
+

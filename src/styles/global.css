@@ -1,0 +1,70 @@
+@import "tailwindcss";
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+@source "../../node_modules/flowbite";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+	--color-primary-50: #fef9e7;
+	--color-primary-100: #fdf3cf;
+	--color-primary-200: #fbe9a7;
+	--color-primary-300: #f9df7f;
+	--color-primary-400: #f5c857;
+	--color-primary-500: #c39519;
+	--color-primary-600: #a37d15;
+	--color-primary-700: #836711;
+	--color-primary-800: #63510d;
+	--color-primary-900: #433b09;
+
+	--color-primary: #c39519;
+
+	--font-heading: "Space Grotesk", sans-serif;
+	--font-body: "Teachers", sans-serif;
+}
+
+body {
+	font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-heading);
+}
+
+/* View Transitions - Smooth image transitions */
+::view-transition-old(program-image-*),
+::view-transition-new(program-image-*) {
+	animation-duration: 1.2s;
+	animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+::view-transition-old(program-image-*) {
+	animation-name: fade-out;
+}
+
+::view-transition-new(program-image-*) {
+	animation-name: fade-in;
+}
+
+@keyframes fade-out {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}

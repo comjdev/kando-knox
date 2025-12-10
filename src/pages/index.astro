@@ -1,11 +1,37 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import KandoInfo from "../components/home/KandoInfo.astro";
+import Layout from "../layouts/Layout.astro";
+import Program from "../components/home/Program.astro";
+import Team from "../components/home/Team.astro";
+import Benefits from "../components/home/Benefits.astro";
+import Testimonials from "../components/shared/Testimonials.astro";
+import LatestPosts from "../components/home/LatestPosts.astro";
 ---
 
 <Layout>
-	<Welcome />
+  <main class="bg-white dark:bg-gray-900">
+    <section class="mt-12 bg-white dark:bg-gray-900">
+      <div class="py-8 px-4 mx-auto max-w-7xl">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white">
+          Hello World
+        </h1>
+        <p class="text-2xl text-gray-500 dark:text-gray-400">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+          quos.
+        </p>
+      </div>
+    </section>
+
+    <KandoInfo />
+
+    <Benefits />
+
+    <Program />
+
+    <Team />
+
+    <LatestPosts />
+
+    <Testimonials />
+  </main>
 </Layout>

@@ -1,0 +1,88 @@
+{
+  "id": 5,
+  "title": "Teen & Adult Brazilian Jiu-Jitsu",
+  "slug": "teen-adult-bjj-brazilian-jiu-jitsu-knox",
+  "shortDescription": "Learn the art of Brazilian Jiu-Jitsu in a supportive environment. Perfect for adults of all fitness levels.",
+  "ageGroup": "13+",
+  "bearCave": true,
+  "schedule": [
+    {
+      "day": "Monday",
+      "timeFrom": "8:00 PM",
+      "timeTo": "9:00 PM",
+      "className": "Bear Cave BJJ",
+      "beltRank": null,
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Wednesday",
+      "timeFrom": "11:00 AM",
+      "timeTo": "12:00 PM",
+      "className": "Bear Cave BJJ",
+      "beltRank": null,
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Thursday",
+      "timeFrom": "8:00 PM",
+      "timeTo": "9:00 PM",
+      "className": "Bear Cave BJJ",
+      "beltRank": null,
+      "instructor": "Sensei Andy"
+    }
+  ],
+  "features": [
+    "Self-defense techniques",
+    "Physical fitness",
+    "Mental discipline",
+    "Competition training"
+  ],
+  "image": "/img/adult-bjj.jpg",
+  "description": [
+    "Learn the art of Brazilian Jiu-Jitsu in a supportive environment. Perfect for adults of all fitness levels, our program teaches practical self-defense and builds physical strength.",
+    "Our BJJ classes combine technical instruction with live training, helping you develop both the knowledge and practical skills needed for real-world self-defense situations.",
+    "Join our welcoming community of practitioners who are committed to continuous improvement, fitness, and the art of Brazilian Jiu-Jitsu."
+  ],
+  "content": [
+    {
+      "title": "Master the Art of Ground Fighting",
+      "description": "Brazilian Jiu-Jitsu is renowned for its effectiveness in ground fighting and submission techniques. Learn how to control and submit opponents regardless of size or strength through proper technique and leverage. Our program teaches you the fundamentals and advanced techniques needed to excel in BJJ.",
+      "image": "/img/kando-knox-adult-bjj-1.jpg"
+    },
+    {
+      "title": "Build Strength, Flexibility, and Endurance",
+      "description": "BJJ is a full-body workout that improves strength, flexibility, and cardiovascular fitness. Every class challenges your body in new ways, helping you build functional strength and improve your overall physical condition. It's one of the most effective workouts you'll ever experience.",
+      "image": "/img/kando-knox-adult-bjj-2.jpg"
+    },
+    {
+      "title": "Join a Supportive Community",
+      "description": "Our BJJ community is built on respect, camaraderie, and mutual support. Whether you're a complete beginner or have previous experience, you'll find training partners who will help you grow and improve. We believe that everyone gets better when we help each other succeed.",
+      "image": "/img/kando-knox-adult-bjj-3.jpg"
+    }
+  ],
+  "faq": [
+    {
+      "question": "What is Brazilian Jiu-Jitsu?",
+      "answer": "Brazilian Jiu-Jitsu is a martial art that focuses on grappling and ground fighting. It emphasizes technique and leverage, allowing smaller practitioners to defend themselves against larger opponents."
+    },
+    {
+      "question": "Do I need prior experience?",
+      "answer": "Not at all! Our program welcomes complete beginners. Our instructors will guide you through the fundamentals step by step, ensuring you learn proper technique and build confidence at your own pace."
+    },
+    {
+      "question": "Is BJJ safe?",
+      "answer": "Yes, when practiced correctly, BJJ is very safe. Our instructors emphasize proper technique, control, and respect for training partners. We create a controlled environment where you can learn and train without unnecessary risk of injury."
+    },
+    {
+      "question": "What should I bring to my first class?",
+      "answer": "For your first class, wear comfortable athletic clothing (no zippers or buttons). Bring a water bottle and an open mind! If you decide to continue, we'll help you get set up with a BJJ gi (uniform)."
+    }
+  ],
+  "trial": {
+    "weeks": 4,
+    "cost": 49.95,
+    "value": 270,
+    "unlimitedClasses": true,
+    "freeGi": true
+  }
+}

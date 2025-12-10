@@ -1,0 +1,66 @@
+---
+import { getCollection } from "astro:content";
+
+const benefitsCollection = await getCollection("benefits");
+// Sort by order field if present, otherwise by title
+const benefits = benefitsCollection.sort((a, b) => {
+  const orderA = a.data.order ?? 999;
+  const orderB = b.data.order ?? 999;
+  return orderA - orderB;
+});
+
+// Icon mapping function
+function getIcon(iconType: string | undefined) {
+  const icons: Record<string, string> = {
+    confidence: `<path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path>`,
+    focus: `<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>`,
+    fitness: `<path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"></path>`,
+    shield: `<path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>`,
+    discipline: `<path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path><path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"></path>`,
+    wellbeing: `<path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>`,
+  };
+  return icons[iconType || "confidence"] || icons.confidence;
+}
+---
+
+<section class="bg-gray-100 dark:bg-gray-800">
+  <div class="py-8 px-4 mx-auto max-w-7xl sm:py-16 lg:py-24">
+    <div class="max-w-3xl mb-8 lg:mb-16">
+      <h2
+        class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"
+      >
+        Benefits of Martial Arts Training
+      </h2>
+      <p class="text-gray-600 sm:text-xl dark:text-gray-300">
+        Discover how martial arts training at Kando Martial Arts can transform
+        your life, building physical strength, mental resilience, and valuable
+        life skills.
+      </p>
+    </div>
+    <div
+      class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0"
+    >
+      {
+        benefits.map((benefit) => (
+          <div>
+            <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-gray-200 lg:h-12 lg:w-12 dark:bg-gray-700">
+              <svg
+                class="w-5 h-5 text-primary-500 lg:w-6 lg:h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+                set:html={getIcon(benefit.data.icon)}
+              />
+            </div>
+            <h3 class="mb-2 text-xl font-bold dark:text-white">
+              {benefit.data.title}
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300">
+              {benefit.data.description}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

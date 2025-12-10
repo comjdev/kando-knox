@@ -1,0 +1,106 @@
+---
+interface ScheduleItem {
+  day: string;
+  timeFrom: string;
+  timeTo: string;
+  className: string;
+  beltRank?: string | null;
+  instructor?: string;
+}
+
+interface Props {
+  title: string;
+  description?: string | string[];
+  shortDescription?: string;
+  features?: string[];
+  schedule?: ScheduleItem[];
+  bearCave?: boolean;
+}
+
+const { title, description, shortDescription, features, schedule, bearCave } =
+  Astro.props;
+
+// Normalize description to array format
+const descriptionParagraphs = Array.isArray(description)
+  ? description
+  : description
+    ? [description]
+    : [];
+---
+
+<section class="bg-gray-100 dark:bg-gray-800 antialiased">
+  <div class="max-w-7xl px-4 py-8 mx-auto lg:px-6 sm:py-16 lg:py-24">
+    <div class="max-w-5xl mx-auto space-y-16">
+      <div class="space-y-8 lg:space-y-12">
+        <div class="space-y-6">
+          <div class="space-y-4">
+            <h3
+              class="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl dark:text-white"
+            >
+              {title} at Kando Knox
+            </h3>
+            {
+              descriptionParagraphs.length > 0 &&
+                descriptionParagraphs.map((paragraph: string) => (
+                  <p class="text-base font-normal text-gray-500 sm:text-lg dark:text-gray-400">
+                    {paragraph}
+                  </p>
+                ))
+            }
+          </div>
+
+          {
+            features && features.length > 0 && (
+              <div class="flex items-center gap-2.5 flex-wrap">
+                {features.map((feature: string) => (
+                  <div class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900">
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">
+                      {feature}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )
+          }
+        </div>
+
+        {
+          bearCave && (
+            <div class="pt-8 border-t border-gray-200 dark:border-gray-700">
+              <div class="flex flex-col items-center gap-6 md:flex-row md:items-center">
+                <div class="shrink-0 pr-8 lg:pr-12">
+                  <img
+                    src="/img/bear-cave-logo.avif"
+                    alt="Bear Cave BJJ Knox Logo"
+                    class="w-32 h-32 lg:w-48 lg:h-48 object-contain"
+                  />
+                </div>
+                <div class="flex-1 space-y-4">
+                  <h4 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    Bear Cave BJJ Knox
+                  </h4>
+                  <p class="text-base font-normal text-gray-500 sm:text-lg dark:text-gray-400">
+                    Bear Cave BJJ Knox proudly operates within Kando Martial
+                    Arts Knox, where shared values and a strong sense of
+                    community make it the perfect home for our team.
+                  </p>
+                  <p class="text-base font-normal text-gray-500 sm:text-lg dark:text-gray-400">
+                    We believe that good people create great training—and an
+                    even better community. That's why we've partnered with the
+                    Kando Martial Arts family, whose culture and approach align
+                    closely with our own.
+                  </p>
+                  <p class="text-base font-normal text-gray-500 sm:text-lg dark:text-gray-400">
+                    Together, we work to provide an engaging, complementary, and
+                    well-rounded training environment for all members, whether
+                    you're here to learn, grow, or push your boundaries.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>
