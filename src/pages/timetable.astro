@@ -1,0 +1,67 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE_CONFIG } from "../config";
+import Timetable from "../components/shared/Timetable.astro";
+
+interface ScheduleItem {
+  day: string;
+  timeFrom: string;
+  timeTo: string;
+  className: string;
+  beltRank?: string | null;
+  instructor?: string;
+}
+
+// Load all programs
+const programModules = Object.values(
+  import.meta.glob("../content/program/*.json", { eager: true })
+);
+
+// Combine all schedules from all programs
+const allSchedules: ScheduleItem[] = [];
+programModules.forEach((programModule: any) => {
+  const program = programModule.default;
+  if (program.schedule && Array.isArray(program.schedule)) {
+    allSchedules.push(...program.schedule);
+  }
+});
+
+// Sort by day and time for better organization
+const dayOrder: Record<string, number> = {
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+  Sunday: 7,
+};
+
+// Helper function to convert time to minutes for sorting
+function timeToMinutes(time: string): number {
+  const [timePart, period] = time.split(" ");
+  const [hours, minutes] = timePart.split(":").map(Number);
+  let totalMinutes = hours * 60 + minutes;
+  if (period === "PM" && hours !== 12) {
+    totalMinutes += 12 * 60;
+  }
+  if (period === "AM" && hours === 12) {
+    totalMinutes -= 12 * 60;
+  }
+  return totalMinutes;
+}
+
+// Sort schedules by day, then by start time
+allSchedules.sort((a, b) => {
+  const dayDiff = (dayOrder[a.day] || 99) - (dayOrder[b.day] || 99);
+  if (dayDiff !== 0) return dayDiff;
+  return timeToMinutes(a.timeFrom) - timeToMinutes(b.timeFrom);
+});
+
+const pageTitle = `Timetable | ${SITE_CONFIG.title}`;
+---
+
+<Layout title="Timetable">
+  <Timetable schedule={allSchedules} />
+</Layout>
+

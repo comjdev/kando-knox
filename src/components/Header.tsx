@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Logo from "./shared/Logo";
-import { PROGRAMS } from "../config";
+import { PROGRAMS, SITE_CONFIG } from "../config";
 import PrimaryButton from "./shared/PrimaryButton";
 
 export default function Header() {
@@ -131,10 +131,11 @@ export default function Header() {
             </li>
             <li>
               <a
-                href="/timetable"
+                href={SITE_CONFIG.shopUrl}
+                target="_blank"
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
-                Timetable
+                Shop
               </a>
             </li>
             <li>
@@ -296,11 +297,11 @@ export default function Header() {
               the perfect program to build confidence, strength, and discipline.
             </p>
             <a
-              href="/programs"
+              href="/timetable"
               className="inline-flex items-center text-sm font-medium text-primary hover:underline"
             >
-              View all programs
-              <span className="sr-only">View all programs</span>
+              View timetable
+              <span className="sr-only">View timetable</span>
               <svg
                 className="w-4 h-4 ms-1.5 rtl:rotate-180"
                 aria-hidden="true"

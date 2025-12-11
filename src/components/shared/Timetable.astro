@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import { SITE_CONFIG } from "../../config";
 import beltRanksData from "../../content/belt-ranks.json";
+import BeltRankFilter from "./BeltRankFilter";
 
 interface ScheduleItem {
   day: string;
@@ -52,6 +53,7 @@ const days = Object.keys(scheduleByDay);
           <h2 class="text-4xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">
             {scheduleTitle}
           </h2>
+          <BeltRankFilter client:visible schedule={schedule} />
         </div>
 
         {days.length > 0 && (
@@ -73,7 +75,10 @@ const days = Object.keys(scheduleByDay);
                   </h3>
 
                   {daySchedule.map((item, itemIndex) => (
-                    <div class="space-y-4">
+                    <div
+                      class="space-y-4"
+                      data-belt-rank={item.beltRank || "none"}
+                    >
                       <span class="bg-primary-400 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">
                         <svg
                           aria-hidden="true"

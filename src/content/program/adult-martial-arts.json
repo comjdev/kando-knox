@@ -27,7 +27,7 @@
       "timeFrom": "6:15 PM",
       "timeTo": "7:00 PM",
       "className": "Teen & Adult Martial Arts",
-      "beltRank": "Fundamentals",
+      "beltRank": "Teen & Adult Fundamentals",
       "instructor": "Sensei Andy"
     },
     {
@@ -35,7 +35,7 @@
       "timeFrom": "7:00 PM",
       "timeTo": "8:00 PM",
       "className": "Teen & Adult Martial Arts",
-      "beltRank": "Intermediate",
+      "beltRank": "Teen & AdultIntermediate",
       "instructor": "Sensei Andy"
     },
     {
@@ -43,7 +43,7 @@
       "timeFrom": "8:00 PM",
       "timeTo": "9:00 PM",
       "className": "Teen & Adult Martial Arts",
-      "beltRank": "Advanced",
+      "beltRank": "Teen & Adult Advanced",
       "instructor": "Sensei Andy"
     },
     {
