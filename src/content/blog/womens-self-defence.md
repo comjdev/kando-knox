@@ -3,6 +3,7 @@ title: "Women’s Self-Defence: Why Every Woman Should Learn the Basics"
 slug: "womens-self-defence-why-every-woman-should-learn-the-basics"
 description: "Empowering, practical women's self-defence training at Kando Martial Arts in Knox. Learn why every woman benefits from self-defence skills and confidence-building techniques."
 date: 2025-11-20
+image: "/images/blog/womens-self-defence.jpg"
 ---
 
 Learning self-defence is about much more than physical techniques; it’s about building confidence, awareness, and a sense of empowerment. At **Kando Martial Arts in Knox**, women of all ages discover practical ways to protect themselves while gaining fitness, mental clarity, and personal assurance.

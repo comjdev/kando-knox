@@ -1,0 +1,275 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PageTemplate from "../../components/shared/PageTemplate.astro";
+import LocationMap from "../../components/shared/LocationMap.astro";
+import FAQs from "../../components/shared/FAQs.astro";
+import LocationPrograms from "../../components/locations/LocationPrograms.astro";
+import LocationBookTrial from "../../components/locations/LocationBookTrial.astro";
+import LocationsFAQs from "../../components/locations/LocationsFAQs.astro";
+import WhyKando from "../../components/locations/WhyKando.astro";
+import Testimonials from "../../components/shared/Testimonials.astro";
+import LatestPosts from "../../components/shared/LatestPosts.astro";
+
+export async function getStaticPaths() {
+  // #region agent log
+  fetch("http://127.0.0.1:7242/ingest/5d3b9051-a0ef-41c6-8c79-fe5a50d1c563", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      location: "[location].astro:7",
+      message: "getStaticPaths entry",
+      data: {},
+      timestamp: Date.now(),
+      sessionId: "debug-session",
+      runId: "post-fix",
+      hypothesisId: "A",
+    }),
+  }).catch(() => {});
+  // #endregion
+
+  const allLocations = Object.values(
+    import.meta.glob("../../content/locations/*.json", { eager: true })
+  ).map((location: any) => location.default);
+
+  // Filter out files that don't have a slug (like FAQ files)
+  const locations = allLocations.filter((location: any) => location.slug);
+
+  // #region agent log
+  fetch("http://127.0.0.1:7242/ingest/5d3b9051-a0ef-41c6-8c79-fe5a50d1c563", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      location: "[location].astro:16",
+      message: "After filtering locations",
+      data: {
+        allLocationsCount: allLocations.length,
+        filteredLocationsCount: locations.length,
+        locations: locations.map((l: any) => ({
+          hasSlug: !!l.slug,
+          slug: l.slug,
+          hasTitle: !!l.title,
+        })),
+      },
+      timestamp: Date.now(),
+      sessionId: "debug-session",
+      runId: "post-fix",
+      hypothesisId: "A",
+    }),
+  }).catch(() => {});
+  // #endregion
+
+  const paths = locations.map((location: any) => {
+    // #region agent log
+    fetch("http://127.0.0.1:7242/ingest/5d3b9051-a0ef-41c6-8c79-fe5a50d1c563", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        location: "[location].astro:33",
+        message: "Mapping location to path",
+        data: {
+          hasSlug: !!location.slug,
+          slug: location.slug,
+          title: location.title,
+        },
+        timestamp: Date.now(),
+        sessionId: "debug-session",
+        runId: "post-fix",
+        hypothesisId: "A",
+      }),
+    }).catch(() => {});
+    // #endregion
+
+    return {
+      params: { location: location.slug },
+      props: { location },
+    };
+  });
+
+  // #region agent log
+  fetch("http://127.0.0.1:7242/ingest/5d3b9051-a0ef-41c6-8c79-fe5a50d1c563", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      location: "[location].astro:48",
+      message: "Before returning paths",
+      data: {
+        pathsCount: paths.length,
+        paths: paths.map((p: any) => ({
+          hasLocationParam: !!p.params.location,
+          locationParam: p.params.location,
+        })),
+      },
+      timestamp: Date.now(),
+      sessionId: "debug-session",
+      runId: "post-fix",
+      hypothesisId: "A",
+    }),
+  }).catch(() => {});
+  // #endregion
+
+  return paths;
+}
+
+const { location } = Astro.props;
+
+// Get featured image or use default
+const featuredImage =
+  location.image || location.featuredImage || "/img/default.jpg";
+
+// Get transition name for view transitions
+const transitionName = location.transitionName || `location-${location.slug}`;
+
+// Load FAQ files - use glob to get both content root and locations subdirectory
+const allFaqFiles = Object.entries(
+  import.meta.glob("../../content/**/*.json", { eager: true })
+).map(([path, file]: [string, any]) => ({
+  path,
+  data: file.default,
+}));
+
+// Extract FAQ data - can be directly on location, a filename string, or in a dedicated section
+let faqs: Array<{ question: string; answer: string }> = [];
+
+if (typeof location.faqs === "string") {
+  // Load FAQ file if faqs is a filename string (e.g., "faqs-karate.json")
+  const faqFile = allFaqFiles.find((f) => {
+    const fileName = f.path.split("/").pop() || "";
+    return (
+      fileName === location.faqs ||
+      fileName.includes(location.faqs.replace(".json", ""))
+    );
+  });
+
+  if (faqFile?.data?.faqs && Array.isArray(faqFile.data.faqs)) {
+    faqs = faqFile.data.faqs;
+
+    // Replace LOCATION placeholder with actual location name
+    faqs = faqs.map((faq: { question: string; answer: string }) => ({
+      question: faq.question.replace(/LOCATION/g, location.locationName),
+      answer: faq.answer.replace(/LOCATION/g, location.locationName),
+    }));
+  }
+} else if (Array.isArray(location.faqs)) {
+  // Use FAQs array directly if provided
+  faqs = location.faqs;
+}
+---
+
+<Layout>
+  <PageTemplate
+    title={location.title}
+    description={location.description}
+    image={featuredImage}
+    transitionName={transitionName}
+  >
+    <!-- Intro Section -->
+    {
+      location.intro && (
+        <section class="my-8">
+          {location.intro.heading && (
+            <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+              {location.intro.heading}
+            </h2>
+          )}
+          {location.intro.description && (
+            <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+              {location.intro.description}
+            </p>
+          )}
+        </section>
+      )
+    }
+
+    <!-- Kando Info Section -->
+    {
+      location.kandoInfo && (
+        <section class="my-8">
+          {location.kandoInfo.heading && (
+            <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+              {location.kandoInfo.heading}
+            </h2>
+          )}
+          {location.kandoInfo.description &&
+            Array.isArray(location.kandoInfo.description) && (
+              <div class="space-y-4">
+                {location.kandoInfo.description.map((paragraph: string) => (
+                  <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            )}
+          {location.kandoInfo.description &&
+            typeof location.kandoInfo.description === "string" && (
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {location.kandoInfo.description}
+              </p>
+            )}
+        </section>
+      )
+    }
+
+    <!-- Serving Area Section -->
+    {
+      location.servingArea && (
+        <section class="my-8">
+          {location.servingArea.heading && (
+            <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+              {location.servingArea.heading}
+            </h2>
+          )}
+          {location.servingArea.description && (
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+              {location.servingArea.description}
+            </p>
+          )}
+        </section>
+      )
+    }
+  </PageTemplate>
+
+  <!-- Full Screen Map Section -->
+  <LocationMap
+    mapEmbed={location.mapEmbed}
+    locationName={location.locationName}
+  />
+
+  <!-- Classes Section -->
+  {
+    location.classes && (
+      <LocationPrograms
+        classes={location.classes}
+        locationName={location.locationName}
+      />
+    )
+  }
+
+  <!-- Testimonials Section -->
+  {
+    location.testimonials && (
+      <Testimonials testimonials={location.testimonials} />
+    )
+  }
+
+  <!-- Book a Trial Section -->
+  {location.programs && <LocationBookTrial programs={location.programs} />}
+
+  <!-- Why Choose Us Section -->
+  {location.whyChooseUs && <WhyKando whyChooseUs={location.whyChooseUs} />}
+
+  <!-- FAQ Section -->
+  {
+    faqs.length > 0 && (
+      <LocationsFAQs
+        faq={faqs}
+        title={`Frequently asked questions about karate in ${location.locationName}`}
+      />
+    )
+  }
+
+  <!-- Latest Posts Section -->
+  <LatestPosts />
+
+  <!-- Testimonials Section -->
+  <Testimonials />
+</Layout>

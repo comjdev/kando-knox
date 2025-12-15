@@ -1,0 +1,102 @@
+{
+  "title": "Karate Classes in Wantirna",
+  "slug": "karate-wantirna",
+  "description": "Professional karate classes in Wantirna for kids, teens, and adults. Located in Boronia, serving Wantirna and surrounding areas. Book your trial class today!",
+  "image": "/img/default.jpg",
+  "locationName": "Wantirna",
+  "transitionName": "location-wantirna",
+  "programs": [
+    "pre-school-martial-arts",
+    "junior-martial-arts",
+    "adult-martial-arts"
+  ],
+  "faqs": "faqs-karate.json",
+  "intro": {
+    "heading": "Karate and Martial Arts Classes in Wantirna",
+    "description": "Professional karate classes in Wantirna for kids, teens, and adults. Located in Boronia, serving Wantirna and surrounding areas. Book your trial class today!"
+  },
+  "kandoInfo": {
+    "heading": "Kando Martial Arts Knox",
+    "description": [
+      "Kando Martial Arts was founded in 1997 by Chief Instructor Shihan Paul Veldman, a highly respected martial arts teacher with decades of experience.",
+      "Shihan Paul holds a 6th Degree Black Belt in Karate and began training at age 13 in San Chi Kai Freestyle Karate. He later specialised in traditional Shukokai Karate at Sendai Karate under Sensei Kurt Klimkait, earning his Black Belt in 1995.",
+      "Sensei Andy began his karate journey with Kando at age 12 after experiencing bullying. Over 15 years of training, karate helped him build confidence, resilience, and leadership skills.",
+      "With over 10 years of teaching experience, Sensei Andy played a key role in growing Kando Rowville into the second-largest Kando club. He is now established his own Kando MartialArts club in Knox, continuing Kando’s tradition of quality karate instruction for the Wantirna area.",
+      "Kando Martial Arts Knox is a proud member of the Kando Martial Arts family, and is committed to providing the highest quality karate instruction for the Wantirna area."
+    ]
+  },
+  "servingArea": {
+    "heading": "Wantirna and surrounding areas",
+    "description": "Kando Martial Arts Knox is proud to serve families from Wantirna and the surrounding areas of Knox, like Boronia, Bayswater, Ferntree Gully, Scoresby, and Ringwood. We are a family-friendly club that welcomes students of all ages and skill levels."
+  },
+  "classes": [
+    {
+      "id": "pre-school-martial-arts",
+      "heading": "Pre-School Karate for Kids",
+      "description": "Designed for children aged 3–5, our pre-school karate program introduces the fundamentals of karate through fun, age-appropriate activities. Families from Wantirna and the Knox area love how this program helps young children build confidence, listening skills, respect, and coordination in a safe and supportive environment."
+    },
+    {
+      "id": "junior-martial-arts",
+      "heading": "Junior Karate Classes for Wantirna Kids",
+      "description": "Perfect for children aged 7–12, our junior karate classes build strong foundations in karate technique, discipline, and focus. Popular with families from Wantirna and surrounding Knox suburbs, this program supports confidence, teamwork, and personal growth in a positive training environment."
+    },
+    {
+      "id": "adult-martial-arts",
+      "heading": "Teen & Adult Karate Training",
+      "description": "Our teen and adult karate program is ideal for students aged 13 and above who want to improve fitness, focus, and self-defence skills. Welcoming students from Wantirna and across the Knox area, these karate classes offer structured training in a safe, respectful, and supportive setting."
+    }
+  ],
+  "whyChooseUs": {
+    "heading": "Why choose Kando Martial Arts Knox for karate training in Wantirna?",
+    "description": "Kando Martial Arts Knox is a family-friendly club that welcomes students of all ages and skill levels. We are a family-friendly club that welcomes students of all ages and skill levels.",
+    "benefits": [
+      {
+        "icon": "users-group",
+        "heading": "Family Friendly",
+        "description": "We are a family-friendly club that welcomes students of all ages and skill levels. We are a family-friendly club that welcomes students of all ages and skill levels."
+      },
+      {
+        "icon": "calendar-month",
+        "heading": "Flexible Scheduling",
+        "description": "We offer flexible scheduling to fit your busy lifestyle. Whether you're a busy parent, a working professional, or just looking for a way to stay active, we have a program that will fit your needs."
+      },
+      {
+        "icon": "face-laugh",
+        "heading": "Professional Instructors",
+        "description": "We have a team of professional instructors who are dedicated to helping you achieve your goals. We have a team of professional instructors who are dedicated to helping you achieve your goals."
+      }
+    ]
+  },
+  "benefits": [
+    {
+      "heading": "Physical Benefits",
+      "description": [
+        "Improves strength, flexibility & coordination",
+        "Boosts cardiovascular fitness & endurance",
+        "Develops balance, posture & body control",
+        "Encourages healthy, active lifestyles",
+        "Enhances overall motor skills"
+      ]
+    },
+    {
+      "heading": "Mental & Emotional Benefits",
+      "description": [
+        "Builds confidence & self-esteem",
+        "Improves focus, concentration & memory",
+        "Teaches discipline, patience & perseverance",
+        "Helps manage stress & emotions",
+        "Encourages goal-setting & resilience"
+      ]
+    },
+    {
+      "heading": "Life Skills & Personal Development",
+      "description": [
+        "Teaches respect, teamwork & leadership",
+        "Builds self-control & positive behaviour",
+        "Develops real-world self-defence awareness",
+        "Encourages responsibility & accountability",
+        "Supports long-term personal growth"
+      ]
+    }
+  ]
+}

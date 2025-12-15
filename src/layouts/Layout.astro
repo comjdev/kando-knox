@@ -20,6 +20,29 @@ const pageTitle = title ? `${title} | ${SITE_CONFIG.title}` : SITE_CONFIG.title;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      // Prevent theme flash by setting theme before page renders
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const systemPrefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const theme = savedTheme || (systemPrefersDark ? "dark" : "light");
+        document.documentElement.classList.remove("light", "dark");
+        document.documentElement.classList.add(theme);
+      })();
+    </script>
+    <style is:inline>
+      /* Critical CSS to prevent nav flash - must match Tailwind classes exactly */
+      html.dark nav {
+        background-color: rgb(31 41 55 / 0.9);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+      html.dark nav.shadow-sm {
+        background-color: rgb(31 41 55);
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -30,12 +53,86 @@ const pageTitle = title ? `${title} | ${SITE_CONFIG.title}` : SITE_CONFIG.title;
     <title>{pageTitle}</title>
   </head>
   <body class="bg-white dark:bg-gray-900">
-    <Header client:visible />
+    <!-- <Header client:load /> -->
     <slot />
     <Footer />
     <script
       is:inline
       src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"
     ></script>
+    <script is:inline>
+      // Ensure theme persists during ViewTransitions and prevent nav flash
+      function applyTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        const systemPrefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const theme = savedTheme || (systemPrefersDark ? "dark" : "light");
+        document.documentElement.classList.remove("light", "dark");
+        document.documentElement.classList.add(theme);
+      }
+
+      function applyNavBackground() {
+        const theme = document.documentElement.classList.contains("dark")
+          ? "dark"
+          : "light";
+        // Use requestAnimationFrame to catch nav as soon as it appears
+        requestAnimationFrame(() => {
+          const nav = document.querySelector("nav");
+          if (nav) {
+            if (theme === "dark") {
+              const isScrolled = nav.classList.contains("shadow-sm");
+              nav.style.setProperty(
+                "background-color",
+                isScrolled ? "rgb(31 41 55)" : "rgb(31 41 55 / 0.9)",
+                "important"
+              );
+            } else {
+              // Clear inline style in light mode to let CSS classes take over
+              nav.style.removeProperty("background-color");
+            }
+          }
+        });
+      }
+
+      // Set theme before swap happens
+      document.addEventListener("astro:before-swap", () => {
+        applyTheme();
+      });
+
+      // Apply on page load (ViewTransitions)
+      document.addEventListener("astro:page-load", () => {
+        applyTheme();
+        applyNavBackground();
+      });
+
+      // Apply on initial load
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
+          applyNavBackground();
+        });
+      } else {
+        applyNavBackground();
+      }
+
+      // Watch for nav element and apply background immediately
+      if (typeof MutationObserver !== "undefined") {
+        const observer = new MutationObserver((mutations, obs) => {
+          const nav = document.querySelector("nav");
+          if (nav) {
+            applyNavBackground();
+            obs.disconnect(); // Stop observing once nav is found
+          }
+        });
+
+        if (document.body) {
+          observer.observe(document.body, { childList: true, subtree: true });
+        } else {
+          document.addEventListener("DOMContentLoaded", () => {
+            observer.observe(document.body, { childList: true, subtree: true });
+          });
+        }
+      }
+    </script>
   </body>
 </html>

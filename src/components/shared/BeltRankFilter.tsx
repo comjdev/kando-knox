@@ -12,14 +12,39 @@ interface ScheduleItem {
 
 interface BeltRankFilterProps {
   schedule: ScheduleItem[];
+  selectedRank?: string;
+  onRankChange?: (rank: string) => void;
+  isSelect?: boolean; // If true, render as select dropdown instead of custom dropdown
+  availableRanks?: string[]; // Pre-filtered belt ranks to use instead of calculating from schedule
+  disabled?: boolean; // Disable the filter (e.g., when no program is selected)
 }
 
-export default function BeltRankFilter({ schedule }: BeltRankFilterProps) {
-  const [selectedRank, setSelectedRank] = useState<string>("all");
+export default function BeltRankFilter({
+  schedule,
+  selectedRank: controlledRank,
+  onRankChange,
+  isSelect = false,
+  availableRanks,
+  disabled = false,
+}: BeltRankFilterProps) {
+  const [internalRank, setInternalRank] = useState<string>("all");
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  // Get all unique belt ranks from the schedule
+  const selectedRank =
+    controlledRank !== undefined ? controlledRank : internalRank;
+  const handleRankChange = (rank: string) => {
+    if (onRankChange) {
+      onRankChange(rank);
+    } else {
+      setInternalRank(rank);
+    }
+  };
+
+  // Get all unique belt ranks from the schedule or use provided availableRanks
   const uniqueRanks = React.useMemo(() => {
+    if (availableRanks) {
+      return availableRanks;
+    }
     const ranks = new Set<string>();
     schedule.forEach((item) => {
       if (item.beltRank) {
@@ -27,9 +52,30 @@ export default function BeltRankFilter({ schedule }: BeltRankFilterProps) {
       }
     });
     return Array.from(ranks).sort();
-  }, [schedule]);
+  }, [schedule, availableRanks]);
+
+  // Check if there are meaningful belt ranks to filter
+  const hasMeaningfulBeltRanks = React.useMemo(() => {
+    if (uniqueRanks.length === 0) {
+      return false;
+    }
+    // If only one rank and it's "All Belts" or "All Classes", no meaningful filter
+    if (
+      uniqueRanks.length === 1 &&
+      (uniqueRanks[0] === "All Belts" || uniqueRanks[0] === "All Classes")
+    ) {
+      return false;
+    }
+    // If there are multiple ranks, or a single rank that's not "All Belts"/"All Classes", show filter
+    return true;
+  }, [uniqueRanks]);
 
   useEffect(() => {
+    // Skip filter logic if used as select (controlled by DualFilter)
+    if (isSelect && onRankChange) {
+      return;
+    }
+
     // Filter timetable items based on selected rank
     const timetableItems = document.querySelectorAll("[data-belt-rank]");
 
@@ -59,6 +105,17 @@ export default function BeltRankFilter({ schedule }: BeltRankFilterProps) {
       }
     });
 
+    // Hide program groups that have no visible items
+    const programGroups = document.querySelectorAll(".program-group");
+    programGroups.forEach((group) => {
+      const visibleItems = group.querySelectorAll(".space-y-4:not(.hidden)");
+      if (visibleItems.length === 0) {
+        group.classList.add("hidden");
+      } else {
+        group.classList.remove("hidden");
+      }
+    });
+
     // Hide day columns that have no visible items
     const dayColumns = document.querySelectorAll('.grid > div[class*="px-8"]');
     dayColumns.forEach((column) => {
@@ -69,9 +126,10 @@ export default function BeltRankFilter({ schedule }: BeltRankFilterProps) {
         column.classList.remove("hidden");
       }
     });
-  }, [selectedRank]);
+  }, [selectedRank, isSelect, onRankChange]);
 
-  if (uniqueRanks.length === 0) {
+  // Don't render if there are no meaningful belt ranks to filter
+  if (!hasMeaningfulBeltRanks) {
     return null;
   }
 
@@ -124,6 +182,58 @@ export default function BeltRankFilter({ schedule }: BeltRankFilterProps) {
     };
   }, [isOpen]);
 
+  if (isSelect) {
+    // Render as select dropdown (for dual filter layout)
+    // If only "All Belts" or "All Classes" is available, show it as the default option
+    const hasOnlyDefaultOption =
+      uniqueRanks.length === 1 &&
+      (uniqueRanks[0] === "All Belts" || uniqueRanks[0] === "All Classes");
+    const defaultOption = hasOnlyDefaultOption ? uniqueRanks[0] : null;
+    const defaultLabel = defaultOption || "All Belt Ranks";
+
+    return (
+      <select
+        id="belt-rank-filter"
+        value={
+          hasOnlyDefaultOption && selectedRank === "all"
+            ? defaultOption || "all"
+            : selectedRank
+        }
+        onChange={(e) => {
+          // If "All Belts" or "All Classes" is selected and it's the only option, treat it as "all"
+          const value =
+            hasOnlyDefaultOption &&
+            (e.target.value === "All Belts" || e.target.value === "All Classes")
+              ? "all"
+              : e.target.value;
+          handleRankChange(value);
+        }}
+        disabled={disabled}
+        className={`block w-full px-3 py-2.5 bg-white border border-l-0 border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white shadow-sm placeholder:text-gray-400 min-w-[200px] ${
+          disabled
+            ? "opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-700"
+            : ""
+        }`}
+      >
+        {disabled ? (
+          <option value="all">Select a program first</option>
+        ) : (
+          <>
+            {!hasOnlyDefaultOption && (
+              <option value="all">{defaultLabel}</option>
+            )}
+            {uniqueRanks.map((rank) => (
+              <option key={rank} value={rank}>
+                {rank}
+              </option>
+            ))}
+          </>
+        )}
+      </select>
+    );
+  }
+
+  // Original custom dropdown (for single filter layout)
   return (
     <div className="flex justify-center mt-4">
       <div className="relative belt-rank-filter-dropdown">
@@ -134,7 +244,7 @@ export default function BeltRankFilter({ schedule }: BeltRankFilterProps) {
           id="belt-rank-filter"
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-primary-500 dark:focus:border-primary-500 flex items-center gap-2 min-w-[200px] justify-between"
+          className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-primary-500 dark:focus:border-primary-500 flex items-center gap-2 min-w-[350px] justify-between"
         >
           <span className="flex items-center">
             {getSelectedLabel()}
@@ -159,7 +269,7 @@ export default function BeltRankFilter({ schedule }: BeltRankFilterProps) {
           <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-600 max-h-60 overflow-auto">
             <button
               onClick={() => {
-                setSelectedRank("all");
+                handleRankChange("all");
                 setIsOpen(false);
               }}
               className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
@@ -177,7 +287,7 @@ export default function BeltRankFilter({ schedule }: BeltRankFilterProps) {
                 <button
                   key={rank}
                   onClick={() => {
-                    setSelectedRank(rank);
+                    handleRankChange(rank);
                     setIsOpen(false);
                   }}
                   className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center ${

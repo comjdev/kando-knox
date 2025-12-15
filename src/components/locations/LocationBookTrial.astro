@@ -1,0 +1,232 @@
+---
+import BookTrial from "../shared/BookTrial.astro";
+
+interface Props {
+  programs: string[];
+}
+
+const { programs } = Astro.props;
+
+// Load program files to get trial data
+const programFiles = Object.values(
+  import.meta.glob("../../content/program/*.json", { eager: true })
+).map((file: any) => file.default);
+
+// Get trial data for each program
+function getProgramTrial(programId: string) {
+  const program = programFiles.find((p: any) => {
+    const slug = p.slug || "";
+    return slug.includes(programId);
+  });
+  return program?.trial || null;
+}
+
+// Map program IDs to their trial data and labels
+const programTabs = [
+  {
+    id: "pre-school-martial-arts",
+    label: "Pre-School",
+    trial: getProgramTrial("pre-school-martial-arts"),
+    title: "Pre-School Karate",
+  },
+  {
+    id: "junior-martial-arts",
+    label: "Junior",
+    trial: getProgramTrial("junior-martial-arts"),
+    title: "Junior Karate",
+  },
+  {
+    id: "adult-martial-arts",
+    label: "Teen & Adult",
+    trial: getProgramTrial("adult-martial-arts"),
+    title: "Teen & Adult Karate",
+  },
+].filter((tab) => tab.trial && programs.includes(tab.id)); // Only include tabs with trial data and in programs array
+---
+
+<section id="book-trial-section" class="bg-gray-100 dark:bg-gray-800">
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <h2
+      class="mb-6 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white"
+    >
+      Karate Trials
+    </h2>
+
+    <!-- Tabs -->
+    <div class="mb-8">
+      <div class="sm:hidden">
+        <label for="tabs" class="sr-only">Select program</label>
+        <select
+          id="tabs"
+          class="block w-full px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 shadow-sm"
+        >
+          {
+            programTabs.map((tab, index) => (
+              <option value={tab.id} selected={index === 0}>
+                {tab.label}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+      <ul
+        class="hidden text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:flex -space-x-px"
+      >
+        {
+          programTabs.map((tab, index) => (
+            <li class="w-full focus-within:z-10">
+              <a
+                href={`#${tab.id}`}
+                class={`inline-block w-full ${
+                  index === 0
+                    ? "bg-primary-500 text-white border-primary-500"
+                    : "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600"
+                } border ${
+                  index === 0
+                    ? "rounded-s-lg"
+                    : index === programTabs.length - 1
+                      ? "rounded-e-lg"
+                      : ""
+                } hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-800 font-medium leading-5 text-sm px-4 py-2.5 focus:outline-none`}
+                aria-current={index === 0 ? "page" : undefined}
+              >
+                {tab.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <!-- Tab Content -->
+    {
+      programTabs.map((tab, index) => (
+        <div
+          id={tab.id}
+          class={index === 0 ? "" : "hidden"}
+          data-tab-content={tab.id}
+        >
+          <BookTrial trial={tab.trial} title={tab.title} />
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  // Tab switching functionality
+  document.addEventListener("DOMContentLoaded", () => {
+    const tabSection = document.getElementById("book-trial-section");
+    if (!tabSection) return;
+
+    const tabLinks = tabSection.querySelectorAll('a[href^="#"]');
+    const tabContents = tabSection.querySelectorAll("[data-tab-content]");
+    const selectElement = tabSection.querySelector(
+      "#tabs"
+    ) as HTMLSelectElement;
+
+    // Handle desktop tab clicks
+    tabLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const targetId = (link as HTMLAnchorElement).hash.substring(1);
+
+        // Hide all tab contents
+        tabContents.forEach((content) => {
+          content.classList.add("hidden");
+        });
+
+        // Show selected tab content
+        const targetContent = document.getElementById(targetId);
+        if (targetContent) {
+          targetContent.classList.remove("hidden");
+        }
+
+        // Update active tab styling
+        tabLinks.forEach((l) => {
+          const anchor = l as HTMLAnchorElement;
+          anchor.classList.remove(
+            "bg-primary-500",
+            "text-white",
+            "border-primary-500"
+          );
+          anchor.classList.add(
+            "bg-gray-50",
+            "dark:bg-gray-700",
+            "text-gray-700",
+            "dark:text-gray-300",
+            "border-gray-300",
+            "dark:border-gray-600"
+          );
+        });
+        (link as HTMLAnchorElement).classList.remove(
+          "bg-gray-50",
+          "dark:bg-gray-700",
+          "text-gray-700",
+          "dark:text-gray-300",
+          "border-gray-300",
+          "dark:border-gray-600"
+        );
+        (link as HTMLAnchorElement).classList.add(
+          "bg-primary-500",
+          "text-white",
+          "border-primary-500"
+        );
+      });
+    });
+
+    // Handle mobile select change
+    if (selectElement) {
+      selectElement.addEventListener("change", (e) => {
+        const targetId = (e.target as HTMLSelectElement).value;
+
+        // Hide all tab contents
+        tabContents.forEach((content) => {
+          content.classList.add("hidden");
+        });
+
+        // Show selected tab content
+        const targetContent = document.getElementById(targetId);
+        if (targetContent) {
+          targetContent.classList.remove("hidden");
+        }
+
+        // Update active tab link if exists
+        const activeLink = tabSection.querySelector(
+          `a[href="#${targetId}"]`
+        ) as HTMLAnchorElement;
+        if (activeLink) {
+          tabLinks.forEach((l) => {
+            const anchor = l as HTMLAnchorElement;
+            anchor.classList.remove(
+              "bg-primary-500",
+              "text-white",
+              "border-primary-500"
+            );
+            anchor.classList.add(
+              "bg-gray-50",
+              "dark:bg-gray-700",
+              "text-gray-700",
+              "dark:text-gray-300",
+              "border-gray-300",
+              "dark:border-gray-600"
+            );
+          });
+          activeLink.classList.remove(
+            "bg-gray-50",
+            "dark:bg-gray-700",
+            "text-gray-700",
+            "dark:text-gray-300",
+            "border-gray-300",
+            "dark:border-gray-600"
+          );
+          activeLink.classList.add(
+            "bg-primary-500",
+            "text-white",
+            "border-primary-500"
+          );
+        }
+      });
+    }
+  });
+</script>

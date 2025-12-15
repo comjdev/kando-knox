@@ -1,0 +1,41 @@
+---
+import { SITE_CONFIG } from "../../config";
+
+interface Props {
+  mapEmbed?: string;
+  locationName: string;
+  address?: string;
+}
+
+const { mapEmbed, locationName, address } = Astro.props;
+
+// Format address from config if not provided
+const formattedAddress =
+  address ||
+  `${SITE_CONFIG.address.street}, ${SITE_CONFIG.address.city} ${SITE_CONFIG.address.state} ${SITE_CONFIG.address.postcode}, ${SITE_CONFIG.address.country}`;
+
+// Generate map embed from address if not provided
+// Using address-based query parameter which works without API key
+// The 'output=embed' parameter ensures it uses the embed API, not the JavaScript API
+const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(formattedAddress)}&output=embed`;
+const finalMapEmbed =
+  mapEmbed ||
+  `<iframe src="${mapEmbedUrl}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+---
+
+<section class="w-full h-[500px] relative">
+  <div class="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-6">
+    <div class="max-w-7xl mx-auto text-center">
+      <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+        Find us in Boronia
+      </h3>
+      <p class="text-gray-700 dark:text-gray-300">
+        <strong>Address:</strong>
+        {formattedAddress}
+      </p>
+    </div>
+  </div>
+  <div class="w-full h-full">
+    <div class="w-full h-full" set:html={finalMapEmbed} />
+  </div>
+</section>

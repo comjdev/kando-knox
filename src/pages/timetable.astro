@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { SITE_CONFIG } from "../config";
-import Timetable from "../components/shared/Timetable.astro";
+import TimetableComponent from "../components/shared/Timetable.astro";
 
 interface ScheduleItem {
   day: string;
@@ -62,6 +62,5 @@ const pageTitle = `Timetable | ${SITE_CONFIG.title}`;
 ---
 
 <Layout title="Timetable">
-  <Timetable schedule={allSchedules} />
+  <TimetableComponent schedule={allSchedules} useDualFilter={true} />
 </Layout>
-

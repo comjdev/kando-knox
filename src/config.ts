@@ -9,6 +9,17 @@ export const SITE_CONFIG = {
   academyUrl:
     "https://cf.knoxmartialarts.com.au/membership-access-page1584527208387?page_id=37236729&page_key=xmowug900rg1qm7g&login_redirect=1",
   // author: "Your Name",
+  address: {
+    street: "Unit 2/5 Wadhurst Dr",
+    city: "Boronia",
+    state: "VIC",
+    postcode: "3155",
+    country: "Australia",
+  },
+  coordinates: {
+    latitude: -37.8656501,
+    longitude: 145.2531667,
+  },
 } as const;
 
 export interface Program {

@@ -1,0 +1,102 @@
+{
+  "title": "Karate Classes near Croydon",
+  "slug": "karate-croydon",
+  "description": "High-quality karate classes for kids, teens, and adults near Croydon. Based in Boronia, proudly serving Croydon and surrounding Knox suburbs.",
+  "image": "/img/default.jpg",
+  "locationName": "Croydon",
+  "transitionName": "location-croydon",
+  "programs": [
+    "pre-school-martial-arts",
+    "junior-martial-arts",
+    "adult-martial-arts"
+  ],
+  "faqs": "faqs-karate.json",
+  "intro": {
+    "heading": "Karate & Martial Arts Training Near Croydon",
+    "description": "Our karate programs welcome families from Croydon looking for professional training for kids, teens, and adults. Conveniently located in Boronia and serving the wider Knox area."
+  },
+  "kandoInfo": {
+    "heading": "Kando Martial Arts Knox",
+    "description": [
+      "Kando Martial Arts was established in 1997 by Chief Instructor Shihan Paul Veldman, a highly respected martial arts instructor with decades of experience.",
+      "Shihan Paul is a 6th Degree Black Belt in Karate and began training at age 13, later specialising in traditional Shukokai Karate.",
+      "Sensei Andy started karate at a young age and developed confidence, resilience, and leadership through years of dedicated training.",
+      "With over a decade of teaching experience, Sensei Andy now leads Kando Martial Arts Knox, delivering high-quality karate instruction to families from across the Knox area.",
+      "Kando Martial Arts Knox proudly supports students travelling from Croydon with structured, traditional karate training."
+    ]
+  },
+  "servingArea": {
+    "heading": "Serving Croydon and nearby Knox suburbs",
+    "description": "Our Boronia-based karate dojo welcomes students from Croydon and surrounding areas such as Wantirna, Bayswater, Rowville, and Ferntree Gully. We provide a supportive, family-friendly training environment."
+  },
+  "classes": [
+    {
+      "id": "pre-school-martial-arts",
+      "heading": "Pre-School Karate for Croydon Families",
+      "description": "For children aged 3\u20135, this pre-school karate program introduces basic karate skills through fun, structured activities. Families from Croydon value the confidence, coordination, and listening skills their children develop."
+    },
+    {
+      "id": "junior-martial-arts",
+      "heading": "Junior Karate Classes Near Croydon",
+      "description": "Ideal for children aged 7\u201312, these junior karate classes focus on technique, discipline, and focus. Many families from Croydon choose this program for its positive structure and supportive coaching."
+    },
+    {
+      "id": "adult-martial-arts",
+      "heading": "Teen & Adult Karate Training for Croydon Residents",
+      "description": "Our teen and adult karate classes are suitable for students aged 13 and above from Croydon. Training focuses on fitness, self-defence, and personal development in a respectful environment."
+    }
+  ],
+  "whyChooseUs": {
+    "heading": "Why families from Croydon choose Kando Martial Arts Knox",
+    "description": "Families from Croydon trust Kando Martial Arts Knox for professional instruction, a welcoming culture, and proven karate programs for all ages.",
+    "benefits": [
+      {
+        "icon": "users-group",
+        "heading": "Family Friendly",
+        "description": "We proudly welcome families from Croydon and across Knox, offering inclusive karate classes for all ages and experience levels."
+      },
+      {
+        "icon": "calendar-month",
+        "heading": "Flexible Scheduling",
+        "description": "Our class timetable suits busy families from Croydon, with flexible training options throughout the week."
+      },
+      {
+        "icon": "face-laugh",
+        "heading": "Experienced Instructors",
+        "description": "Our qualified karate instructors are dedicated to helping every student reach their personal goals through structured training."
+      }
+    ]
+  },
+  "benefits": [
+    {
+      "heading": "Physical Benefits",
+      "description": [
+        "Improves strength, flexibility & coordination",
+        "Boosts cardiovascular fitness & endurance",
+        "Develops balance, posture & body control",
+        "Encourages healthy, active lifestyles",
+        "Enhances overall motor skills"
+      ]
+    },
+    {
+      "heading": "Mental & Emotional Benefits",
+      "description": [
+        "Builds confidence & self-esteem",
+        "Improves focus, concentration & memory",
+        "Teaches discipline, patience & perseverance",
+        "Helps manage stress & emotions",
+        "Encourages goal-setting & resilience"
+      ]
+    },
+    {
+      "heading": "Life Skills & Personal Development",
+      "description": [
+        "Teaches respect, teamwork & leadership",
+        "Builds self-control & positive behaviour",
+        "Develops real-world self-defence awareness",
+        "Encourages responsibility & accountability",
+        "Supports long-term personal growth"
+      ]
+    }
+  ]
+}

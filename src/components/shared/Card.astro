@@ -9,6 +9,7 @@ const { title, slug, description, date, image } = Astro.props;
     src={image ? image : "/img/default.jpg"}
     alt={`Post Image for ${title}`}
     class="w-full h-64 object-cover"
+    transition:name={`blog-image-${slug}`}
   />
   <div class="p-4 flex flex-col flex-1">
     <h2 class="text-2xl font-bold mb-2">

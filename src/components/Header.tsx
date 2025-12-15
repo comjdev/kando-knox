@@ -4,20 +4,68 @@ import { PROGRAMS, SITE_CONFIG } from "../config";
 import PrimaryButton from "./shared/PrimaryButton";
 
 export default function Header() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  // Initialize theme from DOM (set by inline script) or localStorage to prevent flash
+  const getInitialTheme = (): "light" | "dark" => {
+    if (typeof document !== "undefined") {
+      // Check if HTML element already has theme class (set by inline script)
+      const htmlClass = document.documentElement.classList.contains("dark")
+        ? "dark"
+        : document.documentElement.classList.contains("light")
+          ? "light"
+          : null;
+      if (htmlClass) return htmlClass;
+
+      // Fallback to localStorage or system preference
+      const savedTheme = localStorage.getItem("theme") as
+        | "light"
+        | "dark"
+        | null;
+      if (savedTheme) return savedTheme;
+
+      const systemPrefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      return systemPrefersDark ? "dark" : "light";
+    }
+    return "light";
+  };
+
+  const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
-    // Check localStorage or system preference
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    const initialTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
+    // Sync theme state with DOM and ensure consistency
+    const syncTheme = () => {
+      const savedTheme = localStorage.getItem("theme") as
+        | "light"
+        | "dark"
+        | null;
+      const systemPrefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      const initialTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
 
-    setTheme(initialTheme);
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(initialTheme);
+      setTheme(initialTheme);
+      document.documentElement.classList.remove("light", "dark");
+      document.documentElement.classList.add(initialTheme);
+    };
+
+    syncTheme();
+
+    // Sync theme during ViewTransitions
+    const handlePageLoad = () => {
+      // Read from DOM first (set by inline script)
+      const htmlHasDark = document.documentElement.classList.contains("dark");
+      const htmlHasLight = document.documentElement.classList.contains("light");
+      if (htmlHasDark || htmlHasLight) {
+        setTheme(htmlHasDark ? "dark" : "light");
+      } else {
+        syncTheme();
+      }
+    };
+
+    document.addEventListener("astro:page-load", handlePageLoad);
 
     // Handle scroll event
     const handleScroll = () => {
@@ -25,8 +73,40 @@ export default function Header() {
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("astro:page-load", handlePageLoad);
+    };
   }, []);
+
+  useEffect(() => {
+    // Close dropdown when clicking outside
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      const dropdown = document.getElementById("mega-menu-full-cta-dropdown");
+      const button = document.getElementById(
+        "mega-menu-full-cta-dropdown-button"
+      );
+
+      if (
+        isDropdownOpen &&
+        dropdown &&
+        button &&
+        !dropdown.contains(target) &&
+        !button.contains(target)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -38,7 +118,7 @@ export default function Header() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 border-default transition-all ${
+      className={`sticky top-0 z-[1100] border-default transition-all ${
         isScrolled
           ? "bg-white dark:bg-gray-800 shadow-sm"
           : "bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm"
@@ -81,13 +161,16 @@ export default function Header() {
             <li>
               <button
                 id="mega-menu-full-cta-dropdown-button"
-                data-collapse-toggle="mega-menu-full-cta-dropdown"
-                data-dropdown-placement="bottom"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center justify-between w-full py-2 px-3 font-medium text-heading border-b border-light md:w-auto hover:bg-neutral-secondary-soft hover:text-primary md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
+                aria-expanded={isDropdownOpen}
+                aria-haspopup="true"
               >
                 Programs
                 <svg
-                  className="w-4 h-4 ms-1.5"
+                  className={`w-4 h-4 ms-1.5 transition-transform ${
+                    isDropdownOpen ? "rotate-180" : ""
+                  }`}
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -194,7 +277,9 @@ export default function Header() {
       </div>
       <div
         id="mega-menu-full-cta-dropdown"
-        className="hidden absolute top-full left-0 right-0 z-50 mt-1 bg-neutral-primary-soft border-default shadow-xs border-y"
+        className={`${
+          isDropdownOpen ? "block" : "hidden"
+        } absolute top-full left-0 right-0 z-[1100] mt-1 bg-neutral-primary-soft border-default shadow-xs border-y`}
       >
         <div className="grid max-w-7xl px-4 py-5 mx-auto text-sm text-body md:grid-cols-3 md:px-6">
           {/* Left column - Martial Arts */}
@@ -209,6 +294,7 @@ export default function Header() {
                 <li key={program.href}>
                   <a
                     href={program.href}
+                    onClick={() => setIsDropdownOpen(false)}
                     className="block hover:text-primary group"
                   >
                     <span className="font-medium group-hover:underline">
@@ -241,6 +327,7 @@ export default function Header() {
                     <li key={program.href}>
                       <a
                         href={program.href}
+                        onClick={() => setIsDropdownOpen(false)}
                         className="block hover:text-primary group"
                       >
                         <span className="font-medium group-hover:underline">
@@ -270,6 +357,7 @@ export default function Header() {
                     <li key={program.href}>
                       <a
                         href={program.href}
+                        onClick={() => setIsDropdownOpen(false)}
                         className="block hover:text-primary group"
                       >
                         <span className="font-medium group-hover:underline">
@@ -298,6 +386,7 @@ export default function Header() {
             </p>
             <a
               href="/timetable"
+              onClick={() => setIsDropdownOpen(false)}
               className="inline-flex items-center text-sm font-medium text-primary hover:underline"
             >
               View timetable
