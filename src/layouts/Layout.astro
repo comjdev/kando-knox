@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header";
 import "../styles/global.css";
 import { SITE_CONFIG } from "../config";
@@ -49,11 +49,11 @@ const pageTitle = title ? `${title} | ${SITE_CONFIG.title}` : SITE_CONFIG.title;
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Teachers:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <ViewTransitions fallback="animate" />
+    <ClientRouter />
     <title>{pageTitle}</title>
   </head>
   <body class="bg-white dark:bg-gray-900">
-    <!-- <Header client:load /> -->
+    <Header client:load />
     <slot />
     <Footer />
     <script

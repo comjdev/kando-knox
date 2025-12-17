@@ -8,6 +8,7 @@ interface Slide {
   description: string;
   buttonText?: string;
   buttonLink?: string;
+  dojo?: string;
 }
 
 const slides: Slide[] = heroSliderData;
@@ -20,7 +21,9 @@ const slides: Slide[] = heroSliderData;
         slides.map((slide) => (
           <div class="item" style={`background-image: url(${slide.image});`}>
             <div class="content">
-              <div class="title">{slide.title}</div>
+              <div class="title" data-dojo={slide.dojo || ""}>
+                {slide.title}
+              </div>
               <div class="name">{slide.name}</div>
               <div class="des">{slide.description}</div>
               {slide.buttonText && slide.buttonLink ? (
@@ -39,10 +42,40 @@ const slides: Slide[] = heroSliderData;
     <!--next prev button-->
     <div class="arrows">
       <button class="prev">
-        <i class="bi bi-arrow-left"></i>
+        <svg
+          class="w-6 h-6 text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 12h14M5 12l4-4m-4 4 4 4"></path>
+        </svg>
       </button>
       <button class="next">
-        <i class="bi bi-arrow-right"></i>
+        <svg
+          class="w-6 h-6 text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 12H5m14 0-4 4m4-4-4-4"></path>
+        </svg>
       </button>
     </div>
 
@@ -51,40 +84,15 @@ const slides: Slide[] = heroSliderData;
   </div>
 </div>
 
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-/>
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-/>
-
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-  }
-
-  :root {
+  .hero-carousel-wrapper {
     --left-position: 55%;
     --transition-time: 1.2s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
-  html,
-  body {
-    height: 100%;
+    height: calc(100vh - 96px);
     width: 100%;
     background-color: #111111;
-  }
-
-  /* hero wrapper */
-  .hero-carousel-wrapper {
     position: relative;
-    width: 100%;
-    height: 100vh;
+    z-index: 0;
   }
 
   /* carousel */
@@ -93,6 +101,7 @@ const slides: Slide[] = heroSliderData;
     height: 100%;
     overflow: hidden;
     position: relative;
+    z-index: 0;
   }
 
   .carousel .list .item {
@@ -106,7 +115,7 @@ const slides: Slide[] = heroSliderData;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
     background-position: center;
     background-size: cover;
-    z-index: 100;
+    z-index: 10;
     transform: translate(0, 0px);
     transition: all var(--transition-time);
   }
@@ -190,8 +199,7 @@ const slides: Slide[] = heroSliderData;
   }
 
   .content .title::after {
-    content: attr(data-item);
-    border-radius: 50%;
+    content: attr(data-dojo);
     color: #fff;
     font-size: 12px;
     position: absolute;
@@ -208,7 +216,7 @@ const slides: Slide[] = heroSliderData;
     line-height: 1;
     transition: all var(--transition-time);
     margin-bottom: 10px;
-    color: #c08f0d;
+    color: var(--color-primary-500, #c39519);
   }
 
   .content .des {
@@ -237,9 +245,9 @@ const slides: Slide[] = heroSliderData;
 
   .list .item:nth-child(1) .content .title::after,
   .list .item:nth-child(2) .content .title::after {
-    font-size: 20px;
-    top: -40px;
-    left: 15px;
+    font-size: 14px;
+    top: -30px;
+    left: 0px;
   }
 
   .list .item:nth-child(1) .content .title,
@@ -266,7 +274,7 @@ const slides: Slide[] = heroSliderData;
     display: none;
     margin-top: 20px;
     padding: 12px 24px;
-    background-color: #c08f0d;
+    background-color: var(--color-primary-500, #c39519);
     color: #ffffff;
     text-decoration: none;
     border-radius: 4px;
@@ -308,7 +316,7 @@ const slides: Slide[] = heroSliderData;
     bottom: 50px;
     left: var(--left-position);
     width: calc(100% - var(--left-position) - 2%);
-    z-index: 100;
+    z-index: 20;
     display: flex;
     gap: 5%;
     align-items: center;
@@ -339,16 +347,6 @@ const slides: Slide[] = heroSliderData;
     background-color: transparent;
   }
 
-  .slide-number {
-    font-size: 25px;
-    color: #ffffff;
-    font-weight: 400;
-    margin-left: auto;
-    letter-spacing: 5px;
-    opacity: 0;
-    animation: animate 0.5s ease-in-out 0.3s 1 forwards;
-  }
-
   .progress-bar-container {
     width: 60%;
     height: 3px;
@@ -360,19 +358,20 @@ const slides: Slide[] = heroSliderData;
   .progress-bar {
     height: 100%;
     width: 100%;
-    background-color: #c08f0d;
+    background-color: var(--color-primary-500, #c39519);
     transition: all var(--transition-time);
   }
 
   /* time running */
   .carousel .timeRunning {
-    position: fixed;
-    z-index: 1000;
+    position: absolute;
+    z-index: 200;
     width: 0%;
     height: 4px;
-    background-color: #ffffff;
+    background-color: var(--color-primary-500, #c39519);
     left: 0;
     top: 0;
+    pointer-events: none;
     animation: runningTime 7s linear 1 forwards;
   }
 
@@ -422,11 +421,6 @@ const slides: Slide[] = heroSliderData;
   nextBtn.addEventListener("click", () => handleSliderNavigation("next"));
   prevBtn.addEventListener("click", () => handleSliderNavigation("prev"));
 
-  // Add attribute to each item
-  items.forEach((item, index) => {
-    item.querySelector(".title").setAttribute("data-item", index + 1);
-  });
-
   // Automatically navigate to the next slide
   autoNextTimeout = setTimeout(() => {
     nextBtn.click();
@@ -460,27 +454,8 @@ const slides: Slide[] = heroSliderData;
     afterSlideChange(); // Log the active slide index
   }
 
-  // Logs the current active slide's original index
+  // Updates after slide change
   function afterSlideChange() {
-    const slideNumberElement = document.querySelector(".slide-number");
-    if (slideNumberElement) slideNumberElement.remove();
-
-    const sliderItems = Array.from(list.querySelectorAll(".item")); // Get the current visible order of items
-    const activeItem = parseInt(
-      sliderItems[1].querySelector(".title").getAttribute("data-item")
-    ); // The first visible item is the active one
-
-    const activeIndex =
-      activeItem < 10 ? `0${activeItem}` : activeItem.toString();
-
-    const div = document.createElement("div");
-    div.classList.add("slide-number");
-    div.textContent = `${activeIndex}/${sliderItems.length}`;
-
-    arrowsDiv.appendChild(div);
-
-    console.log(`Current active slide original index: ${activeIndex}`);
-
     updateProgressBar();
     resetCarouselState();
   }
@@ -488,15 +463,15 @@ const slides: Slide[] = heroSliderData;
   // Updates the progress bar based on the active slide index
   function updateProgressBar() {
     const totalSlides = items.length;
+    const sliderItems = Array.from(list.querySelectorAll(".item"));
 
-    const sliderItems = Array.from(list.querySelectorAll(".item")); // Get the current visible order of items
-    const activeItem =
-      parseInt(
-        sliderItems[0].querySelector(".title").getAttribute("data-item")
-      ) + 1; // The first visible item is the active one
+    // Find the index of the first visible item in the original items array
+    const firstVisibleItem = sliderItems[0];
+    const originalIndex = items.findIndex((item) => item === firstVisibleItem);
+    const activeItem = originalIndex >= 0 ? originalIndex + 1 : 1;
 
-    const progressPercentage = (activeItem / totalSlides) * 100; // Calculate progress percentage
-    progressBar.style.width = `${progressPercentage}%`; // Update the progress bar's width
+    const progressPercentage = (activeItem / totalSlides) * 100;
+    progressBar.style.width = `${progressPercentage}%`;
   }
 
   // Resets the carousel state after navigation

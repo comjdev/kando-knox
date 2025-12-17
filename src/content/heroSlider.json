@@ -1,82 +1,65 @@
 [
   {
-    "image": "https://images.pexels.com/photos/552785/pexels-photo-552785.jpeg",
-    "title": "SUNRISE ON PEAKS",
-    "name": "Sunrise",
-    "description": "Witness the serene beauty of the sunrise over majestic mountain peaks. A moment of pure tranquility.",
-    "buttonText": "Book Now",
-    "buttonLink": "/book-now"
+    "image": "/img/hero/martial-arts-kando-knox.jpg",
+    "title": "Kando Martial Arts Knox",
+    "name": "Classes for all ages",
+    "description": "Learn the art of martial arts with Kando Knox. We offer a variety of classes for all ages and skill levels.",
+    "buttonText": "About Us",
+    "buttonLink": "#about-us",
+    "dojo": "Kando"
   },
   {
-    "image": "https://images.pexels.com/photos/17804524/pexels-photo-17804524/free-photo-of-barren-rocky-mountains.jpeg",
-    "title": "RUGGED ROCKS",
-    "name": "Rocky",
-    "description": "Explore the rugged beauty of barren rocky mountains. A testament to nature's raw power.",
-    "buttonText": "Book Now",
-    "buttonLink": "/book-now"
+    "image": "/img/hero/karate-kando-knox.jpg",
+    "title": "Karate & Martial Arts",
+    "name": "Adult & Teens",
+    "description": "Build strength, fitness, confidence, and practical self-defence skills in our adult and teen martial arts classes.",
+    "buttonText": "Learn More",
+    "buttonLink": "/programs/adult-martial-arts-karate-knox",
+    "dojo": "Kando"
   },
   {
-    "image": "https://images.pexels.com/photos/6439041/pexels-photo-6439041.jpeg",
-    "title": "FOREST PATHWAY",
-    "name": "Forest",
-    "description": "A peaceful trail through dense green forests. Perfect for reconnecting with nature.",
-    "buttonText": "Book Now",
-    "buttonLink": "/book-now"
+    "image": "/img/hero/kids-karate-kando-knox.jpg",
+    "title": "Karate & Martial Arts",
+    "name": "Junior 7-12 Years",
+    "description": "Help your child develop confidence, discipline, fitness, and self-defence skills in a fun and supportive environment.",
+    "buttonText": "Learn More",
+    "buttonLink": "/programs/junior-martial-arts-karate-knox",
+    "dojo": "Kando"
   },
   {
-    "image": "https://images.pexels.com/photos/2832061/pexels-photo-2832061.jpeg",
-    "title": "COLORFUL MEADOW",
-    "name": "Meadow",
-    "description": "A colorful meadow filled with butterflies and blooming flowers. Nature at its best.",
-    "buttonText": "Book Now",
-    "buttonLink": "/book-now"
+    "image": "/img/hero/brazilian-jiu-jitsu-kando-knox.jpg",
+    "title": "Brazilian Jiu-Jitsu",
+    "name": "Adult & Teens",
+    "description": "Learn effective grappling, control, and real-world self-defence through technique-focused Brazilian Jiu-Jitsu training.",
+    "buttonText": "Learn More",
+    "buttonLink": "/programs/teen-adult-bjj-brazilian-jiu-jitsu-knox",
+    "dojo": "Bear Cave"
   },
   {
-    "image": "https://images.pexels.com/photos/552784/pexels-photo-552784.jpeg",
-    "title": "SERENE LAKE",
-    "name": "Lake",
-    "description": "A calm and serene lake surrounded by towering trees and mountains. A perfect escape.",
-    "buttonText": "Book Now",
-    "buttonLink": "/book-now"
+    "image": "/img/hero/kids-brazilian-jiu-jitsu-kando-knox.jpg",
+    "title": "Brazilian Jiu-Jitsu",
+    "name": "Junior 7-12 Years",
+    "description": "A fun and safe introduction to Brazilian Jiu-Jitsu that builds confidence, coordination, and problem-solving skills.",
+    "buttonText": "Learn More",
+    "buttonLink": "/programs/junior-bjj-bear-cave-knox",
+    "dojo": "Bear Cave"
   },
   {
-    "image": "https://images.pexels.com/photos/18536296/pexels-photo-18536296/free-photo-of-mountain-peaks-over-clouds.jpeg",
-    "title": "PEAKS IN THE CLOUDS",
-    "name": "Clouds",
-    "description": "Mountain peaks wrapped in clouds. A dreamy sight that inspires awe and wonder.",
-    "buttonText": "Book Now",
-    "buttonLink": "/book-now"
+    "image": "/img/hero/pre-school-martial-arts-kando-knox.jpg",
+    "title": "Pre-School Martial Arts",
+    "name": "3-6 Years",
+    "description": "Engaging martial arts classes designed to improve focus, coordination, confidence, and listening skills for young children.",
+    "buttonText": "Learn More",
+    "buttonLink": "/programs/pre-school-martial-arts-karate-knox",
+    "dojo": "Kando"
   },
   {
-    "image": "https://images.pexels.com/photos/7616134/pexels-photo-7616134.jpeg",
-    "title": "RIVERBANK PARADISE",
-    "name": "Riverbank",
-    "description": "A picturesque riverbank flowing through lush greenery and vibrant landscapes.",
-    "buttonText": "Book Now",
-    "buttonLink": "/book-now"
-  },
-  {
-    "image": "https://images.pexels.com/photos/20641721/pexels-photo-20641721/free-photo-of-barren-mountains-peaks-under-clouds.jpeg",
-    "title": "MYSTIC RIDGES",
-    "name": "Ridges",
-    "description": "Discover the mystic beauty of mountain ridges under a cloudy sky. Perfect for adventurers.",
-    "buttonText": "Book Now",
-    "buttonLink": "/book-now"
-  },
-  {
-    "image": "https://images.pexels.com/photos/17977245/pexels-photo-17977245/free-photo-of-barren-mountain-peaks.jpeg",
-    "title": "GOLDEN CLIFFS",
-    "name": "Cliffs",
-    "description": "Golden cliffs basking in sunlight. A stunning view that captures the heart of nature.",
-    "buttonText": "Book Now",
-    "buttonLink": "/book-now"
-  },
-  {
-    "image": "https://images.pexels.com/photos/2073873/pexels-photo-2073873.jpeg",
-    "title": "PEACEFUL VALLEY",
-    "name": "Valley",
-    "description": "A peaceful valley surrounded by towering mountains. A perfect destination for solitude.",
-    "buttonText": "Book Now",
-    "buttonLink": "/book-now"
+    "image": "/img/hero/womens-self-defense-kando-knox.jpg",
+    "title": "Women's Self-Defense",
+    "name": "Women's Only",
+    "description": "Learn practical, easy-to-use self-defence strategies in a supportive women-only environment focused on confidence and safety.",
+    "buttonText": "Learn More",
+    "buttonLink": "/programs/womens-self-defence-knox",
+    "dojo": "Kando"
   }
 ]
