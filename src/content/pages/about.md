@@ -8,7 +8,7 @@ transitionName: "about-page"
 
 Kando Martial Arts proudly serving Melbourne since 1997
 
-## Who we Are And why You Should Train Here
+## Who we are<br>and why you should train here
 
 Since we've opened, we've been dedicated to changing the lives of people one person at a time, through martial arts, education and coaching. We strive to provide a safe, comfortable and welcoming atmosphere for all students and family members. We take pride in creating an environment for individuals to achieve, develop and succeed in their personal goals.
 
@@ -17,6 +17,8 @@ We strongly believe that martial arts can be for everyone, regardless of age, ge
 ## Sensei Andy
 
 Sensei Andy began Martial Arts with Kando at the age of 12 after being bullied by some older children. Over 15 years of training in the junior program and then with the Teen & Adult class, Martial Arts gave him the confidence to grow the person he has now become.
+
+![Sensei Andy](/img/sensei-andy.jpg)
 
 Sensei Andy has been teaching with Kando for over 10 years. In 2015 Sensei Andy switched dojo's from Kando Hughesdale to Kando Rowville and helped grow the club into the second biggest Kando Club. He is now starting the journey for his own Kando Club in Knox.
 

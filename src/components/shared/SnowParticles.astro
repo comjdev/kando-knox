@@ -1,0 +1,228 @@
+---
+// Snow Particles Component
+// Based on: https://codepen.io/Alexandra-Sevigny/pen/PwPbgKG
+---
+
+<canvas id="snow-canvas"></canvas>
+
+<style>
+  #snow-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
+
+<script>
+  // Use global state to persist across page navigations
+  if (typeof window !== "undefined" && !window.__snowParticles) {
+    window.__snowParticles = {
+      canvas: null,
+      ctx: null,
+      width: 0,
+      height: 0,
+      snowflakes: [],
+      animationId: null,
+      isAnimating: false,
+      observer: null,
+      resizeHandler: null,
+    };
+  }
+
+  const state = window.__snowParticles;
+
+  // Initialize canvas
+  function initCanvas() {
+    if (!state.canvas) {
+      state.canvas = document.getElementById("snow-canvas");
+      if (state.canvas) {
+        state.ctx = state.canvas.getContext("2d");
+      }
+    }
+    return state.canvas && state.ctx;
+  }
+
+  function resize() {
+    if (!initCanvas()) return;
+    state.width = state.canvas.width = window.innerWidth;
+    state.height = state.canvas.height = window.innerHeight;
+  }
+
+  function createSnowflake() {
+    return {
+      x: Math.random() * state.width,
+      y: Math.random() * state.height,
+      radius: Math.random() * 3 + 1,
+      speed: Math.random() * 2 + 0.5,
+      opacity: Math.random() * 0.5 + 0.3,
+      wind: Math.random() * 0.5 - 0.25,
+    };
+  }
+
+  function init() {
+    resize();
+    // Only reinitialize snowflakes if we don't have any or canvas was reset
+    if (state.snowflakes.length === 0 || !state.width || !state.height) {
+      state.snowflakes = [];
+      const flakeCount = Math.floor((state.width * state.height) / 15000);
+      for (let i = 0; i < flakeCount; i++) {
+        state.snowflakes.push(createSnowflake());
+      }
+    }
+  }
+
+  function update() {
+    for (let i = 0; i < state.snowflakes.length; i++) {
+      const flake = state.snowflakes[i];
+
+      flake.y += flake.speed;
+      flake.x += flake.wind;
+
+      // Reset if off screen
+      if (flake.y > state.height) {
+        flake.y = -10;
+        flake.x = Math.random() * state.width;
+      }
+
+      // Wrap horizontally
+      if (flake.x > state.width) {
+        flake.x = 0;
+      } else if (flake.x < 0) {
+        flake.x = state.width;
+      }
+    }
+  }
+
+  function draw() {
+    if (!initCanvas() || !state.width || !state.height) return;
+    state.ctx.clearRect(0, 0, state.width, state.height);
+
+    state.ctx.fillStyle = "white";
+    for (let i = 0; i < state.snowflakes.length; i++) {
+      const flake = state.snowflakes[i];
+      state.ctx.globalAlpha = flake.opacity;
+      state.ctx.beginPath();
+      state.ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+      state.ctx.fill();
+    }
+    state.ctx.globalAlpha = 1;
+  }
+
+  function animate() {
+    if (!state.isAnimating) return;
+    update();
+    draw();
+    state.animationId = requestAnimationFrame(animate);
+  }
+
+  function startAnimation() {
+    if (!state.isAnimating) {
+      state.isAnimating = true;
+      animate();
+    }
+  }
+
+  function stopAnimation() {
+    state.isAnimating = false;
+    if (state.animationId !== null) {
+      cancelAnimationFrame(state.animationId);
+      state.animationId = null;
+    }
+  }
+
+  // Check if dark mode is enabled
+  function isDarkMode() {
+    return document.documentElement.classList.contains("dark");
+  }
+
+  // Initialize animation
+  function initializeSnow() {
+    if (!initCanvas() || !isDarkMode()) return;
+
+    // Set up resize handler if not already set
+    if (!state.resizeHandler) {
+      state.resizeHandler = resize;
+      window.addEventListener("resize", state.resizeHandler);
+    }
+
+    // Initialize snowflakes if needed
+    init();
+
+    // Start animation if not already running
+    if (!state.isAnimating) {
+      startAnimation();
+    }
+  }
+
+  // Stop animation
+  function cleanupSnow() {
+    stopAnimation();
+    state.snowflakes = [];
+    if (initCanvas() && state.width && state.height) {
+      state.ctx.clearRect(0, 0, state.width, state.height);
+    }
+    if (state.resizeHandler) {
+      window.removeEventListener("resize", state.resizeHandler);
+      state.resizeHandler = null;
+    }
+  }
+
+  // Initialize on load and page transitions
+  if (typeof window !== "undefined") {
+    // Function to check and initialize
+    function checkAndInit() {
+      const isDark = isDarkMode();
+      if (isDark && !state.isAnimating) {
+        initializeSnow();
+      } else if (!isDark && state.isAnimating) {
+        cleanupSnow();
+      }
+    }
+
+    // Set up theme observer if not already set
+    if (!state.observer) {
+      state.observer = new MutationObserver(checkAndInit);
+      state.observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", checkAndInit);
+    } else {
+      checkAndInit();
+    }
+
+    // Reinitialize on Astro page load (ViewTransitions)
+    document.addEventListener("astro:page-load", () => {
+      // Reset canvas reference on new page (DOM element gets replaced)
+      state.canvas = null;
+      state.ctx = null;
+
+      // If animation is running, we need to reinitialize canvas but keep animation going
+      if (state.isAnimating && isDarkMode()) {
+        // Reinitialize canvas reference
+        if (initCanvas()) {
+          // Resize canvas to match new page dimensions
+          resize();
+          // Update existing snowflakes to fit new dimensions if needed
+          for (let i = 0; i < state.snowflakes.length; i++) {
+            const flake = state.snowflakes[i];
+            // Wrap positions if they're outside new bounds
+            if (flake.x > state.width) flake.x = flake.x % state.width;
+            if (flake.y > state.height) flake.y = flake.y % state.height;
+          }
+        }
+      } else {
+        // Normal initialization check
+        checkAndInit();
+      }
+    });
+  }
+</script>

@@ -33,7 +33,10 @@ const teamMap = new Map(
 // Group by day, then by program (className)
 const scheduleByDay = schedule
   ? schedule.reduce(
-      (acc: Record<string, Record<string, ScheduleItem[]>>, item: ScheduleItem) => {
+      (
+        acc: Record<string, Record<string, ScheduleItem[]>>,
+        item: ScheduleItem
+      ) => {
         if (!acc[item.day]) {
           acc[item.day] = {};
         }
@@ -52,7 +55,7 @@ const days = Object.keys(scheduleByDay);
 
 {
   schedule && schedule.length > 0 && (
-    <section class="bg-white dark:bg-gray-900 antialiased">
+    <section id="timetable" class="bg-white dark:bg-gray-900 antialiased">
       <div class="max-w-7xl px-4 py-8 mx-auto lg:px-6 sm:py-16 lg:py-24">
         <div class="max-w-3xl mx-auto space-y-4 text-center">
           <h2 class="text-4xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">
@@ -83,96 +86,99 @@ const days = Object.keys(scheduleByDay);
                     {day}
                   </h3>
 
-                  {Object.entries(daySchedule).map(([programName, programItems]) => (
-                    <div class="program-group" data-program={programName}>
-                      <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 pt-4 border-t border-gray-200 dark:border-gray-700 first:border-t-0 first:pt-0">
-                        {programName}
-                      </h4>
-                      {programItems.map((item, itemIndex) => (
-                        <div
-                          class="space-y-4"
-                          data-belt-rank={item.beltRank || "none"}
-                          data-program={programName}
-                        >
-                          <span class="bg-primary-400 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">
-                            <svg
-                              aria-hidden="true"
-                              class="w-3 h-3 mr-1"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                                clip-rule="evenodd"
-                              />
-                            </svg>
-                            {item.timeFrom} - {item.timeTo}
-                          </span>
-                          {item.beltRank && (
-                            <div class="flex items-center gap-2 flex-wrap">
-                              <p class="text-sm font-medium text-primary-600 dark:text-primary-400">
-                                {item.beltRank}
-                              </p>
-                              {beltRanksData[
-                                item.beltRank as keyof typeof beltRanksData
-                              ] && (
-                                <div class="flex items-center gap-1.5">
-                                  {beltRanksData[
-                                    item.beltRank as keyof typeof beltRanksData
-                                  ].map((belt, beltIndex) => {
-                                    const borderColor =
-                                      "borderColor" in belt
-                                        ? belt.borderColor
-                                        : belt.color;
-                                    const beltName =
-                                      belt.name.charAt(0).toUpperCase() +
-                                      belt.name.slice(1);
-                                    const tooltipId = `tooltip-${dayIndex}-${programName}-${itemIndex}-${beltIndex}`;
-                                    return (
-                                      <div class="relative group">
-                                        <span
-                                          class="inline-block w-4 h-4 rounded-full border cursor-pointer"
-                                          style={`background-color: ${belt.color}; border-color: ${borderColor};`}
-                                          aria-label={`${belt.name} belt`}
-                                        />
-                                        <div
-                                          id={tooltipId}
-                                          role="tooltip"
-                                          class="absolute z-10 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-300 inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 dark:bg-gray-700 rounded-lg shadow-sm whitespace-nowrap bottom-full left-1/2 -translate-x-1/2 mb-2"
-                                        >
-                                          {beltName}
-                                          <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-700" />
+                  {Object.entries(daySchedule).map(
+                    ([programName, programItems]) => (
+                      <div class="program-group" data-program={programName}>
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 pt-4 border-t border-gray-200 dark:border-gray-700 first:border-t-0 first:pt-0">
+                          {programName}
+                        </h4>
+                        {programItems.map((item, itemIndex) => (
+                          <div
+                            class="space-y-4"
+                            data-belt-rank={item.beltRank || "none"}
+                            data-program={programName}
+                          >
+                            <span class="bg-primary-400 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">
+                              <svg
+                                aria-hidden="true"
+                                class="w-3 h-3 mr-1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                              {item.timeFrom} - {item.timeTo}
+                            </span>
+                            {item.beltRank && (
+                              <div class="flex items-center gap-2 flex-wrap">
+                                <p class="text-sm font-medium text-primary-600 dark:text-primary-400">
+                                  {item.beltRank}
+                                </p>
+                                {beltRanksData[
+                                  item.beltRank as keyof typeof beltRanksData
+                                ] && (
+                                  <div class="flex items-center gap-1.5">
+                                    {beltRanksData[
+                                      item.beltRank as keyof typeof beltRanksData
+                                    ].map((belt, beltIndex) => {
+                                      const borderColor =
+                                        "borderColor" in belt
+                                          ? belt.borderColor
+                                          : belt.color;
+                                      const beltName =
+                                        belt.name.charAt(0).toUpperCase() +
+                                        belt.name.slice(1);
+                                      const tooltipId = `tooltip-${dayIndex}-${programName}-${itemIndex}-${beltIndex}`;
+                                      return (
+                                        <div class="relative group">
+                                          <span
+                                            class="inline-block w-4 h-4 rounded-full border cursor-pointer"
+                                            style={`background-color: ${belt.color}; border-color: ${borderColor};`}
+                                            aria-label={`${belt.name} belt`}
+                                          />
+                                          <div
+                                            id={tooltipId}
+                                            role="tooltip"
+                                            class="absolute z-10 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-300 inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 dark:bg-gray-700 rounded-lg shadow-sm whitespace-nowrap bottom-full left-1/2 -translate-x-1/2 mb-2"
+                                          >
+                                            {beltName}
+                                            <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-700" />
+                                          </div>
                                         </div>
-                                      </div>
-                                    );
-                                  })}
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {item.instructor &&
+                              teamMap.has(item.instructor) && (
+                                <div class="flex items-center gap-3">
+                                  <img
+                                    class="object-cover w-12 h-12 rounded-full shrink-0"
+                                    src={teamMap.get(item.instructor)?.image}
+                                    alt={item.instructor}
+                                  />
+                                  <div>
+                                    <p class="text-lg font-medium leading-tight text-gray-900 dark:text-white">
+                                      {item.instructor}
+                                    </p>
+                                    <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                      {teamMap.get(item.instructor)?.role}
+                                    </p>
+                                  </div>
                                 </div>
                               )}
-                            </div>
-                          )}
-                          {item.instructor && teamMap.has(item.instructor) && (
-                            <div class="flex items-center gap-3">
-                              <img
-                                class="object-cover w-12 h-12 rounded-full shrink-0"
-                                src={teamMap.get(item.instructor)?.image}
-                                alt={item.instructor}
-                              />
-                              <div>
-                                <p class="text-lg font-medium leading-tight text-gray-900 dark:text-white">
-                                  {item.instructor}
-                                </p>
-                                <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                                  {teamMap.get(item.instructor)?.role}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  ))}
+                          </div>
+                        ))}
+                      </div>
+                    )
+                  )}
                 </div>
               );
             })}

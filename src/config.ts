@@ -3,11 +3,9 @@ export const SITE_CONFIG = {
   description: "Martial arts training in Knox",
   facebook: "https://www.facebook.com/kandoknox",
   instagram: "https://www.instagram.com/kandoknox",
-  // Add other site-wide constants here as needed
-  url: "https://knoxmartialarts.com",
+  url: "https://knoxmartialarts.com.au",
   shopUrl: "https://shop.knoxmartialarts.com",
-  academyUrl:
-    "https://cf.knoxmartialarts.com.au/membership-access-page1584527208387?page_id=37236729&page_key=xmowug900rg1qm7g&login_redirect=1",
+  academyUrl: "https://kandoknox.myclickfunnels.com/courses/online-academy",
   // author: "Your Name",
   address: {
     street: "Unit 2/5 Wadhurst Dr",
@@ -16,6 +14,8 @@ export const SITE_CONFIG = {
     postcode: "3155",
     country: "Australia",
   },
+  phone: "(03) 9800 5454",
+  email: "knox@kandomartialarts.com.au",
   coordinates: {
     latitude: -37.8656501,
     longitude: 145.2531667,

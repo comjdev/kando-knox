@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import "../styles/global.css";
 import { SITE_CONFIG } from "../config";
 import Footer from "../components/Footer.astro";
+import SnowParticles from "../components/shared/SnowParticles.astro";
 
 interface Props {
   title?: string;
@@ -11,6 +12,12 @@ interface Props {
 
 const { title } = Astro.props;
 const pageTitle = title ? `${title} | ${SITE_CONFIG.title}` : SITE_CONFIG.title;
+
+// Check if current date is between December 15 and 27
+const now = new Date();
+const month = now.getMonth(); // 0-11, where 11 is December
+const day = now.getDate();
+const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
 ---
 
 <!doctype html>
@@ -56,6 +63,7 @@ const pageTitle = title ? `${title} | ${SITE_CONFIG.title}` : SITE_CONFIG.title;
     <Header client:load />
     <slot />
     <Footer />
+    {isDecember15to27 && <SnowParticles />}
     <script
       is:inline
       src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"

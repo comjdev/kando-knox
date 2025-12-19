@@ -3,7 +3,7 @@ title: "Why Brazilian Jiu-Jitsu Is One of the Most Effective Martial Arts for Se
 slug: "why-brazilian-jiu-jitsu-is-one-of-the-most-effective-martial-arts-for-self-defence"
 description: "Discover why Brazilian Jiu-Jitsu is one of the most practical and reliable self-defence systems, focusing on technique over strength and suitable for all ages at Kando Martial Arts in Knox."
 date: 2025-10-01
-image: "/images/blog/bjj-self-defence.jpg"
+image: "/blog/bjj-self-defence.jpg"
 ---
 
 Brazilian Jiu-Jitsu (BJJ) has grown rapidly in popularity over the past two decades, and for good reason. It is widely recognised as one of the most effective, practical and reliable martial arts for real-world self-defence. At **Kando Martial Arts in Knox**, students of all ages learn how to neutralise threats using leverage, technique and intelligent strategy rather than relying on size or physical strength.

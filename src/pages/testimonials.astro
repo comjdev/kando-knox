@@ -1,0 +1,87 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE_CONFIG } from "../config";
+import googleReviews from "../content/testimonials/google-reviews.json";
+import Rating from "../components/shared/Rating.astro";
+
+// Filter out reviews without text and ensure text is not null
+const reviewsWithText = googleReviews.filter(
+  (review): review is typeof review & { text: string } => !!review.text
+);
+---
+
+<Layout>
+  <section class="bg-white dark:bg-gray-900">
+    <div class="py-8 px-4 mx-auto max-w-7xl lg:py-16 lg:px-6">
+      <div class="mx-auto max-w-3xl text-center">
+        <h2
+          class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"
+        >
+          Testimonials
+        </h2>
+        <p
+          class="mb-8 font-light text-gray-500 lg:mb-16 dark:text-gray-400 sm:text-xl"
+        >
+          Kando Martial Arts Knox has earned outstanding reviews from families
+          and students who consistently praise the welcoming atmosphere,
+          exceptional instructors, and transformative impact on both children
+          and adults. Our students regularly highlight how martial arts training
+          has boosted confidence, improved mood, and taught valuable life skills
+          including respect, discipline, and leadership.
+        </p>
+      </div>
+      <div class="testimonials-masonry">
+        {
+          reviewsWithText.slice(0, 50).map((review) => (
+            <figure class="p-6 bg-gray-50 rounded-lg dark:bg-gray-800">
+              <blockquote class="text-sm text-gray-500 dark:text-gray-400">
+                <h2 class="text-lg font-bold mb-2">{review.name} </h2>
+
+                <div class="mb-3 flex items-center space-x-2">
+                  <Rating rating={review.stars} />{" "}
+                  <span class="text-sm text-gray-400 dark:text-gray-300 font-light">
+                    | Google Reviews
+                  </span>
+                </div>
+
+                <p class="my-4">"{review.text}"</p>
+              </blockquote>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .testimonials-masonry {
+    columns: 1;
+    column-gap: 1rem;
+  }
+
+  @media (min-width: 600px) {
+    .testimonials-masonry {
+      columns: 2;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .testimonials-masonry {
+      columns: 3;
+    }
+  }
+
+  @media (min-width: 1300px) {
+    .testimonials-masonry {
+      columns: 4;
+    }
+  }
+
+  .testimonials-masonry figure {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    display: inline-block;
+    width: 100%;
+  }
+</style>

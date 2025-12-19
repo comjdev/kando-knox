@@ -14,20 +14,36 @@ interface Slide {
 const slides: Slide[] = heroSliderData;
 ---
 
-<div class="hero-carousel-wrapper">
-  <div class="carousel">
+<div
+  class="hero-carousel-wrapper relative z-0 w-full bg-[#111111]"
+  style="height: calc(100vh - 96px);"
+>
+  <div class="carousel relative w-full h-full overflow-hidden z-0">
     <div class="list">
       {
         slides.map((slide) => (
-          <div class="item" style={`background-image: url(${slide.image});`}>
-            <div class="content">
-              <div class="title" data-dojo={slide.dojo || ""}>
+          <div
+            class="item absolute rounded-[20px] overflow-hidden bg-cover bg-center shadow-[0_25px_50px_rgba(0,0,0,0.7)] z-10 transition-all"
+            style={`background-image: url(${slide.image});`}
+          >
+            <div class="content absolute text-left text-white z-[3] left-0 w-full p-2.5 transition-all">
+              <div
+                class="title relative uppercase font-bold leading-none mb-2.5 text-white text-xs transition-all"
+                data-dojo={slide.dojo || ""}
+              >
                 {slide.title}
               </div>
-              <div class="name">{slide.name}</div>
-              <div class="des">{slide.description}</div>
+              <div class="name uppercase font-medium leading-none mb-2.5 text-[10px] text-primary-500 transition-all">
+                {slide.name}
+              </div>
+              <div class="des text-base font-normal opacity-0 hidden transition-all">
+                {slide.description}
+              </div>
               {slide.buttonText && slide.buttonLink ? (
-                <a href={slide.buttonLink} class="hero-button">
+                <a
+                  href={slide.buttonLink}
+                  class="hero-button hidden mt-5 px-6 py-3 bg-primary-500 text-white no-underline rounded font-medium transition-all hover:bg-[#a67a0b] hover:-translate-y-0.5"
+                >
                   {slide.buttonText}
                 </a>
               ) : (
@@ -40,8 +56,13 @@ const slides: Slide[] = heroSliderData;
     </div>
 
     <!--next prev button-->
-    <div class="arrows">
-      <button class="prev">
+    <div
+      class="arrows absolute bottom-[50px] z-20 flex gap-[5%] items-center"
+      style="left: var(--left-position); width: calc(100% - var(--left-position) - 2%);"
+    >
+      <button
+        class="prev w-10 h-10 min-w-10 min-h-10 rounded-full border-2 border-white text-white bg-transparent outline-none text-[25px] font-bold transition-all cursor-pointer flex items-center justify-center hover:border-white hover:text-white hover:bg-transparent"
+      >
         <svg
           class="w-6 h-6 text-white"
           aria-hidden="true"
@@ -59,7 +80,9 @@ const slides: Slide[] = heroSliderData;
             d="M5 12h14M5 12l4-4m-4 4 4 4"></path>
         </svg>
       </button>
-      <button class="next">
+      <button
+        class="next w-10 h-10 min-w-10 min-h-10 rounded-full border-2 border-white text-white bg-transparent outline-none text-[25px] font-bold transition-all cursor-pointer flex items-center justify-center hover:border-white hover:text-white hover:bg-transparent"
+      >
         <svg
           class="w-6 h-6 text-white"
           aria-hidden="true"
@@ -80,7 +103,10 @@ const slides: Slide[] = heroSliderData;
     </div>
 
     <!-- time running -->
-    <div class="timeRunning"></div>
+    <div
+      class="timeRunning absolute z-[200] w-0 h-1 bg-primary-500 left-0 top-0 pointer-events-none"
+    >
+    </div>
   </div>
 </div>
 
@@ -88,34 +114,14 @@ const slides: Slide[] = heroSliderData;
   .hero-carousel-wrapper {
     --left-position: 55%;
     --transition-time: 1.2s cubic-bezier(0.25, 1, 0.5, 1);
-    height: calc(100vh - 96px);
-    width: 100%;
-    background-color: #111111;
-    position: relative;
-    z-index: 0;
   }
 
-  /* carousel */
-  .carousel {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-    z-index: 0;
-  }
-
+  /* Item positioning and overlay */
   .carousel .list .item {
     width: 180px;
     height: 250px;
-    position: absolute;
     bottom: 150px;
     left: calc(var(--left-position) + 3%);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
-    background-position: center;
-    background-size: cover;
-    z-index: 10;
     transform: translate(0, 0px);
     transition: all var(--transition-time);
   }
@@ -131,6 +137,7 @@ const slides: Slide[] = heroSliderData;
     z-index: 1;
   }
 
+  /* Active slides (first two) */
   .carousel .list .item:nth-child(1),
   .carousel .list .item:nth-child(2) {
     bottom: 0px;
@@ -141,6 +148,7 @@ const slides: Slide[] = heroSliderData;
     height: 100%;
   }
 
+  /* Preview slides positioning */
   .carousel .list .item:nth-child(3) {
     left: var(--left-position);
   }
@@ -165,19 +173,96 @@ const slides: Slide[] = heroSliderData;
     left: calc(var(--left-position) + 800px);
   }
 
+  /* Content positioning for preview slides */
   .list .item .content {
-    position: absolute;
-    text-align: left;
-    color: #fff;
-    z-index: 3;
-    left: 0;
     top: 100%;
     transform: translateY(-100%);
-    width: 100%;
-    padding: 10px;
     transition: all var(--transition-time);
   }
 
+  /* Content positioning for active slides */
+  .list .item:nth-child(1) .content,
+  .list .item:nth-child(2) .content {
+    transform: translateY(-50%);
+    left: 100px;
+    width: 600px;
+    top: 50%;
+    padding: 0;
+  }
+
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 768px) {
+    .list .item:nth-child(1) .content,
+    .list .item:nth-child(2) .content {
+      left: 20px;
+      width: calc(100% - 40px);
+      top: 40%;
+      padding: 0;
+    }
+
+    .list .item:nth-child(1) .content .title,
+    .list .item:nth-child(2) .content .title {
+      font-size: 24px;
+      margin-bottom: 16px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.2;
+      max-width: 100%;
+    }
+
+    .list .item:nth-child(1) .content .name,
+    .list .item:nth-child(2) .content .name {
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    .list .item:nth-child(1) .content .des,
+    .list .item:nth-child(2) .content .des {
+      font-size: 14px;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .list .item:nth-child(1) .content,
+    .list .item:nth-child(2) .content {
+      left: 16px;
+      width: calc(100% - 32px);
+      top: 35%;
+    }
+
+    .list .item:nth-child(1) .content .title,
+    .list .item:nth-child(2) .content .title {
+      font-size: 20px;
+      margin-bottom: 12px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.2;
+      max-width: 100%;
+    }
+
+    .list .item:nth-child(1) .content .name,
+    .list .item:nth-child(2) .content .name {
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .list .item:nth-child(1) .content .des,
+    .list .item:nth-child(2) .content .des {
+      font-size: 13px;
+    }
+  }
+
+  /* Title base styles - allow wrapping */
+  .content .title {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    line-height: 1.2;
+  }
+
+  /* Title pseudo-elements */
   .content .title::before {
     content: "";
     display: block;
@@ -185,17 +270,6 @@ const slides: Slide[] = heroSliderData;
     width: 20px;
     background-color: #fff;
     margin-bottom: 10px;
-  }
-
-  .content .title {
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #ffffff;
-    font-weight: bold;
-    line-height: 1;
-    margin-bottom: 10px;
-    transition: all var(--transition-time);
-    position: relative;
   }
 
   .content .title::after {
@@ -209,33 +283,7 @@ const slides: Slide[] = heroSliderData;
     font-weight: 400;
   }
 
-  .content .name {
-    font-size: 10px;
-    text-transform: uppercase;
-    font-weight: 500;
-    line-height: 1;
-    transition: all var(--transition-time);
-    margin-bottom: 10px;
-    color: var(--color-primary-500, #c39519);
-  }
-
-  .content .des {
-    font-size: 16px;
-    font-weight: 400;
-    transition: all var(--transition-time);
-    opacity: 0;
-    display: none;
-  }
-
-  .list .item:nth-child(1) .content,
-  .list .item:nth-child(2) .content {
-    transform: translateY(-50%);
-    left: 100px;
-    width: 600px;
-    top: 50%;
-    padding: 0;
-  }
-
+  /* Active slide title styles */
   .list .item:nth-child(1) .content .title::before,
   .list .item:nth-child(2) .content .title::before {
     width: 50px;
@@ -254,6 +302,10 @@ const slides: Slide[] = heroSliderData;
   .list .item:nth-child(2) .content .title {
     font-size: 30px;
     margin-bottom: 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.2;
+    max-width: 100%;
   }
 
   .list .item:nth-child(1) .content .name,
@@ -270,83 +322,13 @@ const slides: Slide[] = heroSliderData;
     width: 400px;
   }
 
-  .content .hero-button {
-    display: none;
-    margin-top: 20px;
-    padding: 12px 24px;
-    background-color: var(--color-primary-500, #c39519);
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: all var(--transition-time);
-  }
-
-  .content .hero-button:hover {
-    background-color: #a67a0b;
-    transform: translateY(-2px);
-  }
-
-  /* Show button on active slides (first two items) */
+  /* Show button on active slides */
   .list .item:nth-child(1) .content .hero-button,
   .list .item:nth-child(2) .content .hero-button {
     display: inline-block;
   }
 
-  @keyframes animate {
-    from {
-      opacity: 0;
-      transform: translate(0, 100px);
-      filter: blur(33px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translate(0);
-      filter: blur(0);
-    }
-  }
-
-  /* Carousel */
-
-  /* next prev arrows */
-
-  .arrows {
-    position: absolute;
-    bottom: 50px;
-    left: var(--left-position);
-    width: calc(100% - var(--left-position) - 2%);
-    z-index: 20;
-    display: flex;
-    gap: 5%;
-    align-items: center;
-  }
-
-  .arrows button {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-    border-radius: 50%;
-    border: 2px solid rgb(255, 255, 255);
-    color: rgb(255, 255, 255);
-    background-color: transparent;
-    outline: none;
-    font-size: 25px;
-    font-weight: bold;
-    transition: all var(--transition-time);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .arrows button:hover {
-    border: 2px solid #ffffff;
-    color: #ffffff;
-    background-color: transparent;
-  }
-
+  /* Progress bar container */
   .progress-bar-container {
     width: 60%;
     height: 3px;
@@ -362,16 +344,9 @@ const slides: Slide[] = heroSliderData;
     transition: all var(--transition-time);
   }
 
-  /* time running */
+  /* Time running animation */
   .carousel .timeRunning {
-    position: absolute;
-    z-index: 200;
     width: 0%;
-    height: 4px;
-    background-color: var(--color-primary-500, #c39519);
-    left: 0;
-    top: 0;
-    pointer-events: none;
     animation: runningTime 7s linear 1 forwards;
   }
 
@@ -384,8 +359,18 @@ const slides: Slide[] = heroSliderData;
     }
   }
 
-  .youtube-button {
-    left: 20px;
+  @keyframes animate {
+    from {
+      opacity: 0;
+      transform: translate(0, 100px);
+      filter: blur(33px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(0);
+      filter: blur(0);
+    }
   }
 </style>
 

@@ -4,48 +4,44 @@ import { PROGRAMS, SITE_CONFIG } from "../config";
 import PrimaryButton from "./shared/PrimaryButton";
 
 export default function Header() {
-  // Initialize theme from DOM (set by inline script) or localStorage to prevent flash
-  const getInitialTheme = (): "light" | "dark" => {
-    if (typeof document !== "undefined") {
+  // Always initialize with "light" to prevent hydration mismatch
+  // Theme will be synced in useEffect after hydration
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Mark as mounted to prevent hydration mismatch
+    setMounted(true);
+
+    // Sync theme state with DOM and ensure consistency
+    const syncTheme = () => {
       // Check if HTML element already has theme class (set by inline script)
-      const htmlClass = document.documentElement.classList.contains("dark")
-        ? "dark"
-        : document.documentElement.classList.contains("light")
-          ? "light"
-          : null;
-      if (htmlClass) return htmlClass;
+      const htmlHasDark = document.documentElement.classList.contains("dark");
+      const htmlHasLight = document.documentElement.classList.contains("light");
+      if (htmlHasDark || htmlHasLight) {
+        const initialTheme = htmlHasDark ? "dark" : "light";
+        setTheme(initialTheme);
+        return;
+      }
 
       // Fallback to localStorage or system preference
       const savedTheme = localStorage.getItem("theme") as
         | "light"
         | "dark"
         | null;
-      if (savedTheme) return savedTheme;
+      if (savedTheme) {
+        setTheme(savedTheme);
+        document.documentElement.classList.remove("light", "dark");
+        document.documentElement.classList.add(savedTheme);
+        return;
+      }
 
       const systemPrefersDark = window.matchMedia(
         "(prefers-color-scheme: dark)"
       ).matches;
-      return systemPrefersDark ? "dark" : "light";
-    }
-    return "light";
-  };
-
-  const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    // Sync theme state with DOM and ensure consistency
-    const syncTheme = () => {
-      const savedTheme = localStorage.getItem("theme") as
-        | "light"
-        | "dark"
-        | null;
-      const systemPrefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      const initialTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
-
+      const initialTheme = systemPrefersDark ? "dark" : "light";
       setTheme(initialTheme);
       document.documentElement.classList.remove("light", "dark");
       document.documentElement.classList.add(initialTheme);
@@ -67,11 +63,13 @@ export default function Header() {
 
     document.addEventListener("astro:page-load", handlePageLoad);
 
-    // Handle scroll event
+    // Handle scroll event - check initial scroll position after mount
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
     };
 
+    // Set initial scroll state after mount to prevent hydration mismatch
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -119,10 +117,11 @@ export default function Header() {
   return (
     <nav
       className={`sticky top-0 z-[1100] border-default transition-all ${
-        isScrolled
+        mounted && isScrolled
           ? "bg-white dark:bg-gray-800 shadow-sm"
           : "bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm"
       }`}
+      suppressHydrationWarning
     >
       <div className="flex flex-wrap justify-between items-center mx-auto max-w-7xl p-4">
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
@@ -238,7 +237,7 @@ export default function Header() {
             aria-label="Toggle dark mode"
             type="button"
           >
-            {theme === "light" ? (
+            {mounted && theme === "light" ? (
               // Moon icon for dark mode
               <svg
                 className="w-5 h-5"
@@ -254,7 +253,7 @@ export default function Header() {
                   d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
                 />
               </svg>
-            ) : (
+            ) : mounted && theme === "dark" ? (
               // Sun icon for light mode
               <svg
                 className="w-5 h-5"
@@ -270,9 +269,25 @@ export default function Header() {
                   d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
                 />
               </svg>
+            ) : (
+              // Placeholder during SSR to prevent hydration mismatch
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
+              </svg>
             )}
           </button>
-          <PrimaryButton href="/contact">Book a trial</PrimaryButton>
+          <PrimaryButton href="#footer-book-trial">Book a trial</PrimaryButton>
         </div>
       </div>
       <div

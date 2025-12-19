@@ -7,10 +7,16 @@ export async function getStaticPaths() {
     import.meta.glob("../content/pages/*.md", { eager: true })
   );
 
-  return pages.map((page: any) => ({
-    params: { slug: page.frontmatter.slug },
-    props: { page },
-  }));
+  return pages
+    .map((page: any) => ({
+      params: { slug: page.frontmatter.slug },
+      props: { page },
+    }))
+    .filter((path) => {
+      // Exclude common static file requests that shouldn't be handled by this route
+      const excludedPaths = ["favicon.ico", "robots.txt", "sitemap.xml"];
+      return !excludedPaths.includes(path.params.slug);
+    });
 }
 
 const { page } = Astro.props;

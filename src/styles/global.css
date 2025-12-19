@@ -3,6 +3,7 @@
 @import "../../node_modules/flowbite-typography/dist/typography.css";
 @plugin "flowbite/plugin";
 @source "../../node_modules/flowbite";
+@source "../";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -26,6 +27,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 120px;
 }
 
 body {
