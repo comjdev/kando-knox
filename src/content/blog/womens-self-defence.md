@@ -5,6 +5,7 @@ description: "Empowering, practical women's self-defence training at Kando Marti
 date: 2025-11-20
 image: "/blog/women-self-defence.jpg"
 imageAlt: "Women's self-defence training at Kando Martial Arts in Knox"
+category: "Self-Defence"
 ---
 
 Learning self-defence is about much more than physical techniques; it’s about building confidence, awareness, and a sense of empowerment. At **Kando Martial Arts in Knox**, women of all ages discover practical ways to protect themselves while gaining fitness, mental clarity, and personal assurance.

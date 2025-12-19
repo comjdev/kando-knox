@@ -18,14 +18,31 @@ const posts = limit ? sortedPosts.slice(0, limit) : sortedPosts;
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
   {
-    posts.map((post: any) => (
-      <Card
-        title={post.frontmatter.title}
-        slug={post.frontmatter.slug}
-        description={post.frontmatter.description}
-        date={post.frontmatter.date}
-        image={post.frontmatter.image}
-      />
-    ))
+    posts.map((post: any) => {
+      // Support both single category (string) and multiple categories (array)
+      const postCategories = Array.isArray(post.frontmatter.category)
+        ? post.frontmatter.category
+        : post.frontmatter.category
+          ? [post.frontmatter.category]
+          : [];
+      const categoryString =
+        postCategories.length > 0 ? postCategories.join(",") : "none";
+
+      return (
+        <div
+          data-category={categoryString}
+          data-categories={JSON.stringify(postCategories)}
+        >
+          <Card
+            title={post.frontmatter.title}
+            slug={post.frontmatter.slug}
+            description={post.frontmatter.description}
+            date={post.frontmatter.date}
+            image={post.frontmatter.image}
+            categories={postCategories}
+          />
+        </div>
+      );
+    })
   }
 </div>

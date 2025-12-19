@@ -1,6 +1,34 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import BlogGrid from "../components/shared/BlogGrid.astro";
+import CategoryFilter from "../components/shared/CategoryFilter";
+
+// Load all blog posts to extract categories
+const blogPosts = import.meta.glob("../content/blog/*.md", { eager: true });
+const allPosts = Object.values(blogPosts).map((post: any) => ({
+  category: post.frontmatter.category || null,
+}));
+
+// Get unique categories (support both string and array)
+const categoriesSet = new Set<string>();
+allPosts.forEach((post) => {
+  if (post.category) {
+    if (Array.isArray(post.category)) {
+      // Multiple categories
+      post.category.forEach((cat: string) => categoriesSet.add(cat));
+    } else {
+      // Single category
+      categoriesSet.add(post.category);
+    }
+  }
+});
+const categories = Array.from(categoriesSet).sort();
+
+// Check if there are uncategorized posts
+const hasUncategorized = allPosts.some((post) => !post.category);
+if (hasUncategorized) {
+  categories.push("Uncategorized");
+}
 ---
 
 <Layout>
@@ -16,6 +44,11 @@ import BlogGrid from "../components/shared/BlogGrid.astro";
           Read our latest articles about martial arts, karate, Brazilian
           Jiu-Jitsu, self-defence, and more.
         </p>
+        {
+          categories.length > 0 && (
+            <CategoryFilter client:load categories={categories} />
+          )
+        }
       </div>
 
       <BlogGrid />

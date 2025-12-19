@@ -4,6 +4,7 @@ slug: "physical-and-mental-health-benefits-of-martial-arts-for-adults"
 description: "Learn why adults in Knox are turning to martial arts for fitness, stress relief, and confidence."
 date: 2025-11-01
 image: "/blog/bjj-friends.jpg"
+category: "Benefits"
 ---
 
 Martial arts has become one of the most effective and enjoyable activities for children, especially for families seeking a trusted, community‑focused program like **Kando Martial Arts at Kando Martial Arts in Knox**. While martial arts is well known for its kicks, blocks and stances, its real value lies in the way it shapes young minds and bodies. Through structured training, positive reinforcement and clear progression, kids at Kando Martial Arts develop confidence, focus, discipline and social skills that carry over into home life and school.

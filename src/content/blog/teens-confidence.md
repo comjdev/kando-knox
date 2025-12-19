@@ -5,6 +5,7 @@ description: "Martial arts gives teens at Kando Martial Arts in Knox confidence,
 date: 2025-09-01
 image: "/blog/teenager-confidence.jpg"
 imageAlt: "Teens building confidence and resilience through martial arts"
+category: "Kids & Teens"
 ---
 
 Teenagers face unique challenges—from school pressures to social dynamics. Martial arts provides a structured and supportive environment where teens can develop confidence, resilience, and healthy habits that benefit every area of their life.

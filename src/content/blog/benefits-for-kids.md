@@ -3,6 +3,7 @@ title: "Top 10 Benefits of Martial Arts for Kids"
 slug: "top-10-benefits-of-martial-arts-for-kids"
 description: "Learn how martial arts at Kando Martial Arts in Knox helps kids develop confidence, focus, resilience, coordination, and social skills while having fun."
 date: 2025-12-01
+category: "Kids & Teens"
 ---
 
 Martial arts is one of the most rewarding activities a child can engage in. At **Kando Martial Arts in Knox**, children not only develop physical skills but also gain emotional resilience, social confidence, and habits that last a lifetime. Unlike traditional sports, martial arts provides a structured environment where kids of all ages can progress at their own pace while learning important life skills.
