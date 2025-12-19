@@ -11,24 +11,16 @@
       "timeFrom": "4:00 PM",
       "timeTo": "5:00 PM",
       "className": "Junior Brazilian Jiu-Jitsu",
-      "beltRank": null,
-      "instructor": null
+      "beltRank": "All Belts",
+      "instructor": "Sensei Andy"
     },
     {
       "day": "Thursday",
       "timeFrom": "4:00 PM",
       "timeTo": "5:00 PM",
       "className": "Junior Brazilian Jiu-Jitsu",
-      "beltRank": null,
-      "instructor": null
-    },
-    {
-      "day": "Saturday",
-      "timeFrom": "10:00 AM",
-      "timeTo": "11:00 AM",
-      "className": "Junior Brazilian Jiu-Jitsu",
-      "beltRank": null,
-      "instructor": null
+      "beltRank": "All Belts",
+      "instructor": "Sensei Andy"
     }
   ],
   "features": [
@@ -57,7 +49,7 @@
     {
       "title": "Develop Discipline and Respect",
       "description": "Brazilian Jiu-Jitsu instills important values like discipline, respect, and perseverance. Children learn to respect their training partners, follow instructions, and work hard to improve. These lessons translate to better behavior at home and school.",
-      "image": "/img/kando-knox-junior-bjj-3.jpg"
+      "image": "/img/kando-knox-junior-bjj-1.jpg"
     }
   ],
   "faq": [

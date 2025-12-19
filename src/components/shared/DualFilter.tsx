@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ProgramFilter from "./ProgramFilter";
 import BeltRankFilter from "./BeltRankFilter";
+import beltRanksData from "../../content/belt-ranks.json";
 
 interface ScheduleItem {
   day: string;
@@ -9,6 +10,35 @@ interface ScheduleItem {
   className: string;
   beltRank?: string | null;
   instructor?: string;
+}
+
+// Helper function to get belt colors for a filter selection
+function getBeltColorsForFilter(filterName: string): string[] {
+  const beltData = beltRanksData[filterName as keyof typeof beltRanksData];
+  if (!beltData) return [];
+  return beltData.map((belt) => belt.name.toLowerCase());
+}
+
+// Helper function to check if a belt rank includes any of the specified belt colors
+function beltRankIncludesColors(
+  beltRank: string | null,
+  colors: string[]
+): boolean {
+  if (!beltRank || colors.length === 0) return false;
+
+  // If "All Belts" or "All Classes", it includes all colors
+  if (beltRank === "All Belts" || beltRank === "All Classes") {
+    return true;
+  }
+
+  // Get the belt colors for this belt rank
+  const rankBeltData = beltRanksData[beltRank as keyof typeof beltRanksData];
+  if (!rankBeltData) return false;
+
+  const rankColors = rankBeltData.map((belt) => belt.name.toLowerCase());
+
+  // Check if any of the filter colors are in this rank's colors
+  return colors.some((color) => rankColors.includes(color));
 }
 
 interface DualFilterProps {
@@ -119,25 +149,27 @@ export default function DualFilter({ schedule }: DualFilterProps) {
       const itemProgram = item.getAttribute("data-program");
       let shouldShow = false;
 
-      // Check belt rank filter
+      // Check belt rank filter (by belt colors)
       if (selectedRank === "all") {
         shouldShow = true;
       } else if (
         selectedRank === "All Belts" ||
         selectedRank === "All Classes"
       ) {
-        // "All Belts" or "All Classes" means show all items regardless of belt rank
-        shouldShow = true;
+        // When "All Belts" or "All Classes" is selected, ONLY show "All Belts"/"All Classes" items
+        // Do NOT show specific belt rank classes
+        shouldShow = itemRank === "All Belts" || itemRank === "All Classes";
       } else if (itemRank === selectedRank) {
+        // Exact match
         shouldShow = true;
-      } else if (
-        selectedRank === "Advanced" &&
-        itemRank === "Junior Advanced"
-      ) {
-        // Include Junior Advanced when filtering for Advanced (both include black belts)
+      } else if (itemRank === "All Belts" || itemRank === "All Classes") {
+        // "All Belts" or "All Classes" items should show for specific filter selections
+        // (but NOT when "All Belts" itself is selected - handled above)
         shouldShow = true;
       } else {
-        shouldShow = false;
+        // Get belt colors for the selected filter and check if item's belt rank includes them
+        const filterBeltColors = getBeltColorsForFilter(selectedRank);
+        shouldShow = beltRankIncludesColors(itemRank, filterBeltColors);
       }
 
       // Check program filter

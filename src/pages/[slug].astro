@@ -1,6 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import PageTemplate from "../components/shared/PageTemplate.astro";
+import Program from "../components/shared/Program.astro";
+import Team from "../components/home/Team.astro";
+import TrialForm from "../components/shared/TrialForm.astro";
 
 export async function getStaticPaths() {
   const pages = Object.values(
@@ -41,4 +44,10 @@ const transitionName =
   >
     <page.Content />
   </PageTemplate>
+
+  <TrialForm />
+
+  <Team />
+
+  <Program />
 </Layout>

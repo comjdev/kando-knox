@@ -375,68 +375,185 @@ const slides: Slide[] = heroSliderData;
 </style>
 
 <script>
-  // Select DOM elements
-  const nextBtn = document.querySelector(".next");
-  const prevBtn = document.querySelector(".prev");
-  const carousel = document.querySelector(".carousel");
-  const list = document.querySelector(".list");
-  const items = Array.from(document.querySelectorAll(".item"));
-  const runningTimeBar = document.querySelector(".carousel .timeRunning");
+  // Use global state to persist across page navigations
+  if (typeof window !== "undefined" && !window.__heroSlider) {
+    window.__heroSlider = {
+      initialized: false,
+      nextBtn: null,
+      prevBtn: null,
+      carousel: null,
+      list: null,
+      items: [],
+      runningTimeBar: null,
+      progressBar: null,
+      transitionTimeout: null,
+      autoNextTimeout: null,
+      nextHandler: null,
+      prevHandler: null,
+    };
+  }
+
+  const state = window.__heroSlider;
 
   // Timing configurations
   const TIME_RUNNING = 1500; // Animation duration for the transition
   const TIME_AUTO_NEXT = 4500; // Auto-slide duration
 
-  // Initialize timeout variables
-  let transitionTimeout;
-  let autoNextTimeout;
+  // Initialize slider function
+  function initializeSlider(showErrors = false) {
+    // Check if elements exist
+    state.nextBtn = document.querySelector(".next");
+    state.prevBtn = document.querySelector(".prev");
+    state.carousel = document.querySelector(".carousel");
+    state.list = document.querySelector(".list");
+    state.runningTimeBar = document.querySelector(".carousel .timeRunning");
 
-  // Create and append the progress bar
-  const arrowsDiv = document.querySelector(".arrows");
-  const progressBarContainer = document.createElement("div");
-  progressBarContainer.className = "progress-bar-container";
+    // Validate all required elements exist
+    if (
+      !state.nextBtn ||
+      !state.prevBtn ||
+      !state.carousel ||
+      !state.list ||
+      !state.runningTimeBar
+    ) {
+      if (showErrors) {
+        console.error("[HeroSlider] Missing required DOM elements. Found:", {
+          nextBtn: !!state.nextBtn,
+          prevBtn: !!state.prevBtn,
+          carousel: !!state.carousel,
+          list: !!state.list,
+          runningTimeBar: !!state.runningTimeBar,
+        });
+      }
+      return false;
+    }
 
-  const progressBar = document.createElement("div");
-  progressBar.className = "progress-bar";
+    // Get items array
+    state.items = Array.from(document.querySelectorAll(".item"));
+    if (state.items.length === 0) {
+      if (showErrors) {
+        console.error("[HeroSlider] No slider items found");
+      }
+      return false;
+    }
 
-  progressBarContainer.appendChild(progressBar);
-  arrowsDiv.appendChild(progressBarContainer);
+    // Create and append the progress bar if it doesn't exist
+    const arrowsDiv = document.querySelector(".arrows");
+    if (!arrowsDiv) {
+      if (showErrors) {
+        console.error("[HeroSlider] Arrows container not found");
+      }
+      return false;
+    }
 
-  // Event listeners for navigation buttons
-  nextBtn.addEventListener("click", () => handleSliderNavigation("next"));
-  prevBtn.addEventListener("click", () => handleSliderNavigation("prev"));
+    // Check if progress bar already exists
+    let progressBarContainer = arrowsDiv.querySelector(
+      ".progress-bar-container"
+    );
+    if (!progressBarContainer) {
+      progressBarContainer = document.createElement("div");
+      progressBarContainer.className = "progress-bar-container";
 
-  // Automatically navigate to the next slide
-  autoNextTimeout = setTimeout(() => {
-    nextBtn.click();
-  }, TIME_AUTO_NEXT);
+      const progressBar = document.createElement("div");
+      progressBar.className = "progress-bar";
 
-  // Start the initial running time animation and progress bar
-  resetAnimation();
-  afterSlideChange();
+      progressBarContainer.appendChild(progressBar);
+      arrowsDiv.appendChild(progressBarContainer);
+      state.progressBar = progressBar;
+    } else {
+      state.progressBar = progressBarContainer.querySelector(".progress-bar");
+    }
+
+    // Remove old event listeners if they exist
+    if (state.nextHandler) {
+      state.nextBtn.removeEventListener("click", state.nextHandler);
+    }
+    if (state.prevHandler) {
+      state.prevBtn.removeEventListener("click", state.prevHandler);
+    }
+
+    // Create new handlers
+    state.nextHandler = () => handleSliderNavigation("next");
+    state.prevHandler = () => handleSliderNavigation("prev");
+
+    // Add event listeners
+    state.nextBtn.addEventListener("click", state.nextHandler);
+    state.prevBtn.addEventListener("click", state.prevHandler);
+
+    // Clear any existing timeouts
+    if (state.transitionTimeout) {
+      clearTimeout(state.transitionTimeout);
+    }
+    if (state.autoNextTimeout) {
+      clearTimeout(state.autoNextTimeout);
+    }
+
+    // Start the initial running time animation and progress bar
+    resetAnimation();
+    afterSlideChange();
+
+    state.initialized = true;
+    console.log("[HeroSlider] Initialized successfully");
+    return true;
+  }
+
+  // Cleanup function
+  function cleanupSlider() {
+    if (state.nextHandler && state.nextBtn) {
+      state.nextBtn.removeEventListener("click", state.nextHandler);
+      state.nextHandler = null;
+    }
+    if (state.prevHandler && state.prevBtn) {
+      state.prevBtn.removeEventListener("click", state.prevHandler);
+      state.prevHandler = null;
+    }
+    if (state.transitionTimeout) {
+      clearTimeout(state.transitionTimeout);
+      state.transitionTimeout = null;
+    }
+    if (state.autoNextTimeout) {
+      clearTimeout(state.autoNextTimeout);
+      state.autoNextTimeout = null;
+    }
+    state.initialized = false;
+  }
 
   // Resets the running time animation
   function resetAnimation() {
-    runningTimeBar.style.animation = "none"; // Remove current animation
-    runningTimeBar.offsetHeight; // Trigger reflow to restart animation
-    runningTimeBar.style.animation = `runningTime ${
+    if (!state.runningTimeBar) {
+      console.error("[HeroSlider] Running time bar not found");
+      return;
+    }
+    state.runningTimeBar.style.animation = "none"; // Remove current animation
+    state.runningTimeBar.offsetHeight; // Trigger reflow to restart animation
+    state.runningTimeBar.style.animation = `runningTime ${
       TIME_AUTO_NEXT / 1000
     }s linear forwards`; // Restart animation
   }
 
   // Handles slider navigation (next/prev)
   function handleSliderNavigation(direction) {
-    const sliderItems = list.querySelectorAll(".item"); // Get all current items in the list
-
-    if (direction === "next") {
-      list.appendChild(sliderItems[0]); // Move the first item to the end of the list
-      carousel.classList.add("next"); // Add the "next" class for transition
-    } else if (direction === "prev") {
-      list.prepend(sliderItems[sliderItems.length - 1]); // Move the last item to the start of the list
-      carousel.classList.add("prev"); // Add the "prev" class for transition
+    if (!state.list || !state.carousel) {
+      console.error("[HeroSlider] List or carousel not found");
+      return;
     }
 
-    afterSlideChange(); // Log the active slide index
+    const sliderItems = state.list.querySelectorAll(".item"); // Get all current items in the list
+
+    if (sliderItems.length === 0) {
+      console.error("[HeroSlider] No slider items found");
+      return;
+    }
+
+    if (direction === "next") {
+      state.list.appendChild(sliderItems[0]); // Move the first item to the end of the list
+      state.carousel.classList.add("next"); // Add the "next" class for transition
+    } else if (direction === "prev") {
+      state.list.prepend(sliderItems[sliderItems.length - 1]); // Move the last item to the start of the list
+      state.carousel.classList.add("prev"); // Add the "prev" class for transition
+    }
+
+    afterSlideChange(); // Update progress bar and reset state
   }
 
   // Updates after slide change
@@ -447,36 +564,135 @@ const slides: Slide[] = heroSliderData;
 
   // Updates the progress bar based on the active slide index
   function updateProgressBar() {
-    const totalSlides = items.length;
-    const sliderItems = Array.from(list.querySelectorAll(".item"));
+    if (!state.progressBar || !state.list || state.items.length === 0) {
+      return;
+    }
+
+    const totalSlides = state.items.length;
+    const sliderItems = Array.from(state.list.querySelectorAll(".item"));
+
+    if (sliderItems.length === 0) {
+      return;
+    }
 
     // Find the index of the first visible item in the original items array
     const firstVisibleItem = sliderItems[0];
-    const originalIndex = items.findIndex((item) => item === firstVisibleItem);
+    const originalIndex = state.items.findIndex(
+      (item) => item === firstVisibleItem
+    );
     const activeItem = originalIndex >= 0 ? originalIndex + 1 : 1;
 
     const progressPercentage = (activeItem / totalSlides) * 100;
-    progressBar.style.width = `${progressPercentage}%`;
+    state.progressBar.style.width = `${progressPercentage}%`;
   }
 
   // Resets the carousel state after navigation
   function resetCarouselState() {
+    if (!state.carousel || !state.nextBtn) {
+      return;
+    }
+
     // Clear existing timeouts for transitions and auto-slide
-    clearTimeout(transitionTimeout);
-    clearTimeout(autoNextTimeout);
+    if (state.transitionTimeout) {
+      clearTimeout(state.transitionTimeout);
+    }
+    if (state.autoNextTimeout) {
+      clearTimeout(state.autoNextTimeout);
+    }
 
     // Remove the transition class after the animation duration
-    transitionTimeout = setTimeout(() => {
-      carousel.classList.remove("next");
-      carousel.classList.remove("prev");
+    state.transitionTimeout = setTimeout(() => {
+      if (state.carousel) {
+        state.carousel.classList.remove("next");
+        state.carousel.classList.remove("prev");
+      }
     }, TIME_RUNNING);
 
     // Restart the auto-slide timer
-    autoNextTimeout = setTimeout(() => {
-      nextBtn.click();
+    state.autoNextTimeout = setTimeout(() => {
+      if (state.nextBtn && state.initialized) {
+        state.nextBtn.click();
+      }
     }, TIME_AUTO_NEXT);
 
     // Reset the running time bar animation
     resetAnimation();
+  }
+
+  // Retry initialization with exponential backoff
+  function retryInitialization(maxAttempts = 10, attempt = 1) {
+    // Check if hero carousel wrapper exists (only on homepage)
+    const heroWrapper = document.querySelector(".hero-carousel-wrapper");
+    if (!heroWrapper) {
+      // Not on homepage, don't initialize (this is normal)
+      return;
+    }
+
+    // Only show errors on the last attempt
+    const showErrors = attempt === maxAttempts;
+    if (initializeSlider(showErrors)) {
+      return; // Success
+    }
+
+    if (attempt < maxAttempts) {
+      // Exponential backoff: 50ms, 100ms, 200ms, 400ms, etc. (max 800ms)
+      const delay = Math.min(50 * Math.pow(2, attempt - 1), 800);
+      setTimeout(() => {
+        retryInitialization(maxAttempts, attempt + 1);
+      }, delay);
+    } else {
+      console.error(
+        `[HeroSlider] Initialization failed after ${maxAttempts} attempts. Hero slider may not be available on this page.`
+      );
+    }
+  }
+
+  // Initialize on load and page transitions
+  if (typeof window !== "undefined") {
+    // Function to initialize or reinitialize
+    function initOrReinit() {
+      // Cleanup first if already initialized
+      if (state.initialized) {
+        cleanupSlider();
+      }
+
+      // Use requestAnimationFrame to ensure DOM is ready, then retry
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          retryInitialization();
+        });
+      });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initOrReinit);
+    } else {
+      initOrReinit();
+    }
+
+    // Reinitialize on Astro page load (ViewTransitions)
+    document.addEventListener("astro:page-load", () => {
+      // Reset element references
+      state.nextBtn = null;
+      state.prevBtn = null;
+      state.carousel = null;
+      state.list = null;
+      state.items = [];
+      state.runningTimeBar = null;
+      state.progressBar = null;
+
+      // Wait for ViewTransitions to complete
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          retryInitialization();
+        });
+      });
+    });
+
+    // Also check before page swap to cleanup
+    document.addEventListener("astro:before-swap", () => {
+      cleanupSlider();
+    });
   }
 </script>

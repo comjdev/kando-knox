@@ -1,5 +1,6 @@
 ---
 import Logo from "./shared/Logo.astro";
+import TrialForm from "./shared/TrialForm.astro";
 import { PROGRAMS, SITE_CONFIG } from "../config";
 
 // Get blog posts and sort by date (newest first)
@@ -14,118 +15,7 @@ const latestPosts = allPosts
   .slice(0, 3);
 ---
 
-<section id="footer-book-trial" class="bg-gray-300 dark:bg-gray-600">
-  <div class="py-8 px-4 mx-auto max-w-7xl sm:py-16 lg:px-6">
-    <div class="mx-auto max-w-3xl text-center">
-      <h2
-        class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white"
-      >
-        Book Your Trial Today
-      </h2>
-      <p class="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400">
-        Experience the benefits of martial arts training at Kando Martial Arts
-        Knox. Join us for a trial and discover how we can help you or your child
-        develop confidence, discipline, and physical fitness.
-      </p>
-      <form action="#" class="mx-auto max-w-screen-sm">
-        <div class="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2">
-          <div>
-            <label
-              for="footer-first-name"
-              class="hidden mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              First name
-            </label>
-            <input
-              type="text"
-              id="footer-first-name"
-              name="first-name"
-              class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-              placeholder="First name"
-              required
-            />
-          </div>
-          <div>
-            <label
-              for="footer-last-name"
-              class="hidden mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              Last name
-            </label>
-            <input
-              type="text"
-              id="footer-last-name"
-              name="last-name"
-              class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-              placeholder="Last name"
-              required
-            />
-          </div>
-        </div>
-        <div class="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2">
-          <div>
-            <label
-              for="footer-email"
-              class="hidden mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              Email address
-            </label>
-            <input
-              type="email"
-              id="footer-email"
-              name="email"
-              class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-          <div>
-            <label
-              for="footer-mobile"
-              class="hidden mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              Mobile
-            </label>
-            <input
-              type="tel"
-              id="footer-mobile"
-              name="mobile"
-              class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-              placeholder="Mobile number"
-              required
-            />
-          </div>
-        </div>
-        <div class="mb-3">
-          <button
-            type="submit"
-            class="w-full py-3 px-5 text-sm font-medium text-center text-white rounded-lg cursor-pointer bg-primary-500 hover:bg-primary-600 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-          >
-            Book a Trial
-          </button>
-        </div>
-        <div
-          class="text-sm font-medium text-left text-gray-500 dark:text-gray-300"
-        >
-          By opting in, you agree to receive periodic text messages & emails
-          from Kando Martial Arts. Your information will never be shared. Reply
-          STOP to cancel. Standard rates may apply. View our{" "}
-          <a
-            href="/terms-of-service"
-            class="text-primary-600 hover:underline dark:text-primary-500"
-            >Terms of Service</a
-          >{" "}
-          and{" "}
-          <a
-            href="/privacy-policy"
-            class="text-primary-600 hover:underline dark:text-primary-500"
-            >Privacy Policy</a
-          >.
-        </div>
-      </form>
-    </div>
-  </div>
-</section>
+<TrialForm id="footer-book-trial" />
 
 <footer class="bg-gray-50 dark:bg-gray-800">
   <div class="p-4 py-6 mx-auto max-w-7xl md:p-8 lg:py-10">

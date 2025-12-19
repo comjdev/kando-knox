@@ -17,39 +17,97 @@ interface ScheduleItem {
 interface Props {
   schedule: ScheduleItem[];
   title?: string;
-  useDualFilter?: boolean; // Use dual filter (program + belt rank) instead of single filter
+  useDualFilter?: boolean;
+}
+
+interface BeltData {
+  name: string;
+  color: string;
+  borderColor?: string;
 }
 
 const { schedule, title, useDualFilter = false } = Astro.props;
 const scheduleTitle = title ? `${title} Schedule` : "Kando Knox Schedule";
 
-// Load team members
+// Constants
+const ALL_BELTS_KEY = "Teen & Adult All Belts" as const;
+const ALL_BELTS_RANKS: readonly string[] = ["All Belts", "All Classes"];
+
+// Helper: Check if belt rank is a generic "All Belts" type
+function isAllBeltsRank(beltRank: string): boolean {
+  return ALL_BELTS_RANKS.includes(beltRank);
+}
+
+// Helper: Check if program is BJJ (Brazilian Jiu-Jitsu)
+function isBJJProgram(programName: string): boolean {
+  const lowerName = programName.toLowerCase();
+  return (
+    lowerName.includes("bjj") ||
+    lowerName.includes("brazilian jiu-jitsu") ||
+    lowerName.includes("brazilian jiu jitsu")
+  );
+}
+
+// Helper: Get belt data for a belt rank, with fallback for "All Belts"
+// Only shows all belt colors for karate programs, not BJJ
+function getBeltDataForRank(
+  beltRank: string,
+  programName?: string
+): BeltData[] | null {
+  const data = beltRanksData[beltRank as keyof typeof beltRanksData];
+  if (data) return data;
+
+  // Fallback: Use "Teen & Adult All Belts" for generic "All Belts" classes
+  // BUT only for karate programs, not BJJ
+  if (isAllBeltsRank(beltRank)) {
+    // If it's a BJJ program, don't show all belt colors
+    if (programName && isBJJProgram(programName)) {
+      return null;
+    }
+    return beltRanksData[ALL_BELTS_KEY] || null;
+  }
+
+  return null;
+}
+
+// Helper: Format belt name for display
+function formatBeltName(name: string): string {
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+// Helper: Get border color for belt, with fallback
+function getBeltBorderColor(belt: BeltData): string {
+  return "borderColor" in belt && belt.borderColor
+    ? belt.borderColor
+    : belt.color;
+}
+
+// Load team members and create lookup map
 const teamMembers = await getCollection("team");
-// Create a map for quick lookup by name
 const teamMap = new Map(
   teamMembers.map((member) => [member.data.name, member.data])
 );
 
-// Group by day, then by program (className)
-const scheduleByDay = schedule
-  ? schedule.reduce(
-      (
-        acc: Record<string, Record<string, ScheduleItem[]>>,
-        item: ScheduleItem
-      ) => {
-        if (!acc[item.day]) {
-          acc[item.day] = {};
-        }
-        if (!acc[item.day][item.className]) {
-          acc[item.day][item.className] = [];
-        }
-        acc[item.day][item.className].push(item);
-        return acc;
-      },
-      {}
-    )
-  : {};
+// Group schedule by day, then by program
+function groupScheduleByDay(
+  schedule: ScheduleItem[]
+): Record<string, Record<string, ScheduleItem[]>> {
+  return schedule.reduce(
+    (acc, item) => {
+      if (!acc[item.day]) {
+        acc[item.day] = {};
+      }
+      if (!acc[item.day][item.className]) {
+        acc[item.day][item.className] = [];
+      }
+      acc[item.day][item.className].push(item);
+      return acc;
+    },
+    {} as Record<string, Record<string, ScheduleItem[]>>
+  );
+}
 
+const scheduleByDay = schedule ? groupScheduleByDay(schedule) : {};
 const days = Object.keys(scheduleByDay);
 ---
 
@@ -73,15 +131,12 @@ const days = Object.keys(scheduleByDay);
             {days.map((day, dayIndex) => {
               const daySchedule = scheduleByDay[day];
               const isMiddleColumn = dayIndex > 0 && dayIndex < days.length - 1;
+              const borderClasses = isMiddleColumn
+                ? "border-l border-r border-gray-200 dark:border-gray-700"
+                : "";
 
               return (
-                <div
-                  class={`px-8 space-y-12 ${
-                    isMiddleColumn
-                      ? "border-l border-r border-gray-200 dark:border-gray-700"
-                      : ""
-                  }`}
-                >
+                <div class={`px-8 space-y-12 ${borderClasses}`}>
                   <h3 class="text-2xl font-bold text-center text-gray-900 dark:text-white">
                     {day}
                   </h3>
@@ -94,11 +149,11 @@ const days = Object.keys(scheduleByDay);
                         </h4>
                         {programItems.map((item, itemIndex) => (
                           <div
-                            class="space-y-4"
+                            class="space-y-4 mb-4"
                             data-belt-rank={item.beltRank || "none"}
                             data-program={programName}
                           >
-                            <span class="bg-primary-400 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">
+                            <span class="bg-primary-400 text-primary-900 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300 mt-2 mb-1">
                               <svg
                                 aria-hidden="true"
                                 class="w-3 h-3 mr-1"
@@ -114,66 +169,69 @@ const days = Object.keys(scheduleByDay);
                               </svg>
                               {item.timeFrom} - {item.timeTo}
                             </span>
-                            {item.beltRank && (
-                              <div class="flex items-center gap-2 flex-wrap">
-                                <p class="text-sm font-medium text-primary-600 dark:text-primary-400">
-                                  {item.beltRank}
-                                </p>
-                                {beltRanksData[
-                                  item.beltRank as keyof typeof beltRanksData
-                                ] && (
-                                  <div class="flex items-center gap-1.5">
-                                    {beltRanksData[
-                                      item.beltRank as keyof typeof beltRanksData
-                                    ].map((belt, beltIndex) => {
-                                      const borderColor =
-                                        "borderColor" in belt
-                                          ? belt.borderColor
-                                          : belt.color;
-                                      const beltName =
-                                        belt.name.charAt(0).toUpperCase() +
-                                        belt.name.slice(1);
-                                      const tooltipId = `tooltip-${dayIndex}-${programName}-${itemIndex}-${beltIndex}`;
-                                      return (
-                                        <div class="relative group">
-                                          <span
-                                            class="inline-block w-4 h-4 rounded-full border cursor-pointer"
-                                            style={`background-color: ${belt.color}; border-color: ${borderColor};`}
-                                            aria-label={`${belt.name} belt`}
-                                          />
-                                          <div
-                                            id={tooltipId}
-                                            role="tooltip"
-                                            class="absolute z-10 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-300 inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 dark:bg-gray-700 rounded-lg shadow-sm whitespace-nowrap bottom-full left-1/2 -translate-x-1/2 mb-2"
-                                          >
-                                            {beltName}
-                                            <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-700" />
-                                          </div>
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                            {item.instructor &&
-                              teamMap.has(item.instructor) && (
-                                <div class="flex items-center gap-3">
-                                  <img
-                                    class="object-cover w-12 h-12 rounded-full shrink-0"
-                                    src={teamMap.get(item.instructor)?.image}
-                                    alt={item.instructor}
-                                  />
-                                  <div>
-                                    <p class="text-lg font-medium leading-tight text-gray-900 dark:text-white">
-                                      {item.instructor}
+                            {item.beltRank &&
+                              (() => {
+                                const beltData = getBeltDataForRank(
+                                  item.beltRank,
+                                  programName
+                                );
+                                return (
+                                  <div class="flex items-center gap-2 flex-wrap">
+                                    <p class="text-sm font-medium text-primary-600 dark:text-primary-400">
+                                      {item.beltRank}
                                     </p>
-                                    <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                                      {teamMap.get(item.instructor)?.role}
-                                    </p>
+                                    {beltData && (
+                                      <div class="flex items-center gap-1.5">
+                                        {beltData.map((belt, beltIndex) => {
+                                          const tooltipId = `tooltip-${dayIndex}-${programName}-${itemIndex}-${beltIndex}`;
+                                          return (
+                                            <div class="relative group">
+                                              <span
+                                                class="inline-block w-4 h-4 rounded-full border cursor-pointer"
+                                                style={`background-color: ${belt.color}; border-color: ${getBeltBorderColor(belt)};`}
+                                                aria-label={`${belt.name} belt`}
+                                              />
+                                              <div
+                                                id={tooltipId}
+                                                role="tooltip"
+                                                class="absolute z-10 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-300 inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 dark:bg-gray-700 rounded-lg shadow-sm whitespace-nowrap bottom-full left-1/2 -translate-x-1/2 mb-2"
+                                              >
+                                                {formatBeltName(belt.name)}
+                                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900 dark:border-t-gray-700" />
+                                              </div>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    )}
                                   </div>
-                                </div>
-                              )}
+                                );
+                              })()}
+                            {/* {item.instructor &&
+                              (() => {
+                                const instructorData = teamMap.get(
+                                  item.instructor
+                                );
+                                return (
+                                  instructorData && (
+                                    <div class="flex items-center gap-3">
+                                      <img
+                                        class="object-cover w-12 h-12 rounded-full shrink-0"
+                                        src={instructorData.image}
+                                        alt={item.instructor}
+                                      />
+                                      <div>
+                                        <p class="text-lg font-medium leading-tight text-gray-900 dark:text-white">
+                                          {item.instructor}
+                                        </p>
+                                        <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                          {instructorData.role}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  )
+                                );
+                              })()} */}
                           </div>
                         ))}
                       </div>

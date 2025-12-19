@@ -1,6 +1,6 @@
 {
   "id": 3,
-  "title": "Teen & Adult Martial Arts",
+  "title": "Teen & Adult Karate & Martial Arts",
   "slug": "adult-martial-arts-karate-knox",
   "shortDescription": "Comprehensive martial arts training for adults. Build strength, confidence, and self-defense skills.",
   "ageGroup": "13+",
@@ -35,7 +35,7 @@
       "timeFrom": "7:00 PM",
       "timeTo": "8:00 PM",
       "className": "Teen & Adult Martial Arts",
-      "beltRank": "Teen & AdultIntermediate",
+      "beltRank": "Teen & Adult Intermediate",
       "instructor": "Sensei Andy"
     },
     {

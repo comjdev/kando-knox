@@ -11,7 +11,7 @@
       "timeFrom": "8:00 PM",
       "timeTo": "9:00 PM",
       "className": "Bear Cave BJJ",
-      "beltRank": null,
+      "beltRank": "All Belts",
       "instructor": "Sensei Andy"
     },
     {
@@ -19,7 +19,7 @@
       "timeFrom": "11:00 AM",
       "timeTo": "12:00 PM",
       "className": "Bear Cave BJJ",
-      "beltRank": null,
+      "beltRank": "All Belts",
       "instructor": "Sensei Andy"
     },
     {
@@ -27,7 +27,7 @@
       "timeFrom": "8:00 PM",
       "timeTo": "9:00 PM",
       "className": "Bear Cave BJJ",
-      "beltRank": null,
+      "beltRank": "All Belts",
       "instructor": "Sensei Andy"
     }
   ],

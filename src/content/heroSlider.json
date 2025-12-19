@@ -13,7 +13,7 @@
     "title": "Karate & Martial Arts",
     "name": "Adult & Teens",
     "description": "Build strength, fitness, confidence, and practical self-defence skills in our adult and teen martial arts classes.",
-    "buttonText": "Learn More",
+    "buttonText": "Adult & Teen Karate",
     "buttonLink": "/programs/adult-martial-arts-karate-knox",
     "dojo": "Kando"
   },
@@ -22,7 +22,7 @@
     "title": "Karate & Martial Arts",
     "name": "Junior 7-12 Years",
     "description": "Help your child develop confidence, discipline, fitness, and self-defence skills in a fun and supportive environment.",
-    "buttonText": "Learn More",
+    "buttonText": "Junior Karate",
     "buttonLink": "/programs/junior-martial-arts-karate-knox",
     "dojo": "Kando"
   },
@@ -31,7 +31,7 @@
     "title": "Brazilian Jiu-Jitsu",
     "name": "Adult & Teens",
     "description": "Learn effective grappling, control, and real-world self-defence through technique-focused Brazilian Jiu-Jitsu training.",
-    "buttonText": "Learn More",
+    "buttonText": "Adult BJJ",
     "buttonLink": "/programs/teen-adult-bjj-brazilian-jiu-jitsu-knox",
     "dojo": "Bear Cave"
   },
@@ -40,7 +40,7 @@
     "title": "Brazilian Jiu-Jitsu",
     "name": "Junior 7-12 Years",
     "description": "A fun and safe introduction to Brazilian Jiu-Jitsu that builds confidence, coordination, and problem-solving skills.",
-    "buttonText": "Learn More",
+    "buttonText": "Junior BJJ",
     "buttonLink": "/programs/junior-bjj-bear-cave-knox",
     "dojo": "Bear Cave"
   },
@@ -49,7 +49,7 @@
     "title": "Pre-School Martial Arts",
     "name": "3-6 Years",
     "description": "Engaging martial arts classes designed to improve focus, coordination, confidence, and listening skills for young children.",
-    "buttonText": "Learn More",
+    "buttonText": "Pre-School Martial Arts",
     "buttonLink": "/programs/pre-school-martial-arts-karate-knox",
     "dojo": "Kando"
   },
@@ -58,7 +58,7 @@
     "title": "Women's Self-Defense",
     "name": "Women's Only",
     "description": "Learn practical, easy-to-use self-defence strategies in a supportive women-only environment focused on confidence and safety.",
-    "buttonText": "Learn More",
+    "buttonText": "Women's Self-Defense",
     "buttonLink": "/programs/womens-self-defence-knox",
     "dojo": "Kando"
   }

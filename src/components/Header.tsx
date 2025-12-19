@@ -121,7 +121,6 @@ export default function Header() {
           ? "bg-white dark:bg-gray-800 shadow-sm"
           : "bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm"
       }`}
-      suppressHydrationWarning
     >
       <div className="flex flex-wrap justify-between items-center mx-auto max-w-7xl p-4">
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
