@@ -25,8 +25,43 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/icons/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/icons/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/icons/favicon-32x32.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/icons/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="/icons/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
+    {/* Google Analytics */}
+    {SITE_CONFIG.googleAnalyticsId && SITE_CONFIG.googleAnalyticsId !== "G-XXXXXXXXXX" && (
+      <>
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.googleAnalyticsId}`}
+        />
+        <script is:inline define:vars={{ gaId: SITE_CONFIG.googleAnalyticsId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag("js", new Date());
+          gtag("config", gaId);
+        </script>
+      </>
+    )}
     <script is:inline>
       // Prevent theme flash by setting theme before page renders
       (function () {
@@ -68,7 +103,10 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
       is:inline
       src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"
     ></script>
-    <script is:inline>
+    <script
+      is:inline
+      define:vars={{ gaId: SITE_CONFIG.googleAnalyticsId }}
+    >
       // Ensure theme persists during ViewTransitions and prevent nav flash
       function applyTheme() {
         const savedTheme = localStorage.getItem("theme");
@@ -80,27 +118,30 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
         document.documentElement.classList.add(theme);
       }
 
-      function applyNavBackground() {
-        const theme = document.documentElement.classList.contains("dark")
-          ? "dark"
-          : "light";
-        // Use requestAnimationFrame to catch nav as soon as it appears
-        requestAnimationFrame(() => {
-          const nav = document.querySelector("nav");
-          if (nav) {
-            if (theme === "dark") {
-              const isScrolled = nav.classList.contains("shadow-sm");
-              nav.style.setProperty(
-                "background-color",
-                isScrolled ? "rgb(31 41 55)" : "rgb(31 41 55 / 0.9)",
-                "important"
-              );
-            } else {
-              // Clear inline style in light mode to let CSS classes take over
-              nav.style.removeProperty("background-color");
+      // Re-initialize Flowbite components after ViewTransitions
+      function reinitFlowbite() {
+        // Wait a bit for DOM to be ready
+        setTimeout(() => {
+          // Try different Flowbite initialization methods
+          if (typeof window.initFlowbite === "function") {
+            try {
+              window.initFlowbite();
+            } catch (e) {
+              // Ignore errors
             }
           }
-        });
+          // Also try FlowbiteInstances if available
+          if (
+            window.FlowbiteInstances &&
+            typeof window.FlowbiteInstances.init === "function"
+          ) {
+            try {
+              window.FlowbiteInstances.init();
+            } catch (e) {
+              // Ignore errors
+            }
+          }
+        }, 100);
       }
 
       // Set theme before swap happens
@@ -111,36 +152,18 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
       // Apply on page load (ViewTransitions)
       document.addEventListener("astro:page-load", () => {
         applyTheme();
-        applyNavBackground();
-      });
-
-      // Apply on initial load
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => {
-          applyNavBackground();
-        });
-      } else {
-        applyNavBackground();
-      }
-
-      // Watch for nav element and apply background immediately
-      if (typeof MutationObserver !== "undefined") {
-        const observer = new MutationObserver((mutations, obs) => {
-          const nav = document.querySelector("nav");
-          if (nav) {
-            applyNavBackground();
-            obs.disconnect(); // Stop observing once nav is found
-          }
-        });
-
-        if (document.body) {
-          observer.observe(document.body, { childList: true, subtree: true });
-        } else {
-          document.addEventListener("DOMContentLoaded", () => {
-            observer.observe(document.body, { childList: true, subtree: true });
+        reinitFlowbite();
+        // Track page view for Google Analytics
+        if (
+          typeof gtag !== "undefined" &&
+          gaId &&
+          gaId !== "G-XXXXXXXXXX"
+        ) {
+          gtag("config", gaId, {
+            page_path: window.location.pathname,
           });
         }
-      }
+      });
     </script>
   </body>
 </html>

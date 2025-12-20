@@ -6,6 +6,7 @@ interface PrimaryButtonProps {
   className?: string;
   target?: string;
   rel?: string;
+  onClick?: () => void;
   children: React.ReactNode;
 }
 
@@ -15,6 +16,7 @@ export default function PrimaryButton({
   className = "",
   target,
   rel,
+  onClick,
   children,
 }: PrimaryButtonProps) {
   const baseClasses =
@@ -24,10 +26,14 @@ export default function PrimaryButton({
   if (href) {
     return React.createElement(
       "a",
-      { href, className: combinedClasses, target, rel },
+      { href, className: combinedClasses, target, rel, onClick },
       children
     );
   }
 
-  return React.createElement("button", { type, className: combinedClasses }, children);
+  return React.createElement(
+    "button",
+    { type, className: combinedClasses, onClick },
+    children
+  );
 }

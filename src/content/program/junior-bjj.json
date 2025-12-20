@@ -8,16 +8,16 @@
   "schedule": [
     {
       "day": "Tuesday",
-      "timeFrom": "4:00 PM",
-      "timeTo": "5:00 PM",
+      "timeFrom": "5:30 PM",
+      "timeTo": "6:15 PM",
       "className": "Junior Brazilian Jiu-Jitsu",
       "beltRank": "All Belts",
       "instructor": "Sensei Andy"
     },
     {
       "day": "Thursday",
-      "timeFrom": "4:00 PM",
-      "timeTo": "5:00 PM",
+      "timeFrom": "6:15 PM",
+      "timeTo": "7:00 PM",
       "className": "Junior Brazilian Jiu-Jitsu",
       "beltRank": "All Belts",
       "instructor": "Sensei Andy"

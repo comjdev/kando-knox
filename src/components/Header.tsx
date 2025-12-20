@@ -9,6 +9,7 @@ export default function Header() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -86,6 +87,12 @@ export default function Header() {
         "mega-menu-full-cta-dropdown-button"
       );
 
+      // Check if click is on a link inside the dropdown (should not close)
+      const clickedLink = target.closest("a");
+      if (clickedLink && dropdown?.contains(clickedLink)) {
+        return;
+      }
+
       if (
         isDropdownOpen &&
         dropdown &&
@@ -98,11 +105,12 @@ export default function Header() {
     };
 
     if (isDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      // Use click instead of mousedown to avoid interfering with link clicks
+      document.addEventListener("click", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, [isDropdownOpen]);
 
@@ -126,36 +134,97 @@ export default function Header() {
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <Logo className="h-16" />
         </a>
-        <button
-          data-collapse-toggle="mega-menu-full-cta"
-          type="button"
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-lg md:hidden hover:bg-neutral-secondary-soft hover:text-heading focus:outline-none focus:ring-2 focus:ring-default"
-          aria-controls="mega-menu-full-cta"
-          aria-expanded="false"
-        >
-          <span className="sr-only">Open main menu</span>
-          <svg
-            className="w-6 h-6"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={toggleTheme}
+            className="inline-flex items-center justify-center p-2.5 w-10 h-10 text-heading bg-neutral-secondary-soft rounded-lg hover:bg-neutral-secondary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+            aria-label="Toggle dark mode"
+            type="button"
           >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeWidth="2"
-              d="M5 7h14M5 12h14M5 17h14"
-            />
-          </svg>
-        </button>
+            {mounted && theme === "light" ? (
+              // Moon icon for dark mode
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
+              </svg>
+            ) : mounted && theme === "dark" ? (
+              // Sun icon for light mode
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 8 0z"
+                />
+              </svg>
+            ) : (
+              // Placeholder during SSR to prevent hydration mismatch
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
+              </svg>
+            )}
+          </button>
+          <button
+            data-collapse-toggle="mega-menu-full-cta"
+            type="button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-lg hover:bg-neutral-secondary-soft hover:text-heading focus:outline-none focus:ring-2 focus:ring-default"
+            aria-controls="mega-menu-full-cta"
+            aria-expanded={isMobileMenuOpen}
+          >
+            <span className="sr-only">Open main menu</span>
+            <svg
+              className="w-6 h-6"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="2"
+                d="M5 7h14M5 12h14M5 17h14"
+              />
+            </svg>
+          </button>
+        </div>
         <div
           id="mega-menu-full-cta"
-          className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 md:relative ${
+            isMobileMenuOpen ? "flex" : "hidden"
+          }`}
         >
-          <ul className="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
+          <ul className="flex flex-col font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse absolute md:relative top-full left-0 right-0 md:top-auto md:left-auto md:right-auto bg-white dark:bg-gray-800 md:bg-transparent shadow-lg md:shadow-none border-b border-light md:border-0 z-[1100] md:z-auto">
             <li>
               <button
                 id="mega-menu-full-cta-dropdown-button"
@@ -185,10 +254,52 @@ export default function Header() {
                   />
                 </svg>
               </button>
+              {/* Mobile program links - shown when dropdown is open */}
+              {isDropdownOpen && (
+                <ul className="md:hidden pl-8 mt-2 space-y-2 border-l-2 border-light">
+                  {PROGRAMS.filter(
+                    (program) => program.group === "Martial Arts"
+                  ).map((program) => (
+                    <li key={program.href}>
+                      <a
+                        href={program.href}
+                        className="block py-2 px-3 text-heading hover:text-primary hover:bg-neutral-secondary-soft rounded"
+                      >
+                        {program.label}
+                      </a>
+                    </li>
+                  ))}
+                  {PROGRAMS.filter(
+                    (program) => program.group === "Brazilian Jiu-Jitsu"
+                  ).map((program) => (
+                    <li key={program.href}>
+                      <a
+                        href={program.href}
+                        className="block py-2 px-3 text-heading hover:text-primary hover:bg-neutral-secondary-soft rounded"
+                      >
+                        {program.label}
+                      </a>
+                    </li>
+                  ))}
+                  {PROGRAMS.filter(
+                    (program) => program.group === "Self-Defence"
+                  ).map((program) => (
+                    <li key={program.href}>
+                      <a
+                        href={program.href}
+                        className="block py-2 px-3 text-heading hover:text-primary hover:bg-neutral-secondary-soft rounded"
+                      >
+                        {program.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
             <li>
               <a
                 href="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 About
@@ -197,6 +308,7 @@ export default function Header() {
             <li>
               <a
                 href="/blog"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Blog
@@ -205,6 +317,7 @@ export default function Header() {
             <li>
               <a
                 href="/academy"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Academy
@@ -214,6 +327,7 @@ export default function Header() {
               <a
                 href={SITE_CONFIG.shopUrl}
                 target="_blank"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Shop
@@ -222,10 +336,19 @@ export default function Header() {
             <li>
               <a
                 href="/contact"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Contact
               </a>
+            </li>
+            <li className="mt-3 md:hidden">
+              <PrimaryButton
+                href="#footer-book-trial"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Book a trial
+              </PrimaryButton>
             </li>
           </ul>
         </div>
@@ -265,7 +388,7 @@ export default function Header() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 8 0z"
                 />
               </svg>
             ) : (
@@ -292,8 +415,8 @@ export default function Header() {
       <div
         id="mega-menu-full-cta-dropdown"
         className={`${
-          isDropdownOpen ? "block" : "hidden"
-        } absolute top-full left-0 right-0 z-[1100] mt-1 bg-neutral-primary-soft border-default shadow-xs border-y`}
+          isDropdownOpen ? "hidden md:block" : "hidden"
+        } absolute top-full left-0 right-0 z-[1100] bg-neutral-primary-soft border-default shadow-xs border-y`}
       >
         <div className="grid max-w-7xl px-4 py-5 mx-auto text-sm text-body md:grid-cols-3 md:px-6">
           {/* Left column - Martial Arts */}
@@ -308,14 +431,16 @@ export default function Header() {
                 <li key={program.href}>
                   <a
                     href={program.href}
-                    onClick={() => setIsDropdownOpen(false)}
+                    onClick={() => {
+                      setIsDropdownOpen(false);
+                    }}
                     className="block hover:text-primary group"
                   >
                     <span className="font-medium group-hover:underline">
                       {program.label}
                     </span>
                     {program.description && (
-                      <p className="text-xs text-body mt-1">
+                      <p className="hidden md:block text-xs text-body mt-1">
                         {program.description}
                       </p>
                     )}
@@ -341,14 +466,16 @@ export default function Header() {
                     <li key={program.href}>
                       <a
                         href={program.href}
-                        onClick={() => setIsDropdownOpen(false)}
+                        onClick={() => {
+                          setIsDropdownOpen(false);
+                        }}
                         className="block hover:text-primary group"
                       >
                         <span className="font-medium group-hover:underline">
                           {program.label}
                         </span>
                         {program.description && (
-                          <p className="text-xs text-body mt-1">
+                          <p className="hidden md:block text-xs text-body mt-1">
                             {program.description}
                           </p>
                         )}
@@ -371,14 +498,16 @@ export default function Header() {
                     <li key={program.href}>
                       <a
                         href={program.href}
-                        onClick={() => setIsDropdownOpen(false)}
+                        onClick={() => {
+                          setIsDropdownOpen(false);
+                        }}
                         className="block hover:text-primary group"
                       >
                         <span className="font-medium group-hover:underline">
                           {program.label}
                         </span>
                         {program.description && (
-                          <p className="text-xs text-body mt-1">
+                          <p className="hidden md:block text-xs text-body mt-1">
                             {program.description}
                           </p>
                         )}
@@ -400,7 +529,9 @@ export default function Header() {
             </p>
             <a
               href="/timetable"
-              onClick={() => setIsDropdownOpen(false)}
+              onClick={() => {
+                setIsDropdownOpen(false);
+              }}
               className="inline-flex items-center text-sm font-medium text-primary hover:underline"
             >
               View timetable

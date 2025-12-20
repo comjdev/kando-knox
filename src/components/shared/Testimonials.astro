@@ -45,8 +45,15 @@ const selectedReviews = shuffled.slice(0, 5);
         class="overflow-hidden relative mx-auto max-w-3xl min-h-[250px] rounded-lg"
       >
         {
-          selectedReviews.map((review) => (
-            <figure class="hidden mx-auto w-full max-w-3xl" data-carousel-item>
+          selectedReviews.map((review, index) => (
+            <figure
+              class={
+                index === 0
+                  ? "mx-auto w-full max-w-3xl block"
+                  : "hidden mx-auto w-full max-w-3xl"
+              }
+              data-carousel-item
+            >
               <blockquote>
                 <p class="text-lg font-medium text-gray-900 sm:text-2xl dark:text-white">
                   "{review.text}"
@@ -127,3 +134,36 @@ const selectedReviews = shuffled.slice(0, 5);
   /* Adjust this value to change speed: lower = faster, higher = slower */
   /* Examples: 0.3s = fast, 0.6s = medium, 1.2s = slow (current), 1.5s = very slow */
 </style>
+
+<script>
+  // Flowbite should auto-initialize via Layout.astro script
+  // This script just ensures the carousel structure is correct
+  if (typeof window !== "undefined") {
+    // Ensure first item is visible on initial load
+    function ensureFirstItemVisible() {
+      const carousel = document.getElementById("testimonial-carousel");
+      if (!carousel) return;
+
+      const items = carousel.querySelectorAll("[data-carousel-item]");
+      if (items.length > 0) {
+        const firstItem = items[0];
+        if (firstItem && firstItem.classList.contains("hidden")) {
+          firstItem.classList.remove("hidden");
+          firstItem.classList.add("block");
+        }
+      }
+    }
+
+    // Run on initial load
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", ensureFirstItemVisible);
+    } else {
+      ensureFirstItemVisible();
+    }
+
+    // Ensure structure is correct after ViewTransitions
+    document.addEventListener("astro:page-load", () => {
+      setTimeout(ensureFirstItemVisible, 150);
+    });
+  }
+</script>
