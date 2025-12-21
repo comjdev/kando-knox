@@ -91,13 +91,37 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
           defer
           src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.googleAnalyticsId}`}
         />
-        <script is:inline define:vars={{ gaId: SITE_CONFIG.googleAnalyticsId }}>
+        {/* Inline GA config - loads after gtag.js via defer */}
+        <script
+          is:inline
+          define:vars={{ gaId: SITE_CONFIG.googleAnalyticsId }}
+        >
+          // Initialize GA after gtag.js loads (deferred)
           window.dataLayer = window.dataLayer || [];
           function gtag() {
             dataLayer.push(arguments);
           }
-          gtag("js", new Date());
-          gtag("config", gaId);
+          // Wait for DOM and gtag.js to be ready
+          function initGA() {
+            if (window.gtag) {
+              gtag("js", new Date());
+              gtag("config", gaId);
+            } else {
+              // gtag.js not loaded yet, wait a bit
+              setTimeout(initGA, 50);
+            }
+          }
+          // Start initialization when DOM is ready (non-blocking)
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initGA);
+          } else {
+            // Use requestIdleCallback for non-blocking execution
+            if (window.requestIdleCallback) {
+              window.requestIdleCallback(initGA, { timeout: 1000 });
+            } else {
+              setTimeout(initGA, 100);
+            }
+          }
         </script>
       </>
     )}
@@ -165,10 +189,13 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
     <slot />
     <Footer />
     {isDecember15to27 && <SnowParticles />}
+    {/* Flowbite - Deferred for better performance (non-critical, loads after page interactive) */}
     <script
       is:inline
+      defer
       src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"
     ></script>
+    {/* Theme persistence and Flowbite reinit - Non-blocking execution */}
     <script
       is:inline
       define:vars={{ gaId: SITE_CONFIG.googleAnalyticsId }}
@@ -185,19 +212,17 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
       }
 
       // Re-initialize Flowbite components after ViewTransitions
+      // Uses requestIdleCallback for non-blocking execution
       function reinitFlowbite() {
-        // Wait a bit for DOM to be ready
-        setTimeout(() => {
-          // Try different Flowbite initialization methods
+        function initFlowbiteComponents() {
+          // Check if Flowbite is loaded
           if (typeof window.initFlowbite === "function") {
             try {
               window.initFlowbite();
             } catch (e) {
               // Ignore errors
             }
-          }
-          // Also try FlowbiteInstances if available
-          if (
+          } else if (
             window.FlowbiteInstances &&
             typeof window.FlowbiteInstances.init === "function"
           ) {
@@ -206,8 +231,19 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
             } catch (e) {
               // Ignore errors
             }
+          } else {
+            // Flowbite not loaded yet, wait and retry
+            setTimeout(initFlowbiteComponents, 100);
           }
-        }, 100);
+        }
+
+        // Use requestIdleCallback for non-blocking execution
+        if (typeof window.requestIdleCallback === "function") {
+          window.requestIdleCallback(initFlowbiteComponents, { timeout: 2000 });
+        } else {
+          // Fallback for browsers without requestIdleCallback
+          setTimeout(initFlowbiteComponents, 100);
+        }
       }
 
       // Set theme before swap happens
@@ -215,19 +251,28 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
         applyTheme();
       });
 
-      // Apply on page load (ViewTransitions)
+      // Apply on page load (ViewTransitions) - Non-blocking
       document.addEventListener("astro:page-load", () => {
         applyTheme();
-        reinitFlowbite();
-        // Track page view for Google Analytics
-        if (
-          typeof gtag !== "undefined" &&
-          gaId &&
-          gaId !== "G-XXXXXXXXXX"
-        ) {
-          gtag("config", gaId, {
-            page_path: window.location.pathname,
-          });
+        // Use requestIdleCallback for non-critical operations
+        function handlePageLoad() {
+          reinitFlowbite();
+          // Track page view for Google Analytics (non-blocking)
+          if (
+            typeof gtag !== "undefined" &&
+            gaId &&
+            gaId !== "G-XXXXXXXXXX"
+          ) {
+            gtag("config", gaId, {
+              page_path: window.location.pathname,
+            });
+          }
+        }
+        // Execute when browser is idle
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(handlePageLoad, { timeout: 2000 });
+        } else {
+          setTimeout(handlePageLoad, 100);
         }
       });
     </script>
