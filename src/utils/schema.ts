@@ -258,6 +258,56 @@ export function getServiceSchema(data: {
 }
 
 /**
+ * LocalBusiness schema for location pages
+ * Provides comprehensive local business information with NAP and geographic data
+ *
+ * @param locationName - Name of the city/location being served
+ * @param slug - URL slug for the location page
+ */
+export function getLocationLocalBusinessSchema(
+  locationName: string,
+  slug: string
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${SITE_CONFIG.url}/locations/${slug}#business`,
+    name: SITE_CONFIG.title,
+    image: `${SITE_CONFIG.url}/img/about.jpg`,
+    url: `${SITE_CONFIG.url}/locations/${slug}`,
+    telephone: SITE_CONFIG.phone,
+    email: SITE_CONFIG.email,
+    priceRange: "$$",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: SITE_CONFIG.address.street,
+      addressLocality: SITE_CONFIG.address.city,
+      addressRegion: SITE_CONFIG.address.state,
+      postalCode: SITE_CONFIG.address.postcode,
+      addressCountry: SITE_CONFIG.address.country,
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: SITE_CONFIG.coordinates.latitude,
+      longitude: SITE_CONFIG.coordinates.longitude,
+    },
+    areaServed: [
+      {
+        "@type": "City",
+        name: locationName,
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "City of Knox",
+      },
+    ],
+    ...(SITE_CONFIG.googleBusinessUrl && {
+      sameAs: [SITE_CONFIG.googleBusinessUrl],
+    }),
+  };
+}
+
+/**
  * Service schema for location pages
  * Represents karate training service for a specific location/city
  *
@@ -328,6 +378,60 @@ export function getLocationFAQPageSchema(locationName: string) {
         },
       },
     ],
+  };
+}
+
+/**
+ * AggregateRating and Review schema
+ * Uses Google reviews data to create aggregate rating and individual reviews
+ *
+ * @param reviews - Array of review objects with stars, name, text, reviewUrl
+ * @param googleBusinessUrl - Optional Google Business Profile URL
+ */
+export function getReviewSchema(
+  reviews: Array<{
+    stars: number;
+    name: string;
+    text: string;
+    reviewUrl?: string;
+  }>,
+  googleBusinessUrl?: string
+) {
+  // Calculate aggregate rating
+  const totalReviews = reviews.length;
+  const totalStars = reviews.reduce((sum, review) => sum + review.stars, 0);
+  const averageRating = totalStars / totalReviews;
+
+  // Get up to 10 most recent reviews (or all if less than 10)
+  const reviewItems = reviews.slice(0, 10).map((review) => ({
+    "@type": "Review",
+    author: {
+      "@type": "Person",
+      name: review.name,
+    },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: review.stars,
+      bestRating: 5,
+    },
+    reviewBody: review.text,
+    ...(review.reviewUrl && { url: review.reviewUrl }),
+  }));
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${SITE_CONFIG.url}/#business`,
+    name: SITE_CONFIG.title,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: averageRating.toFixed(1),
+      reviewCount: totalReviews,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    review: reviewItems,
+    ...(googleBusinessUrl && { url: googleBusinessUrl }),
   };
 }
 

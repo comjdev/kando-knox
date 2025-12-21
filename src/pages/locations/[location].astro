@@ -10,6 +10,7 @@ import WhyKando from "../../components/locations/WhyKando.astro";
 import Testimonials from "../../components/shared/Testimonials.astro";
 import LatestPosts from "../../components/shared/LatestPosts.astro";
 import {
+  getLocationLocalBusinessSchema,
   getLocationServiceSchema,
   getLocationFAQPageSchema,
 } from "../../utils/schema";
@@ -162,13 +163,21 @@ if (typeof location.faqs === "string") {
 }
 
 // Generate schemas for this location page
+// LocalBusiness schema (primary for local SEO) - includes full NAP and geographic data
+const localBusinessSchema = getLocationLocalBusinessSchema(
+  location.locationName,
+  location.slug
+);
+// Service schema (secondary) - location-specific service
 const serviceSchema = getLocationServiceSchema(
   location.locationName,
   location.slug,
   location.title
 );
+// FAQPage schema - for rich snippets
 const faqSchema = getLocationFAQPageSchema(location.locationName);
-const schemas = [serviceSchema, faqSchema];
+// Combine all schemas
+const schemas = [localBusinessSchema, serviceSchema, faqSchema];
 
 // Generate page title - check if location has titleTag, otherwise use default
 // Determine if it's BJJ or Karate based on location data or default to Karate

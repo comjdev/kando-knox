@@ -19,7 +19,7 @@ const { title, slug, description, date, image, categories = [] } = Astro.props;
   <a href={`/blog/${slug}`}>
     <OptimizedImage
       src={image || "/img/default.jpg"}
-      alt={`Post Image for ${title}`}
+      alt={`${title} - Blog post from Kando Martial Arts Knox`}
       class="w-full h-64 object-cover"
       loading="lazy"
       decoding="async"

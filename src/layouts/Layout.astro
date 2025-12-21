@@ -39,7 +39,8 @@ const {
 } = Astro.props;
 // If title is provided, use it directly (it should already include the suffix)
 // Otherwise, use the site title with suffix
-const pageTitle = title || `${SITE_CONFIG.title} | Karate | BJJ`;
+import { generatePageTitle } from "../utils/titles";
+const pageTitle = title || generatePageTitle(SITE_CONFIG.title, ["Karate", "BJJ"]);
 const pageDescription = description || SITE_CONFIG.description;
 
 // Check if current date is between December 15 and 27

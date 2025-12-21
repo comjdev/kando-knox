@@ -29,10 +29,39 @@ const finalMapEmbed =
       <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">
         Find us in Boronia
       </h3>
-      <p class="text-gray-700 dark:text-gray-300">
-        <strong>Address:</strong>
-        {formattedAddress}
-      </p>
+      <!-- NAP (Name, Address, Phone) - Important for Local SEO -->
+      <div class="space-y-1 text-gray-700 dark:text-gray-300">
+        <p>
+          <strong>{SITE_CONFIG.title}</strong>
+        </p>
+        <p>
+          <strong>Address:</strong>
+          {formattedAddress}
+        </p>
+        <p>
+          <strong>Phone:</strong>{" "}
+          <a
+            href={`tel:${SITE_CONFIG.phone.replace(/[^0-9+]/g, "")}`}
+            class="text-primary-500 hover:underline"
+          >
+            {SITE_CONFIG.phone}
+          </a>
+        </p>
+        {
+          SITE_CONFIG.googleBusinessUrl && (
+            <p class="mt-2">
+              <a
+                href={SITE_CONFIG.googleBusinessUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary-500 hover:underline text-sm"
+              >
+                View on Google Maps →
+              </a>
+            </p>
+          )
+        }
+      </div>
     </div>
   </div>
   <div class="w-full h-full">

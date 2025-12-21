@@ -2,19 +2,54 @@
  * Title Tag Utility Functions
  *
  * Generates SEO-friendly page titles with consistent suffix
+ * Ensures titles don't exceed 70 characters (Google best practice)
  */
 
 import { SITE_CONFIG } from "../config";
 
-const TITLE_SUFFIX = "| Kando Martial Arts Knox | Karate | BJJ";
+const BASE_SUFFIX = "| Kando Martial Arts Knox";
+const KEYWORDS = ["Karate", "BJJ"];
 
 /**
- * Generate page title with suffix
+ * Generate page title with smart suffix that adds keywords if space allows
  * @param pageTitle - The main page title
- * @returns Full title with suffix
+ * @param keywords - Optional keywords to add (e.g., ["Karate", "BJJ"])
+ * @returns Full title with suffix (max 70 characters)
  */
-export function generatePageTitle(pageTitle: string): string {
-  return `${pageTitle} ${TITLE_SUFFIX}`;
+export function generatePageTitle(
+  pageTitle: string,
+  keywords?: string[]
+): string {
+  const maxLength = 70;
+  const baseTitle = pageTitle.trim();
+  const baseSuffix = BASE_SUFFIX;
+
+  // Start with base title + base suffix
+  let fullTitle = `${baseTitle} ${baseSuffix}`;
+
+  // If title is already at or near max, return it
+  if (fullTitle.length >= maxLength - 5) {
+    return fullTitle.substring(0, maxLength);
+  }
+
+  // Add keywords if provided and there's space
+  const keywordsToAdd = keywords || KEYWORDS;
+  const remainingSpace = maxLength - fullTitle.length;
+
+  // Try to add keywords, prioritizing the most relevant ones
+  for (const keyword of keywordsToAdd) {
+    const keywordWithSeparator = ` | ${keyword}`;
+    if (fullTitle.length + keywordWithSeparator.length <= maxLength) {
+      fullTitle += keywordWithSeparator;
+    } else {
+      break; // No more space for keywords
+    }
+  }
+
+  // Final check - ensure we don't exceed max length
+  return fullTitle.length > maxLength
+    ? fullTitle.substring(0, maxLength).trim()
+    : fullTitle;
 }
 
 /**
@@ -27,7 +62,13 @@ export function getLocationPageTitle(
   locationName: string,
   programType: "Karate" | "BJJ" = "Karate"
 ): string {
-  return generatePageTitle(`${programType} in ${locationName} & Knox`);
+  // Add the program type as a keyword if it's not already in the title
+  const keywords =
+    programType === "Karate" ? ["Karate", "BJJ"] : ["BJJ", "Karate"];
+  return generatePageTitle(
+    `${programType} in ${locationName} & Knox`,
+    keywords
+  );
 }
 
 /**
@@ -40,7 +81,26 @@ export function getProgramPageTitle(programTitle: string): string {
   const title = programTitle.includes("Classes in Knox")
     ? programTitle
     : `${programTitle} Classes in Knox`;
-  return generatePageTitle(title);
+
+  // Determine keywords based on program type
+  let keywords: string[] = [];
+  const titleLower = title.toLowerCase();
+  if (titleLower.includes("karate") || titleLower.includes("martial arts")) {
+    keywords.push("Karate");
+  }
+  if (
+    titleLower.includes("bjj") ||
+    titleLower.includes("jiu-jitsu") ||
+    titleLower.includes("jiu jitsu")
+  ) {
+    keywords.push("BJJ");
+  }
+  // If no specific keywords found, add both
+  if (keywords.length === 0) {
+    keywords = ["Karate", "BJJ"];
+  }
+
+  return generatePageTitle(title, keywords);
 }
 
 /**

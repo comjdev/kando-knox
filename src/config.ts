@@ -21,6 +21,7 @@ export const SITE_CONFIG = {
     latitude: -37.8656501,
     longitude: 145.2531667,
   },
+  googleBusinessUrl: "https://maps.app.goo.gl/iNSWgGtT8VPqmy516", // Google Business Profile/Maps URL
 } as const;
 
 export interface Program {

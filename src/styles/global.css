@@ -44,33 +44,24 @@ h6 {
 }
 
 /* View Transitions - Smooth image transitions */
-::view-transition-old(program-image-*),
-::view-transition-new(program-image-*) {
-  animation-duration: 1.2s;
-  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-::view-transition-old(program-image-*) {
-  animation-name: fade-out;
-}
-
-::view-transition-new(program-image-*) {
-  animation-name: fade-in;
-}
-
-/* Blog image transitions */
-::view-transition-old(blog-image-*),
-::view-transition-new(blog-image-*) {
+/* Using general selectors to avoid CSS warnings with wildcards */
+/* These apply to all view transitions - specific names can be added if needed */
+::view-transition-group(*) {
   animation-duration: 0.6s;
   animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-::view-transition-old(blog-image-*) {
+/* Smooth fade transitions for all view transitions */
+::view-transition-old(*) {
   animation-name: fade-out;
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-::view-transition-new(blog-image-*) {
+::view-transition-new(*) {
   animation-name: fade-in;
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 @keyframes fade-out {

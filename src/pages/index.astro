@@ -7,9 +7,14 @@ import Benefits from "../components/home/Benefits.astro";
 import Testimonials from "../components/shared/Testimonials.astro";
 import LatestPosts from "../components/shared/LatestPosts.astro";
 import HomeHero from "../components/home/HomeHero.astro";
-import { getSportsActivityLocationSchema } from "../utils/schema";
+import {
+  getSportsActivityLocationSchema,
+  getReviewSchema,
+} from "../utils/schema";
+import googleReviews from "../content/testimonials/google-reviews.json";
 import { SITE_CONFIG } from "../config";
 import { formatMetaDescription } from "../utils/descriptions";
+import { generatePageTitle } from "../utils/titles";
 
 // Get all location names from location files
 const allLocations = Object.values(
@@ -25,11 +30,20 @@ const cities = Array.from(
   )
 ).sort() as string[];
 
-// Generate the SportsActivityLocation schema
-const schema = getSportsActivityLocationSchema(cities);
+// Generate schemas
+const sportsActivitySchema = getSportsActivityLocationSchema(cities);
 
-// Homepage title
-const pageTitle = `${SITE_CONFIG.title} | Karate | BJJ`;
+// Generate Review schema from Google reviews
+// Use Google Business Profile URL from config, fallback to first review URL
+const googleBusinessUrl =
+  SITE_CONFIG.googleBusinessUrl || googleReviews[0]?.url || undefined;
+const reviewSchema = getReviewSchema(googleReviews, googleBusinessUrl);
+
+// Combine schemas
+const schemas = [sportsActivitySchema, reviewSchema];
+
+// Homepage title - use generatePageTitle for consistent formatting
+const pageTitle = generatePageTitle(SITE_CONFIG.title, ["Karate", "BJJ"]);
 const pageDescription = formatMetaDescription(
   SITE_CONFIG.description,
   undefined,
@@ -49,8 +63,12 @@ const pageImage = "/img/about.jpg"; // Use a good homepage image
   description={pageDescription}
   image={pageImage}
   type="website"
-  schema={schema}
+  schemas={schemas}
 >
+  <!-- H1 for SEO - visually hidden but accessible -->
+  <h1 class="sr-only">
+    {SITE_CONFIG.title} - Karate & Brazilian Jiu-Jitsu Classes in Knox, Boronia
+  </h1>
   <HomeHero />
 
   <KandoInfo />
