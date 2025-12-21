@@ -5,13 +5,42 @@ import "../styles/global.css";
 import { SITE_CONFIG } from "../config";
 import Footer from "../components/Footer.astro";
 import SnowParticles from "../components/shared/SnowParticles.astro";
+import Schema from "../components/shared/Schema.astro";
+import SEO from "../components/shared/SEO.astro";
 
 interface Props {
   title?: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  type?: "website" | "article" | "profile";
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  noindex?: boolean;
+  nofollow?: boolean;
+  schema?: Record<string, any>;
+  schemas?: Record<string, any>[];
 }
 
-const { title } = Astro.props;
-const pageTitle = title ? `${title} | ${SITE_CONFIG.title}` : SITE_CONFIG.title;
+const {
+  title,
+  description,
+  image,
+  url,
+  type,
+  publishedTime,
+  modifiedTime,
+  author,
+  noindex,
+  nofollow,
+  schema,
+  schemas,
+} = Astro.props;
+// If title is provided, use it directly (it should already include the suffix)
+// Otherwise, use the site title with suffix
+const pageTitle = title || `${SITE_CONFIG.title} | Karate | BJJ`;
+const pageDescription = description || SITE_CONFIG.description;
 
 // Check if current date is between December 15 and 27
 const now = new Date();
@@ -93,6 +122,21 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
     />
     <ClientRouter />
     <title>{pageTitle}</title>
+    {/* SEO Meta Tags */}
+    <SEO
+      title={pageTitle}
+      description={pageDescription}
+      image={image}
+      url={url}
+      type={type}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      author={author}
+      noindex={noindex}
+      nofollow={nofollow}
+    />
+    {/* Schema.org JSON-LD Structured Data */}
+    {(schema || schemas) && <Schema schema={schema} schemas={schemas} />}
   </head>
   <body class="bg-white dark:bg-gray-900">
     <Header client:load />

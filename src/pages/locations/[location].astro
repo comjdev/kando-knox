@@ -9,6 +9,12 @@ import LocationsFAQs from "../../components/locations/LocationsFAQs.astro";
 import WhyKando from "../../components/locations/WhyKando.astro";
 import Testimonials from "../../components/shared/Testimonials.astro";
 import LatestPosts from "../../components/shared/LatestPosts.astro";
+import {
+  getLocationServiceSchema,
+  getLocationFAQPageSchema,
+} from "../../utils/schema";
+import { getLocationPageTitle } from "../../utils/titles";
+import { SITE_CONFIG } from "../../config";
 
 export async function getStaticPaths() {
   // #region agent log
@@ -153,9 +159,33 @@ if (typeof location.faqs === "string") {
   // Use FAQs array directly if provided
   faqs = location.faqs;
 }
+
+// Generate schemas for this location page
+const serviceSchema = getLocationServiceSchema(
+  location.locationName,
+  location.slug,
+  location.title
+);
+const faqSchema = getLocationFAQPageSchema(location.locationName);
+const schemas = [serviceSchema, faqSchema];
+
+// Generate page title - check if location has titleTag, otherwise use default
+// Determine if it's BJJ or Karate based on location data or default to Karate
+// For now, all location pages are Karate (can be overridden with titleTag in JSON)
+const programType = (location.programType || "Karate") as "Karate" | "BJJ";
+const pageTitle = location.titleTag
+  ? location.titleTag
+  : getLocationPageTitle(location.locationName, programType);
 ---
 
-<Layout>
+<Layout
+  title={pageTitle}
+  description={location.description}
+  image={featuredImage}
+  type="website"
+  url={`${SITE_CONFIG.url}/locations/${location.slug}`}
+  schemas={schemas}
+>
   <PageTemplate
     title={location.title}
     description={location.description}

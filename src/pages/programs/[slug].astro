@@ -7,6 +7,11 @@ import ProgramContent from "../../components/program/ProgramContent.astro";
 import ProgramFAQs from "../../components/program/ProgramFAQs.astro";
 import BookTrial from "../../components/shared/BookTrial.astro";
 import ProgramTimetable from "../../components/shared/Timetable.astro";
+import {
+  getProgramServiceSchema,
+  getProgramFAQPageSchema,
+} from "../../utils/schema";
+import { getProgramPageTitle } from "../../utils/titles";
 
 export async function getStaticPaths() {
   const programs = Object.values(
@@ -20,10 +25,34 @@ export async function getStaticPaths() {
 }
 
 const { program } = Astro.props;
-const pageTitle = `${program.title} | ${SITE_CONFIG.title}`;
+
+// Generate page title - use titleTag if provided, otherwise generate from program title
+const pageTitle = program.titleTag
+  ? program.titleTag
+  : getProgramPageTitle(program.title);
+
+// Generate schemas for this program page
+// Service name format: "{Program Title} Classes in Knox"
+const serviceName = `${program.title} Classes in Knox`;
+// Service type: Use the program title as service type (e.g., "Pre-School Martial Arts and Karate")
+const serviceType = program.title;
+const serviceSchema = getProgramServiceSchema(
+  serviceName,
+  serviceType,
+  program.slug
+);
+const faqSchema = getProgramFAQPageSchema();
+const schemas = [serviceSchema, faqSchema];
 ---
 
-<Layout title={program.title}>
+<Layout
+  title={pageTitle}
+  description={program.description || program.shortDescription}
+  image={program.image}
+  type="website"
+  url={`${SITE_CONFIG.url}/programs/${program.slug}`}
+  schemas={schemas}
+>
   <ProgramHeader
     title={program.title}
     image={program.image}

@@ -1,0 +1,52 @@
+---
+/**
+ * Schema.org JSON-LD Component
+ *
+ * This component renders Schema.org structured data as JSON-LD in the page head.
+ *
+ * Usage Examples:
+ *
+ * Single schema:
+ * ---
+ * const mySchema = {
+ *   "@context": "https://schema.org",
+ *   "@type": "Organization",
+ *   name: "My Company"
+ * };
+ * ---
+ * <Layout schema={mySchema}>
+ *
+ * Multiple schemas:
+ * ---
+ * const orgSchema = { "@context": "https://schema.org", "@type": "Organization", ... };
+ * const websiteSchema = { "@context": "https://schema.org", "@type": "WebSite", ... };
+ * ---
+ * <Layout schemas={[orgSchema, websiteSchema]}>
+ *
+ * Using helper functions:
+ * ---
+ * import { getOrganizationSchema, getWebSiteSchema } from "../utils/schema";
+ * ---
+ * <Layout schemas={[getOrganizationSchema(), getWebSiteSchema()]}>
+ */
+
+interface Props {
+  schema?: Record<string, any>;
+  schemas?: Record<string, any>[];
+}
+
+const { schema, schemas } = Astro.props;
+
+// Support both single schema and multiple schemas
+const schemaArray = schemas || (schema ? [schema] : []);
+---
+
+{
+  schemaArray.map((schemaData, index) => (
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(schemaData)}
+      key={`schema-${index}`}
+    />
+  ))
+}

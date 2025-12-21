@@ -32,9 +32,9 @@
     },
     {
       "day": "Tuesday",
-      "timeFrom": "8:50 AM",
-      "timeTo": "9:20 AM",
-      "className": "Little Dragons (5-6 years)",
+      "timeFrom": "4:10 PM",
+      "timeTo": "4:40 PM",
+      "className": "Kinder Ninjas (3-4 years)",
       "beltRank": null,
       "instructor": null
     },
@@ -50,7 +50,7 @@
       "day": "Tuesday",
       "timeFrom": "4:50 PM",
       "timeTo": "5:20 PM",
-      "className": "Kinder Ninjas (3-4 years)",
+      "className": "Little Dragons (5-6 years)",
       "beltRank": null,
       "instructor": null
     },

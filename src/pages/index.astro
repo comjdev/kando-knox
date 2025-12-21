@@ -7,9 +7,39 @@ import Benefits from "../components/home/Benefits.astro";
 import Testimonials from "../components/shared/Testimonials.astro";
 import LatestPosts from "../components/shared/LatestPosts.astro";
 import HomeHero from "../components/home/HomeHero.astro";
+import { getSportsActivityLocationSchema } from "../utils/schema";
+import { SITE_CONFIG } from "../config";
+
+// Get all location names from location files
+const allLocations = Object.values(
+  import.meta.glob("../content/locations/*.json", { eager: true })
+).map((location: any) => location.default);
+
+// Extract unique location names (cities) and sort them
+const cities = Array.from(
+  new Set(
+    allLocations
+      .filter((loc: any) => loc.locationName)
+      .map((loc: any) => loc.locationName)
+  )
+).sort() as string[];
+
+// Generate the SportsActivityLocation schema
+const schema = getSportsActivityLocationSchema(cities);
+
+// Homepage title
+const pageTitle = `${SITE_CONFIG.title} | Karate | BJJ`;
+const pageDescription = SITE_CONFIG.description;
+const pageImage = "/img/about.jpg"; // Use a good homepage image
 ---
 
-<Layout>
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  image={pageImage}
+  type="website"
+  schema={schema}
+>
   <HomeHero />
 
   <KandoInfo />

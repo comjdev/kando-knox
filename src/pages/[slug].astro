@@ -4,6 +4,8 @@ import PageTemplate from "../components/shared/PageTemplate.astro";
 import Program from "../components/shared/Program.astro";
 import Team from "../components/home/Team.astro";
 import TrialForm from "../components/shared/TrialForm.astro";
+import { getCustomPageTitle, getAboutPageTitle } from "../utils/titles";
+import { SITE_CONFIG } from "../config";
 
 export async function getStaticPaths() {
   const pages = Object.values(
@@ -33,9 +35,27 @@ const featuredImage =
 // Get transition name for view transitions
 const transitionName =
   page.frontmatter.transitionName || `page-${page.frontmatter.slug}`;
+
+// Generate page title
+// Special handling for about page
+let pageTitle: string;
+if (page.frontmatter.slug === "about") {
+  pageTitle = page.frontmatter.titleTag || getAboutPageTitle();
+} else {
+  pageTitle = getCustomPageTitle(
+    page.frontmatter.titleTag,
+    page.frontmatter.title
+  );
+}
 ---
 
-<Layout>
+<Layout
+  title={pageTitle}
+  description={page.frontmatter.description}
+  image={featuredImage}
+  type="website"
+  url={`${SITE_CONFIG.url}/${page.frontmatter.slug}`}
+>
   <PageTemplate
     title={page.frontmatter.title}
     description={page.frontmatter.description}

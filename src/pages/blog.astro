@@ -2,6 +2,9 @@
 import Layout from "../layouts/Layout.astro";
 import BlogGrid from "../components/shared/BlogGrid.astro";
 import CategoryFilter from "../components/shared/CategoryFilter";
+import { getCustomPageTitle } from "../utils/titles";
+import { SITE_CONFIG } from "../config";
+import { getCustomPageTitle } from "../utils/titles";
 
 // Load all blog posts to extract categories
 const blogPosts = import.meta.glob("../content/blog/*.md", { eager: true });
@@ -29,9 +32,19 @@ const hasUncategorized = allPosts.some((post) => !post.category);
 if (hasUncategorized) {
   categories.push("Uncategorized");
 }
+
+const pageTitle = getCustomPageTitle(undefined, "Martial Arts Blog");
+const pageDescription =
+  "Read our latest articles about martial arts, karate, Brazilian Jiu-Jitsu, self-defence, and more.";
 ---
 
-<Layout>
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  image="/img/default.jpg"
+  type="website"
+  url={`${SITE_CONFIG.url}/blog`}
+>
   <section class="bg-white dark:bg-gray-900">
     <div class="py-8 px-4 mx-auto max-w-7xl lg:py-16 lg:px-6">
       <div class="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">

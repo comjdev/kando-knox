@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import { SITE_CONFIG } from "../config";
 import TimetableComponent from "../components/shared/Timetable.astro";
+import { getCustomPageTitle } from "../utils/titles";
 
 interface ScheduleItem {
   day: string;
@@ -58,9 +59,16 @@ allSchedules.sort((a, b) => {
   return timeToMinutes(a.timeFrom) - timeToMinutes(b.timeFrom);
 });
 
-const pageTitle = `Timetable | ${SITE_CONFIG.title}`;
+const pageTitle = getCustomPageTitle(undefined, "Class Timetable");
+const pageDescription = `View the class timetable for ${SITE_CONFIG.title}. Find karate and Brazilian Jiu-Jitsu classes for all ages in ${SITE_CONFIG.address.city}, serving the Knox area.`;
 ---
 
-<Layout title="Timetable">
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  image="/img/default.jpg"
+  type="website"
+  url={`${SITE_CONFIG.url}/timetable`}
+>
   <TimetableComponent schedule={allSchedules} useDualFilter={true} />
 </Layout>

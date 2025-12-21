@@ -3,12 +3,20 @@ import Layout from "../layouts/Layout.astro";
 import LocationMap from "../components/shared/LocationMap.astro";
 import ContactForm from "../components/contact/ContactForm.astro";
 import { SITE_CONFIG } from "../config";
+import { getCustomPageTitle } from "../utils/titles";
 
-const pageTitle = `Contact Us | ${SITE_CONFIG.title}`;
 const formattedAddress = `${SITE_CONFIG.address.street}, ${SITE_CONFIG.address.city} ${SITE_CONFIG.address.state} ${SITE_CONFIG.address.postcode}, ${SITE_CONFIG.address.country}`;
+const pageTitle = getCustomPageTitle(undefined, "Contact Us");
+const pageDescription = `Contact ${SITE_CONFIG.title} in ${SITE_CONFIG.address.city}. Call ${SITE_CONFIG.phone} or email ${SITE_CONFIG.email} for martial arts classes in Knox.`;
 ---
 
-<Layout title="Contact Us">
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  image="/img/kando-contact.jpg"
+  type="website"
+  url={`${SITE_CONFIG.url}/contact`}
+>
   <section class="bg-white dark:bg-gray-900">
     <div
       class="bg-no-repeat bg-cover bg-center bg-gray-700 bg-blend-multiply"

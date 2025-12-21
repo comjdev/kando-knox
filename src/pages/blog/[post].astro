@@ -1,5 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { getBlogPostingSchema } from "../../utils/schema";
+import { getBlogPostTitle } from "../../utils/titles";
+import { SITE_CONFIG } from "../../config";
 
 export async function getStaticPaths() {
   const posts = Object.values(
@@ -16,8 +19,12 @@ const { post } = Astro.props;
 
 // Get current page URL for sharing
 const currentUrl = Astro.url.href;
-const pageTitle = post.frontmatter.title;
 const pageDescription = post.frontmatter.description || post.frontmatter.title;
+
+// Generate page title - use titleTag if provided, otherwise generate from post title
+const pageTitle = post.frontmatter.titleTag
+  ? post.frontmatter.titleTag
+  : getBlogPostTitle(post.frontmatter.title);
 
 // Load all blog posts for sidebar
 const allPosts = Object.values(
@@ -54,9 +61,38 @@ const featuredImage =
   post.frontmatter.image ||
   post.frontmatter.featuredImage ||
   "/img/default.jpg";
+
+// Format date for schema (ISO format)
+const formatDateForSchema = (dateString: string | Date) => {
+  const date = dateString instanceof Date ? dateString : new Date(dateString);
+  return date.toISOString();
+};
+
+// Generate BlogPosting schema
+const schema = getBlogPostingSchema(
+  post.frontmatter.title,
+  post.frontmatter.description || post.frontmatter.title,
+  post.frontmatter.slug,
+  post.frontmatter.date
+    ? formatDateForSchema(post.frontmatter.date)
+    : undefined,
+  undefined, // dateModified - can be added later if needed
+  featuredImage
+);
 ---
 
-<Layout>
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  image={featuredImage}
+  type="article"
+  url={currentUrl}
+  publishedTime={post.frontmatter.date
+    ? formatDateForSchema(post.frontmatter.date)
+    : undefined}
+  author={SITE_CONFIG.title}
+  schema={schema}
+>
   <main class="pb-16 lg:pb-24 bg-white dark:bg-gray-900 antialiased">
     <header
       class="w-full h-[460px] xl:h-[537px] bg-no-repeat bg-cover bg-center relative"

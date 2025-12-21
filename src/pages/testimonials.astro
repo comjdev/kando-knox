@@ -3,14 +3,24 @@ import Layout from "../layouts/Layout.astro";
 import { SITE_CONFIG } from "../config";
 import googleReviews from "../content/testimonials/google-reviews.json";
 import Rating from "../components/shared/Rating.astro";
+import { getCustomPageTitle } from "../utils/titles";
 
 // Filter out reviews without text and ensure text is not null
 const reviewsWithText = googleReviews.filter(
   (review): review is typeof review & { text: string } => !!review.text
 );
+
+const pageTitle = getCustomPageTitle(undefined, "Testimonials");
+const pageDescription = `Read testimonials and reviews from students and families at ${SITE_CONFIG.title}. See what our community says about our karate and BJJ classes in ${SITE_CONFIG.address.city}.`;
 ---
 
-<Layout>
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  image="/img/default.jpg"
+  type="website"
+  url={`${SITE_CONFIG.url}/testimonials`}
+>
   <section class="bg-white dark:bg-gray-900">
     <div class="py-8 px-4 mx-auto max-w-7xl lg:py-16 lg:px-6">
       <div class="mx-auto max-w-3xl text-center">
