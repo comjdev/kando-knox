@@ -1,5 +1,7 @@
 ---
 import heroSliderData from "../../content/heroSlider.json";
+import { getImageAsset } from "../../utils/imageMap";
+import { Image } from "astro:assets";
 
 interface Slide {
   image: string;
@@ -12,6 +14,15 @@ interface Slide {
 }
 
 const slides: Slide[] = heroSliderData;
+
+// Map slides to include optimized image assets
+const slidesWithAssets = slides.map((slide) => {
+  const imageAsset = getImageAsset(slide.image);
+  return {
+    ...slide,
+    imageAsset,
+  };
+});
 ---
 
 <div
@@ -21,37 +32,45 @@ const slides: Slide[] = heroSliderData;
   <div class="carousel relative w-full h-full overflow-hidden z-0">
     <div class="list">
       {
-        slides.map((slide) => (
-          <div
-            class="item absolute rounded-[20px] overflow-hidden bg-cover bg-center shadow-[0_25px_50px_rgba(0,0,0,0.7)] z-10 transition-all"
-            style={`background-image: url(${slide.image});`}
-          >
-            <div class="content absolute text-left text-white z-[3] left-0 w-full p-2.5 transition-all">
-              <div
-                class="title relative uppercase font-bold leading-none mb-2.5 text-white text-xs transition-all"
-                data-dojo={slide.dojo || ""}
-              >
-                {slide.title}
-              </div>
-              <div class="name uppercase font-medium leading-none mb-2.5 text-[10px] text-primary-500 transition-all">
-                {slide.name}
-              </div>
-              <div class="des text-base font-normal opacity-0 hidden transition-all">
-                {slide.description}
-              </div>
-              {slide.buttonText && slide.buttonLink ? (
-                <a
-                  href={slide.buttonLink}
-                  class="hero-button hidden mt-5 px-6 py-3 bg-primary-500 text-white no-underline rounded font-medium transition-all hover:bg-[#a67a0b] hover:-translate-y-0.5"
+        slidesWithAssets.map((slide) => {
+          // Get optimized image URL from asset
+          const imageUrl =
+            typeof slide.imageAsset === "object"
+              ? slide.imageAsset.src
+              : slide.image;
+
+          return (
+            <div
+              class="item absolute rounded-[20px] overflow-hidden bg-cover bg-center shadow-[0_25px_50px_rgba(0,0,0,0.7)] z-10 transition-all"
+              style={`background-image: url(${imageUrl});`}
+            >
+              <div class="content absolute text-left text-white z-[3] left-0 w-full p-2.5 transition-all">
+                <div
+                  class="title relative uppercase font-bold leading-none mb-2.5 text-white text-xs transition-all"
+                  data-dojo={slide.dojo || ""}
                 >
-                  {slide.buttonText}
-                </a>
-              ) : (
-                ""
-              )}
+                  {slide.title}
+                </div>
+                <div class="name uppercase font-medium leading-none mb-2.5 text-[10px] text-primary-500 transition-all">
+                  {slide.name}
+                </div>
+                <div class="des text-base font-normal opacity-0 hidden transition-all">
+                  {slide.description}
+                </div>
+                {slide.buttonText && slide.buttonLink ? (
+                  <a
+                    href={slide.buttonLink}
+                    class="hero-button hidden mt-5 px-6 py-3 bg-primary-500 text-white no-underline rounded font-medium transition-all hover:bg-[#a67a0b] hover:-translate-y-0.5"
+                  >
+                    {slide.buttonText}
+                  </a>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
-          </div>
-        ))
+          );
+        })
       }
     </div>
 

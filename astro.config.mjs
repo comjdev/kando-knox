@@ -10,6 +10,15 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   site: "https://knoxmartialarts.com.au",
   compressHTML: true, // Minify HTML output
+  image: {
+    // Optimize all images to WebP by default (best compression)
+    service: {
+      entrypoint: "astro/assets/services/sharp",
+      config: {
+        limitInputPixels: false, // Allow large images
+      },
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
     build: {

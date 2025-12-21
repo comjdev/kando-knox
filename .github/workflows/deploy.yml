@@ -1,0 +1,154 @@
+name: Deploy to S3 and Invalidate CloudFront
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: "20"
+  AWS_REGION: "ap-southeast-2" # Sydney region - adjust if needed
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+        # Astro automatically optimizes images during build using Sharp
+        # Images in src/assets/ are converted to WebP/AVIF
+        # Images in public/ are served as-is (not optimized)
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload HTML files to S3 (1 day cache)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*" \
+            --include "*.html" \
+            --include "*.xml" \
+            --include "*.txt" \
+            --cache-control "public, max-age=86400, s-maxage=86400" \
+            --delete
+          # Note: CloudFront invalidation ensures fresh content after deployments
+          # 1 day cache is safe since site updates monthly on average
+
+      - name: Upload CSS files to S3 (1 year cache)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*" \
+            --include "*.css" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --content-type "text/css" \
+            --delete
+
+      - name: Upload JavaScript files to S3 (1 year cache)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*" \
+            --include "*.js" \
+            --include "*.mjs" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --content-type "application/javascript" \
+            --delete
+
+      - name: Upload WebP images to S3 (1 year cache)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*" \
+            --include "*.webp" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --content-type "image/webp" \
+            --delete
+
+      - name: Upload AVIF images to S3 (1 year cache)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*" \
+            --include "*.avif" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --content-type "image/avif" \
+            --delete
+
+      - name: Upload other images to S3 (1 year cache)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*" \
+            --include "*.jpg" \
+            --include "*.jpeg" \
+            --include "*.png" \
+            --include "*.gif" \
+            --include "*.svg" \
+            --include "*.ico" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --delete
+
+      - name: Upload fonts to S3 (1 year cache)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*" \
+            --include "*.woff" \
+            --include "*.woff2" \
+            --include "*.ttf" \
+            --include "*.otf" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --delete
+
+      - name: Upload other assets to S3 (1 week cache)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*.html" \
+            --exclude "*.xml" \
+            --exclude "*.txt" \
+            --exclude "*.css" \
+            --exclude "*.js" \
+            --exclude "*.mjs" \
+            --exclude "*.webp" \
+            --exclude "*.avif" \
+            --exclude "*.jpg" \
+            --exclude "*.jpeg" \
+            --exclude "*.png" \
+            --exclude "*.gif" \
+            --exclude "*.svg" \
+            --exclude "*.ico" \
+            --exclude "*.woff" \
+            --exclude "*.woff2" \
+            --exclude "*.ttf" \
+            --exclude "*.otf" \
+            --cache-control "public, max-age=604800" \
+            --delete
+
+      - name: Invalidate CloudFront cache
+        if: env.CLOUDFRONT_DISTRIBUTION_ID != ''
+        env:
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id $CLOUDFRONT_DISTRIBUTION_ID \
+            --paths "/*"
+
+      - name: Deployment summary
+        run: |
+          echo "✅ Deployment complete!"
+          echo "📦 S3 Bucket: ${{ secrets.S3_BUCKET_NAME }}"
+          echo "🌐 CloudFront Distribution: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}"
+          echo "🚀 Site URL: https://knoxmartialarts.com.au"

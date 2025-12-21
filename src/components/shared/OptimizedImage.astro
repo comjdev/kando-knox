@@ -1,5 +1,6 @@
 ---
 import { Image, type ImageMetadata } from "astro:assets";
+import { getImageAsset } from "../../utils/imageMap";
 
 interface Props {
   src: string | ImageMetadata;
@@ -24,20 +25,28 @@ const {
   width,
   height,
   quality = 80,
-  format,
+  format = "webp", // Default to WebP for best performance
 } = Astro.props;
 
-// Check if src is an asset import (ImageMetadata)
-const isAsset = typeof src === "object" && "src" in src;
+// Resolve image path to asset if available
+const imageAsset = getImageAsset(typeof src === "string" ? src : undefined);
 
-// If it's an asset, use Astro's Image component for optimization
-// Otherwise, use regular img tag with optimization attributes
+// Check if we have an asset import (ImageMetadata)
+const isAsset = typeof imageAsset === "object" && "src" in imageAsset;
+
+// Use resolved asset or original src
+const finalSrc = isAsset
+  ? imageAsset
+  : typeof src === "object"
+    ? src
+    : imageAsset;
+const finalIsAsset = typeof finalSrc === "object" && "src" in finalSrc;
 ---
 
 {
-  isAsset ? (
+  finalIsAsset ? (
     <Image
-      src={src as ImageMetadata}
+      src={finalSrc as ImageMetadata}
       alt={alt}
       class={className}
       loading={loading}
@@ -50,12 +59,14 @@ const isAsset = typeof src === "object" && "src" in src;
     />
   ) : (
     <img
-      src={src as string}
+      src={finalSrc as string}
       alt={alt}
       class={className}
       loading={loading}
       decoding={decoding}
       sizes={sizes}
+      width={width}
+      height={height}
     />
   )
 }

@@ -1,5 +1,7 @@
 ---
 import OptimizedImage from "./OptimizedImage.astro";
+import { getImageAsset } from "../../utils/imageMap";
+import { Image } from "astro:assets";
 
 interface Props {
   title: string;
@@ -15,6 +17,11 @@ const {
   transitionName,
 } = Astro.props;
 
+// Resolve image to asset for optimized background image
+const imageAsset = getImageAsset(image);
+const backgroundImageUrl =
+  typeof imageAsset === "object" ? imageAsset.src : image;
+
 // Load programs for sidebar
 const allPrograms = Object.values(
   import.meta.glob("../../content/program/*.json", { eager: true })
@@ -27,7 +34,7 @@ const sidebarPrograms = allPrograms.sort((a, b) => a.id - b.id).slice(0, 3);
 <main class="pb-16 lg:pb-24 bg-white dark:bg-gray-900 antialiased">
   <header
     class="w-full h-[460px] xl:h-[537px] bg-no-repeat bg-cover bg-center relative"
-    style={`background-image: url('${image}'); background-size: cover; background-position: center;`}
+    style={`background-image: url('${backgroundImageUrl}'); background-size: cover; background-position: center;`}
     transition:name={transitionName}
   >
     <div class="absolute inset-0 bg-black/50 z-10"></div>
