@@ -82,14 +82,11 @@ const { title, image, description, shortDescription, ageGroup } = Astro.props;
         image && (
           <div class="max-w-5xl mx-auto mt-8">
             <img
-              class="object-cover object-top w-full h-auto rounded-lg shadow-lg dark:hidden"
+              class="object-cover object-top w-full h-auto rounded-lg shadow-lg"
               src={image}
               alt={title}
-            />
-            <img
-              class="object-cover object-top w-full h-auto rounded-lg shadow-lg dark:block hidden"
-              src={image}
-              alt={title}
+              loading="lazy"
+              decoding="async"
             />
           </div>
         )

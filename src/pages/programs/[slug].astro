@@ -12,6 +12,7 @@ import {
   getProgramFAQPageSchema,
 } from "../../utils/schema";
 import { getProgramPageTitle } from "../../utils/titles";
+import { formatMetaDescription } from "../../utils/descriptions";
 
 export async function getStaticPaths() {
   const programs = Object.values(
@@ -43,11 +44,18 @@ const serviceSchema = getProgramServiceSchema(
 );
 const faqSchema = getProgramFAQPageSchema();
 const schemas = [serviceSchema, faqSchema];
+
+// Format meta description - prioritize metaDescription field, then description, then shortDescription
+const metaDesc = formatMetaDescription(
+  program.metaDescription || program.description || program.shortDescription,
+  undefined,
+  [program.title, "Knox", "Boronia", "martial arts"]
+);
 ---
 
 <Layout
   title={pageTitle}
-  description={program.description || program.shortDescription}
+  description={metaDesc}
   image={program.image}
   type="website"
   url={`${SITE_CONFIG.url}/programs/${program.slug}`}

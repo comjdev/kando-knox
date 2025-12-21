@@ -27,7 +27,15 @@
   },
   "servingArea": {
     "heading": "Serving Boronia and nearby Knox suburbs",
-    "description": "Our Boronia-based karate dojo welcomes students from Boronia and surrounding areas such as Wantirna, Bayswater, Rowville, and Ferntree Gully. We provide a supportive, family-friendly training environment."
+    "description": "Our Boronia-based karate dojo welcomes students from Boronia and surrounding areas such as <a href=\"/locations/karate-wantirna\" class=\"text-primary hover:underline\">Wantirna</a>, <a href=\"/locations/karate-bayswater\" class=\"text-primary hover:underline\">Bayswater</a>, <a href=\"/locations/karate-rowville\" class=\"text-primary hover:underline\">Rowville</a>, and <a href=\"/locations/karate-ferntree-gully\" class=\"text-primary hover:underline\">Ferntree Gully</a>. We provide a supportive, family-friendly training environment."
+  },
+  "getToKando": {
+    "heading": "Kando Martial Arts Knox in Boronia",
+    "description": [
+      "Kando Martial Arts Knox is proudly located right here in Boronia, offering local families immediate access to professional karate and martial arts training without the need to travel outside the area. Our dojo at Unit 2/5 Wadhurst Drive serves as a community hub where Boronia residents can develop martial arts skills close to home.",
+      "For Boronia families, our location means you can walk, cycle, or take a short drive to reach our facility. Whether you're coming from the Boronia shopping centre, local schools, or nearby residential streets, our dojo is just minutes away. This convenience makes it easier for families to maintain consistent training schedules and participate fully in our programs.",
+      "As a Boronia-based martial arts school, we understand the needs of local families and are committed to providing accessible, high-quality instruction. Our central location within Boronia ensures that students can easily attend regular classes, belt gradings, and special events, fostering a strong sense of community among our local members."
+    ]
   },
   "classes": [
     {

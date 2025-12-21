@@ -15,6 +15,7 @@ import {
 } from "../../utils/schema";
 import { getLocationPageTitle } from "../../utils/titles";
 import { SITE_CONFIG } from "../../config";
+import { formatMetaDescription } from "../../utils/descriptions";
 
 export async function getStaticPaths() {
   // #region agent log
@@ -176,11 +177,18 @@ const programType = (location.programType || "Karate") as "Karate" | "BJJ";
 const pageTitle = location.titleTag
   ? location.titleTag
   : getLocationPageTitle(location.locationName, programType);
+
+// Format meta description - prioritize metaDescription field, then description
+const metaDesc = formatMetaDescription(
+  location.metaDescription || location.description,
+  undefined,
+  ["karate classes", location.locationName, "Knox", "Boronia", "martial arts"]
+);
 ---
 
 <Layout
   title={pageTitle}
-  description={location.description}
+  description={metaDesc}
   image={featuredImage}
   type="website"
   url={`${SITE_CONFIG.url}/locations/${location.slug}`}
@@ -249,10 +257,40 @@ const pageTitle = location.titleTag
             </h2>
           )}
           {location.servingArea.description && (
-            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-              {location.servingArea.description}
-            </p>
+            <p
+              class="text-gray-700 dark:text-gray-300 leading-relaxed"
+              set:html={location.servingArea.description}
+            />
           )}
+        </section>
+      )
+    }
+
+    <!-- Get to Kando Section -->
+    {
+      location.getToKando && (
+        <section class="my-8">
+          {location.getToKando.heading && (
+            <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+              {location.getToKando.heading}
+            </h2>
+          )}
+          {location.getToKando.description &&
+            Array.isArray(location.getToKando.description) && (
+              <div class="space-y-4">
+                {location.getToKando.description.map((paragraph: string) => (
+                  <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            )}
+          {location.getToKando.description &&
+            typeof location.getToKando.description === "string" && (
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {location.getToKando.description}
+              </p>
+            )}
         </section>
       )
     }

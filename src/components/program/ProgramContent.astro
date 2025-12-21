@@ -43,14 +43,11 @@ const { content = [], title, description } = Astro.props;
               >
                 <div>
                   <img
-                    class="object-cover w-full rounded-lg shadow-lg dark:hidden"
                     src={item.image}
                     alt={item.title}
-                  />
-                  <img
-                    class="object-cover w-full rounded-lg shadow-lg dark:block hidden"
-                    src={item.image}
-                    alt={item.title}
+                    class="object-cover w-full rounded-lg shadow-lg"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div class="w-full space-y-6 lg:max-w-lg shrink-0 xl:max-w-2xl">

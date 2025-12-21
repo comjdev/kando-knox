@@ -27,7 +27,15 @@
   },
   "servingArea": {
     "heading": "Serving Rowville and nearby Knox suburbs",
-    "description": "Our Boronia-based karate dojo welcomes students from Rowville and surrounding areas such as Wantirna, Bayswater, Rowville, and Ferntree Gully. We provide a supportive, family-friendly training environment."
+    "description": "Our Boronia-based karate dojo welcomes students from Rowville and surrounding areas such as <a href=\"/locations/karate-wantirna\" class=\"text-primary hover:underline\">Wantirna</a>, <a href=\"/locations/karate-bayswater\" class=\"text-primary hover:underline\">Bayswater</a>, and <a href=\"/locations/karate-ferntree-gully\" class=\"text-primary hover:underline\">Ferntree Gully</a>. We provide a supportive, family-friendly training environment."
+  },
+  "getToKando": {
+    "heading": "Getting to Kando Martial Arts Knox from Rowville",
+    "description": [
+      "Rowville families exploring martial arts options often choose Kando Martial Arts Knox for our comprehensive programs that cater to different age groups and skill levels. Our Boronia location serves Rowville residents who are looking for more than just physical activity—they want their children to learn discipline, respect, and self-confidence through authentic karate training.",
+      "The journey from Rowville to our Boronia dojo typically takes around 15 to 20 minutes by car. Take Stud Road heading north toward Boronia, then turn onto Burwood Highway. From Burwood Highway, turn into Lewis Road, followed by a turn into Wadhurst Drive. Our facility is located at Unit 2/5 Wadhurst Drive, Boronia.",
+      "While Rowville is a bit further from Boronia, many families make the trip because they appreciate our teaching philosophy and the positive impact our programs have on children's development. Rowville students often become dedicated members, regularly attending classes and progressing through the belt system while building lasting friendships."
+    ]
   },
   "classes": [
     {

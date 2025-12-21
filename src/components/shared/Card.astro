@@ -19,6 +19,8 @@ const { title, slug, description, date, image, categories = [] } = Astro.props;
       src={image ? image : "/img/default.jpg"}
       alt={`Post Image for ${title}`}
       class="w-full h-64 object-cover"
+      loading="lazy"
+      decoding="async"
       transition:name={`blog-image-${slug}`}
     />
   </a>

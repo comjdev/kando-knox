@@ -27,7 +27,15 @@
   },
   "servingArea": {
     "heading": "Serving Croydon and nearby Knox suburbs",
-    "description": "Our Boronia-based karate dojo welcomes students from Croydon and surrounding areas such as Wantirna, Bayswater, Rowville, and Ferntree Gully. We provide a supportive, family-friendly training environment."
+    "description": "Our Boronia-based karate dojo welcomes students from Croydon and surrounding areas such as <a href=\"/locations/karate-wantirna\" class=\"text-primary hover:underline\">Wantirna</a>, <a href=\"/locations/karate-bayswater\" class=\"text-primary hover:underline\">Bayswater</a>, <a href=\"/locations/karate-rowville\" class=\"text-primary hover:underline\">Rowville</a>, and <a href=\"/locations/karate-ferntree-gully\" class=\"text-primary hover:underline\">Ferntree Gully</a>. We provide a supportive, family-friendly training environment."
+  },
+  "getToKando": {
+    "heading": "Getting to Kando Martial Arts Knox from Croydon",
+    "description": [
+      "Croydon families looking for comprehensive martial arts training often discover Kando Martial Arts Knox as an ideal choice, combining our established reputation with a manageable commute to Boronia. Many Croydon parents appreciate our structured approach to teaching karate, which helps children develop not just physical skills but also important life values like respect and perseverance.",
+      "The drive from Croydon to our Boronia dojo usually takes around 15 to 20 minutes. Take Maroondah Highway heading west toward Boronia, then turn onto Burwood Highway. From Burwood Highway, turn into Lewis Road, followed by a turn into Wadhurst Drive. Our facility is located at Unit 2/5 Wadhurst Drive, Boronia.",
+      "While Croydon is slightly further from Boronia than some other Knox suburbs, many families find the journey worthwhile for the quality of instruction we provide. Public transport connections are available, and our flexible class schedules help accommodate families making the trip from Croydon for regular training sessions."
+    ]
   },
   "classes": [
     {

@@ -27,7 +27,15 @@
   },
   "servingArea": {
     "heading": "Serving Ferntree Gully and nearby Knox suburbs",
-    "description": "Our Boronia-based karate dojo welcomes students from Ferntree Gully and surrounding areas such as Wantirna, Bayswater, Rowville, and Ferntree Gully. We provide a supportive, family-friendly training environment."
+    "description": "Our Boronia-based karate dojo welcomes students from Ferntree Gully and surrounding areas such as <a href=\"/locations/karate-wantirna\" class=\"text-primary hover:underline\">Wantirna</a>, <a href=\"/locations/karate-bayswater\" class=\"text-primary hover:underline\">Bayswater</a>, and <a href=\"/locations/karate-rowville\" class=\"text-primary hover:underline\">Rowville</a>. We provide a supportive, family-friendly training environment."
+  },
+  "getToKando": {
+    "heading": "Getting to Kando Martial Arts Knox from Ferntree Gully",
+    "description": [
+      "Ferntree Gully families seeking authentic karate instruction often choose Kando Martial Arts Knox for our traditional approach and commitment to excellence. Our Boronia location serves as a convenient training destination for Ferntree Gully residents who want their children to experience genuine martial arts values alongside physical development.",
+      "The journey from Ferntree Gully to our Boronia dojo typically takes around 10 to 15 minutes by car. Take Burwood Highway heading north toward Boronia, then turn into Lewis Road, followed by a turn into Wadhurst Drive. Our facility is located at Unit 2/5 Wadhurst Drive, Boronia.",
+      "Ferntree Gully students benefit from our accessible location, with many families finding the short commute manageable for regular attendance. The proximity allows Ferntree Gully members to fully engage with our programs, including weekly classes, seasonal gradings, and community events that strengthen the martial arts journey."
+    ]
   },
   "classes": [
     {

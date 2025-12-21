@@ -27,7 +27,15 @@
   },
   "servingArea": {
     "heading": "Serving Scoresby and nearby Knox suburbs",
-    "description": "Our Boronia-based karate dojo welcomes students from Scoresby and surrounding areas such as Wantirna, Bayswater, Rowville, and Ferntree Gully. We provide a supportive, family-friendly training environment."
+    "description": "Our Boronia-based karate dojo welcomes students from Scoresby and surrounding areas such as <a href=\"/locations/karate-wantirna\" class=\"text-primary hover:underline\">Wantirna</a>, <a href=\"/locations/karate-bayswater\" class=\"text-primary hover:underline\">Bayswater</a>, <a href=\"/locations/karate-rowville\" class=\"text-primary hover:underline\">Rowville</a>, and <a href=\"/locations/karate-ferntree-gully\" class=\"text-primary hover:underline\">Ferntree Gully</a>. We provide a supportive, family-friendly training environment."
+  },
+  "getToKando": {
+    "heading": "Getting to Kando Martial Arts Knox from Scoresby",
+    "description": [
+      "Scoresby families searching for martial arts training often discover that Kando Martial Arts Knox offers the perfect combination of traditional values and modern teaching methods. Our Boronia location attracts Scoresby residents who want their children to experience genuine karate instruction that emphasizes both technique and personal growth.",
+      "The drive from Scoresby to our Boronia dojo usually takes around 10 to 15 minutes. Take Stud Road heading north toward Boronia, then turn onto Burwood Highway. From Burwood Highway, turn into Lewis Road, followed by a turn into Wadhurst Drive. Our facility is located at Unit 2/5 Wadhurst Drive, Boronia.",
+      "Scoresby students find our location convenient enough for regular attendance while still offering the quality instruction they seek. The proximity allows families to easily incorporate martial arts training into their weekly routines, helping children develop consistency and commitment alongside their physical and mental skills."
+    ]
   },
   "classes": [
     {

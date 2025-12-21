@@ -38,7 +38,7 @@ const team = teamMembers.sort((a, b) => {
         </p>
         <div class="mt-4">
           <PrimaryButton
-            client:load
+            client:idle
             href="/contact"
             className="inline-flex items-center justify-center"
           >
@@ -57,6 +57,8 @@ const team = teamMembers.sort((a, b) => {
                 class="object-cover w-full h-[320px] lg:h-auto scale-100 ease-in duration-300 group-hover:scale-125"
                 src={member.data.image}
                 alt={member.data.name}
+                loading="lazy"
+                decoding="async"
               />
               <div class="absolute inset-0 grid items-end justify-center p-4 bg-linear-to-b from-transparent to-black/60">
                 <div class="text-center">

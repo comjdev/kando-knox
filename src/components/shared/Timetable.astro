@@ -120,7 +120,7 @@ const days = Object.keys(scheduleByDay);
             {scheduleTitle}
           </h2>
           {useDualFilter ? (
-            <DualFilter client:load schedule={schedule} />
+            <DualFilter client:visible schedule={schedule} />
           ) : (
             <BeltRankFilter client:visible schedule={schedule} />
           )}
@@ -219,6 +219,8 @@ const days = Object.keys(scheduleByDay);
                                         class="object-cover w-12 h-12 rounded-full shrink-0"
                                         src={instructorData.image}
                                         alt={item.instructor}
+                                        loading="lazy"
+                                        decoding="async"
                                       />
                                       <div>
                                         <p class="text-lg font-medium leading-tight text-gray-900 dark:text-white">

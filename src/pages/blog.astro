@@ -4,6 +4,7 @@ import BlogGrid from "../components/shared/BlogGrid.astro";
 import CategoryFilter from "../components/shared/CategoryFilter";
 import { getCustomPageTitle } from "../utils/titles";
 import { SITE_CONFIG } from "../config";
+import { formatMetaDescription } from "../utils/descriptions";
 
 // Load all blog posts to extract categories
 const blogPosts = import.meta.glob("../content/blog/*.md", { eager: true });
@@ -33,8 +34,17 @@ if (hasUncategorized) {
 }
 
 const pageTitle = getCustomPageTitle(undefined, "Martial Arts Blog");
-const pageDescription =
-  "Read our latest articles about martial arts, karate, Brazilian Jiu-Jitsu, self-defence, and more.";
+const pageDescription = formatMetaDescription(
+  "Read our latest articles about martial arts, karate, Brazilian Jiu-Jitsu, self-defence, and more.",
+  undefined,
+  [
+    "martial arts blog",
+    "karate tips",
+    "BJJ articles",
+    "Knox",
+    "martial arts training",
+  ]
+);
 ---
 
 <Layout
@@ -58,7 +68,7 @@ const pageDescription =
         </p>
         {
           categories.length > 0 && (
-            <CategoryFilter client:load categories={categories} />
+            <CategoryFilter client:visible categories={categories} />
           )
         }
       </div>

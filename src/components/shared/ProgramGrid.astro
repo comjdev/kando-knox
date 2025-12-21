@@ -25,6 +25,8 @@ const programs = limit ? sortedPrograms.slice(0, limit) : sortedPrograms;
               src={program.image}
               alt={program.title}
               class="w-full h-64 object-cover"
+              loading="lazy"
+              decoding="async"
               transition:name={`program-image-${program.slug}`}
             />
           </a>
@@ -50,7 +52,7 @@ const programs = limit ? sortedPrograms.slice(0, limit) : sortedPrograms;
             </ul>
           )}
           <PrimaryButton
-            client:load
+            client:visible
             href={`/programs/${program.slug}`}
             className="w-fit mt-auto"
           >

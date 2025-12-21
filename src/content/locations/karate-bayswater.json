@@ -27,7 +27,15 @@
   },
   "servingArea": {
     "heading": "Serving Bayswater and nearby Knox suburbs",
-    "description": "Our Boronia-based karate dojo welcomes students from Bayswater and surrounding areas such as Wantirna, Bayswater, Rowville, and Ferntree Gully. We provide a supportive, family-friendly training environment."
+    "description": "Our Boronia-based karate dojo welcomes students from Bayswater and surrounding areas such as <a href=\"/locations/karate-wantirna\" class=\"text-primary hover:underline\">Wantirna</a>, Bayswater, <a href=\"/locations/karate-rowville\" class=\"text-primary hover:underline\">Rowville</a>, and <a href=\"/locations/karate-ferntree-gully\" class=\"text-primary hover:underline\">Ferntree Gully</a>. We provide a supportive, family-friendly training environment."
+  },
+  "getToKando": {
+    "heading": "Getting to Kando Martial Arts Knox from Bayswater",
+    "description": [
+      "Bayswater families seeking exceptional martial arts training frequently choose Kando Martial Arts Knox, drawn by our proven track record and convenient Boronia location. Our dojo has become a trusted destination for Bayswater residents who value quality instruction, structured programs, and a supportive community atmosphere for their children and teens.",
+      "The drive from Bayswater to our Boronia dojo typically takes around 10 to 15 minutes. Coming from Bayswater, take Boronia Road heading toward Boronia, then turn left onto Lewis Road, followed by a turn into Wadhurst Drive. Our facility is located at Unit 2/5 Wadhurst Drive, Boronia, making it easily accessible for families throughout the Bayswater area.",
+      "Bayswater students benefit from our strategic location within Knox, with public transport options available for those who prefer not to drive. The proximity means families can easily commit to regular training schedules, attend belt gradings, and participate in special events without the burden of lengthy commutes."
+    ]
   },
   "classes": [
     {

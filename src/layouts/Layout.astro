@@ -74,11 +74,16 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
     />
     <link rel="manifest" href="/icons/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
-    {/* Google Analytics */}
+    
+    {/* Resource Hints for Performance */}
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    
+    {/* Google Analytics - Deferred for better performance */}
     {SITE_CONFIG.googleAnalyticsId && SITE_CONFIG.googleAnalyticsId !== "G-XXXXXXXXXX" && (
       <>
         <script
-          async
+          defer
           src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.googleAnalyticsId}`}
         />
         <script is:inline define:vars={{ gaId: SITE_CONFIG.googleAnalyticsId }}>

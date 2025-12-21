@@ -9,8 +9,29 @@ import sitemap from "@astrojs/sitemap";
 // https://astro.build/config
 export default defineConfig({
   site: "https://knoxmartialarts.com.au",
+  compressHTML: true, // Minify HTML output
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      cssCodeSplit: true, // Split CSS per page for better caching
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            // Split React vendor code
+            if (
+              id.includes("node_modules/react") ||
+              id.includes("node_modules/react-dom")
+            ) {
+              return "react-vendor";
+            }
+            // Split Flowbite
+            if (id.includes("node_modules/flowbite")) {
+              return "flowbite";
+            }
+          },
+        },
+      },
+    },
     optimizeDeps: {
       include: ["react", "react-dom", "react/jsx-runtime"],
     },

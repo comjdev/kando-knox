@@ -6,6 +6,7 @@ import Team from "../components/home/Team.astro";
 import TrialForm from "../components/shared/TrialForm.astro";
 import { getCustomPageTitle, getAboutPageTitle } from "../utils/titles";
 import { SITE_CONFIG } from "../config";
+import { formatMetaDescription } from "../utils/descriptions";
 
 export async function getStaticPaths() {
   const pages = Object.values(
@@ -18,9 +19,14 @@ export async function getStaticPaths() {
       props: { page },
     }))
     .filter((path) => {
-      // Exclude common static file requests that shouldn't be handled by this route
+      const slug = path.params.slug;
+      // Exclude file extensions and common static file requests
+      // that shouldn't be handled by this route
       const excludedPaths = ["favicon.ico", "robots.txt", "sitemap.xml"];
-      return !excludedPaths.includes(path.params.slug);
+      const hasFileExtension =
+        /\.(xml|txt|ico|png|jpg|jpeg|gif|svg|webp|pdf)$/i.test(slug);
+
+      return !excludedPaths.includes(slug) && !hasFileExtension;
     });
 }
 
@@ -47,11 +53,18 @@ if (page.frontmatter.slug === "about") {
     page.frontmatter.title
   );
 }
+
+// Format meta description - prioritize metaDescription field, then description
+const metaDesc = formatMetaDescription(
+  page.frontmatter.metaDescription || page.frontmatter.description,
+  page.frontmatter.title,
+  ["martial arts", "karate", "Knox", "Boronia"]
+);
 ---
 
 <Layout
   title={pageTitle}
-  description={page.frontmatter.description}
+  description={metaDesc}
   image={featuredImage}
   type="website"
   url={`${SITE_CONFIG.url}/${page.frontmatter.slug}`}

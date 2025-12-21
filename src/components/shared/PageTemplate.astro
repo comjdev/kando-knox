@@ -95,6 +95,8 @@ const sidebarPrograms = allPrograms.sort((a, b) => a.id - b.id).slice(0, 3);
                     src={program.image || "/img/placeholder.jpg"}
                     class="mr-4 max-w-full w-24 h-24 rounded-lg object-cover"
                     alt={program.title}
+                    loading="lazy"
+                    decoding="async"
                   />
                 </a>
                 <div>
@@ -126,6 +128,8 @@ const sidebarPrograms = allPrograms.sort((a, b) => a.id - b.id).slice(0, 3);
               src="/img/kando-knox-junior-martial-arts-3.jpg"
               alt="Junior Martial Arts students at Kando Martial Arts Knox"
               class="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
             />
           </a>
           <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">

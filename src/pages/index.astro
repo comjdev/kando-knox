@@ -9,6 +9,7 @@ import LatestPosts from "../components/shared/LatestPosts.astro";
 import HomeHero from "../components/home/HomeHero.astro";
 import { getSportsActivityLocationSchema } from "../utils/schema";
 import { SITE_CONFIG } from "../config";
+import { formatMetaDescription } from "../utils/descriptions";
 
 // Get all location names from location files
 const allLocations = Object.values(
@@ -29,7 +30,17 @@ const schema = getSportsActivityLocationSchema(cities);
 
 // Homepage title
 const pageTitle = `${SITE_CONFIG.title} | Karate | BJJ`;
-const pageDescription = SITE_CONFIG.description;
+const pageDescription = formatMetaDescription(
+  SITE_CONFIG.description,
+  undefined,
+  [
+    "karate classes",
+    "Brazilian Jiu-Jitsu",
+    "martial arts training",
+    "Knox",
+    "Boronia",
+  ]
+);
 const pageImage = "/img/about.jpg"; // Use a good homepage image
 ---
 

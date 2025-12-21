@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { getBlogPostingSchema } from "../../utils/schema";
 import { getBlogPostTitle } from "../../utils/titles";
 import { SITE_CONFIG } from "../../config";
+import { formatMetaDescription } from "../../utils/descriptions";
 
 export async function getStaticPaths() {
   const posts = Object.values(
@@ -19,7 +20,13 @@ const { post } = Astro.props;
 
 // Get current page URL for sharing
 const currentUrl = Astro.url.href;
-const pageDescription = post.frontmatter.description || post.frontmatter.title;
+
+// Format meta description - prioritize metaDescription field, then description
+const pageDescription = formatMetaDescription(
+  post.frontmatter.metaDescription || post.frontmatter.description,
+  post.frontmatter.title,
+  ["martial arts", "karate", "BJJ", "Knox"]
+);
 
 // Generate page title - use titleTag if provided, otherwise generate from post title
 const pageTitle = post.frontmatter.titleTag
@@ -367,6 +374,8 @@ const schema = getBlogPostingSchema(
                         src={blogPost.image}
                         class="mr-4 max-w-full w-24 h-24 rounded-lg object-cover"
                         alt={blogPost.title}
+                        loading="lazy"
+                        decoding="async"
                       />
                     </a>
                     <div>
@@ -405,6 +414,8 @@ const schema = getBlogPostingSchema(
                 src="/img/kando-knox-junior-martial-arts-3.jpg"
                 alt="Junior Martial Arts students at Kando Martial Arts Knox"
                 class="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
             </a>
             <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">

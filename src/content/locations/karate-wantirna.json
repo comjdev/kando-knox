@@ -27,7 +27,15 @@
   },
   "servingArea": {
     "heading": "Wantirna and surrounding areas",
-    "description": "Kando Martial Arts Knox is proud to serve families from Wantirna and the surrounding areas of Knox, like Boronia, Bayswater, Ferntree Gully, Scoresby, and Ringwood. We are a family-friendly club that welcomes students of all ages and skill levels."
+    "description": "Kando Martial Arts Knox is proud to serve families from Wantirna and the surrounding areas of Knox, like <a href=\"/locations/karate-boronia\" class=\"text-primary hover:underline\">Boronia</a>, <a href=\"/locations/karate-bayswater\" class=\"text-primary hover:underline\">Bayswater</a>, <a href=\"/locations/karate-ferntree-gully\" class=\"text-primary hover:underline\">Ferntree Gully</a>, and <a href=\"/locations/karate-scoresby\" class=\"text-primary hover:underline\">Scoresby</a>. We are a family-friendly club that welcomes students of all ages and skill levels."
+  },
+  "getToKando": {
+    "heading": "Getting to Kando Martial Arts Knox from Wantirna",
+    "description": [
+      "Wantirna families looking for authentic karate instruction often choose Kando Martial Arts Knox because we focus on building strong foundations in both technique and character. Our Boronia location serves Wantirna residents who appreciate our emphasis on traditional martial arts values while providing a supportive, family-oriented training environment.",
+      "The journey from Wantirna to our Boronia dojo typically takes around 10 to 15 minutes by car. Take Mountain Highway heading west toward Boronia, then turn onto Boronia Road. From Boronia Road, turn into Lewis Road, followed by a turn into Wadhurst Drive. Our facility is located at Unit 2/5 Wadhurst Drive, Boronia.",
+      "Wantirna students benefit from our accessible location, making it easy to maintain regular training schedules. The short commute means families can consistently attend classes, participate in gradings, and engage with our martial arts community without the challenge of long travel times, helping students progress steadily through their karate journey."
+    ]
   },
   "classes": [
     {

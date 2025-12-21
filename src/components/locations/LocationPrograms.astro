@@ -64,6 +64,8 @@ function getProgramData(id: string) {
                     class="w-full rounded-lg"
                     src={image}
                     alt={`${classItem.heading} image`}
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div class="mt-4 md:mt-0">
                     <h3 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
@@ -124,6 +126,8 @@ function getProgramData(id: string) {
                     class="w-full rounded-lg"
                     src={image}
                     alt={`${classItem.heading} image`}
+                    loading="lazy"
+                    decoding="async"
                   />
                 </>
               )}

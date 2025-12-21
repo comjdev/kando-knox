@@ -4,6 +4,7 @@ import { SITE_CONFIG } from "../config";
 import googleReviews from "../content/testimonials/google-reviews.json";
 import Rating from "../components/shared/Rating.astro";
 import { getCustomPageTitle } from "../utils/titles";
+import { formatMetaDescription } from "../utils/descriptions";
 
 // Filter out reviews without text and ensure text is not null
 const reviewsWithText = googleReviews.filter(
@@ -11,7 +12,11 @@ const reviewsWithText = googleReviews.filter(
 );
 
 const pageTitle = getCustomPageTitle(undefined, "Testimonials");
-const pageDescription = `Read testimonials and reviews from students and families at ${SITE_CONFIG.title}. See what our community says about our karate and BJJ classes in ${SITE_CONFIG.address.city}.`;
+const pageDescription = formatMetaDescription(
+  `Read testimonials and reviews from students and families at ${SITE_CONFIG.title}. See what our community says about our karate and BJJ classes in ${SITE_CONFIG.address.city}.`,
+  undefined,
+  ["student reviews", "martial arts testimonials", "Knox"]
+);
 ---
 
 <Layout

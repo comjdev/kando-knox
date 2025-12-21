@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { SITE_CONFIG } from "../config";
 import TimetableComponent from "../components/shared/Timetable.astro";
 import { getCustomPageTitle } from "../utils/titles";
+import { formatMetaDescription } from "../utils/descriptions";
 
 interface ScheduleItem {
   day: string;
@@ -60,7 +61,11 @@ allSchedules.sort((a, b) => {
 });
 
 const pageTitle = getCustomPageTitle(undefined, "Class Timetable");
-const pageDescription = `View the class timetable for ${SITE_CONFIG.title}. Find karate and Brazilian Jiu-Jitsu classes for all ages in ${SITE_CONFIG.address.city}, serving the Knox area.`;
+const pageDescription = formatMetaDescription(
+  `View the class timetable for ${SITE_CONFIG.title}. Find karate and Brazilian Jiu-Jitsu classes for all ages in ${SITE_CONFIG.address.city}, serving the Knox area.`,
+  undefined,
+  ["class schedule", "training times", "martial arts classes"]
+);
 ---
 
 <Layout

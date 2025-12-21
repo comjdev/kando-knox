@@ -28,7 +28,7 @@ import PrimaryButton from "../shared/PrimaryButton";
         strive for greatness and live their best life.
       </p>
 
-      <PrimaryButton client:load href="/contact" className="mt-6">
+      <PrimaryButton client:idle href="/contact" className="mt-6">
         Get in touch
       </PrimaryButton>
     </div>
@@ -37,11 +37,15 @@ import PrimaryButton from "../shared/PrimaryButton";
         class="w-full rounded-lg"
         src="/img/kando-knox-karate-man.jpg"
         alt="Kando Martial Arts Knox | Martial Arts, Karate, Brazilian Jiu-Jitsu"
+        loading="lazy"
+        decoding="async"
       />
       <img
         class="mt-4 w-full lg:mt-10 rounded-lg"
         src="/img/kando-knox-karate-girl.jpg"
         alt="Kando Martial Arts Knox | Martial Arts, Karate, Brazilian Jiu-Jitsu"
+        loading="lazy"
+        decoding="async"
       />
     </div>
   </div>

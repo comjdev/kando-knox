@@ -4,10 +4,15 @@ import LocationMap from "../components/shared/LocationMap.astro";
 import ContactForm from "../components/contact/ContactForm.astro";
 import { SITE_CONFIG } from "../config";
 import { getCustomPageTitle } from "../utils/titles";
+import { formatMetaDescription } from "../utils/descriptions";
 
 const formattedAddress = `${SITE_CONFIG.address.street}, ${SITE_CONFIG.address.city} ${SITE_CONFIG.address.state} ${SITE_CONFIG.address.postcode}, ${SITE_CONFIG.address.country}`;
 const pageTitle = getCustomPageTitle(undefined, "Contact Us");
-const pageDescription = `Contact ${SITE_CONFIG.title} in ${SITE_CONFIG.address.city}. Call ${SITE_CONFIG.phone} or email ${SITE_CONFIG.email} for martial arts classes in Knox.`;
+const pageDescription = formatMetaDescription(
+  `Contact ${SITE_CONFIG.title} in ${SITE_CONFIG.address.city} for karate and Brazilian Jiu-Jitsu classes. Call ${SITE_CONFIG.phone} or email ${SITE_CONFIG.email} to book a trial class.`,
+  undefined,
+  ["martial arts", "Knox", "Boronia"]
+);
 ---
 
 <Layout
