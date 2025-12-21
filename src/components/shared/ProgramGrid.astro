@@ -1,6 +1,7 @@
 ---
 import PrimaryButton from "./PrimaryButton";
 import OptimizedImage from "./OptimizedImage.astro";
+import { getCollection } from "astro:content";
 
 interface Props {
   limit?: number;
@@ -8,11 +9,10 @@ interface Props {
 
 const { limit } = Astro.props;
 
-const allPrograms = Object.values(
-  import.meta.glob("../../content/program/*.json", { eager: true })
-).map((program: any) => program.default);
-
-const sortedPrograms = allPrograms.sort((a, b) => a.id - b.id);
+const allPrograms = await getCollection("programs");
+const sortedPrograms = allPrograms
+  .map((p) => p.data)
+  .sort((a, b) => a.id - b.id);
 const programs = limit ? sortedPrograms.slice(0, limit) : sortedPrograms;
 ---
 

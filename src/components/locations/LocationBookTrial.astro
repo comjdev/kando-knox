@@ -7,10 +7,11 @@ interface Props {
 
 const { programs } = Astro.props;
 
+import { getCollection } from "astro:content";
+
 // Load program files to get trial data
-const programFiles = Object.values(
-  import.meta.glob("../../content/program/*.json", { eager: true })
-).map((file: any) => file.default);
+const allPrograms = await getCollection("programs");
+const programFiles = allPrograms.map((p) => p.data);
 
 // Get trial data for each program
 function getProgramTrial(programId: string) {

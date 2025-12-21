@@ -26,14 +26,26 @@ export default function PrimaryButton({
   if (href) {
     return React.createElement(
       "a",
-      { href, className: combinedClasses, target, rel, onClick },
+      {
+        href,
+        className: combinedClasses,
+        target,
+        rel,
+        onClick,
+        "aria-label": typeof children === "string" ? children : undefined,
+      },
       children
     );
   }
 
   return React.createElement(
     "button",
-    { type, className: combinedClasses, onClick },
+    {
+      type,
+      className: combinedClasses,
+      onClick,
+      "aria-label": typeof children === "string" ? children : undefined,
+    },
     children
   );
 }

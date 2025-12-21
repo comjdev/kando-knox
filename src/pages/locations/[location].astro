@@ -18,104 +18,18 @@ import { getLocationPageTitle } from "../../utils/titles";
 import { SITE_CONFIG } from "../../config";
 import { formatMetaDescription } from "../../utils/descriptions";
 
-export async function getStaticPaths() {
-  // #region agent log
-  fetch("http://127.0.0.1:7242/ingest/5d3b9051-a0ef-41c6-8c79-fe5a50d1c563", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      location: "[location].astro:7",
-      message: "getStaticPaths entry",
-      data: {},
-      timestamp: Date.now(),
-      sessionId: "debug-session",
-      runId: "post-fix",
-      hypothesisId: "A",
-    }),
-  }).catch(() => {});
-  // #endregion
+import { getCollection } from "astro:content";
 
-  const allLocations = Object.values(
-    import.meta.glob("../../content/locations/*.json", { eager: true })
-  ).map((location: any) => location.default);
+export async function getStaticPaths() {
+  const allLocations = await getCollection("locations");
 
   // Filter out files that don't have a slug (like FAQ files)
-  const locations = allLocations.filter((location: any) => location.slug);
+  const locations = allLocations.filter((location) => location.data.slug);
 
-  // #region agent log
-  fetch("http://127.0.0.1:7242/ingest/5d3b9051-a0ef-41c6-8c79-fe5a50d1c563", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      location: "[location].astro:16",
-      message: "After filtering locations",
-      data: {
-        allLocationsCount: allLocations.length,
-        filteredLocationsCount: locations.length,
-        locations: locations.map((l: any) => ({
-          hasSlug: !!l.slug,
-          slug: l.slug,
-          hasTitle: !!l.title,
-        })),
-      },
-      timestamp: Date.now(),
-      sessionId: "debug-session",
-      runId: "post-fix",
-      hypothesisId: "A",
-    }),
-  }).catch(() => {});
-  // #endregion
-
-  const paths = locations.map((location: any) => {
-    // #region agent log
-    fetch("http://127.0.0.1:7242/ingest/5d3b9051-a0ef-41c6-8c79-fe5a50d1c563", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        location: "[location].astro:33",
-        message: "Mapping location to path",
-        data: {
-          hasSlug: !!location.slug,
-          slug: location.slug,
-          title: location.title,
-        },
-        timestamp: Date.now(),
-        sessionId: "debug-session",
-        runId: "post-fix",
-        hypothesisId: "A",
-      }),
-    }).catch(() => {});
-    // #endregion
-
-    return {
-      params: { location: location.slug },
-      props: { location },
-    };
-  });
-
-  // #region agent log
-  fetch("http://127.0.0.1:7242/ingest/5d3b9051-a0ef-41c6-8c79-fe5a50d1c563", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      location: "[location].astro:48",
-      message: "Before returning paths",
-      data: {
-        pathsCount: paths.length,
-        paths: paths.map((p: any) => ({
-          hasLocationParam: !!p.params.location,
-          locationParam: p.params.location,
-        })),
-      },
-      timestamp: Date.now(),
-      sessionId: "debug-session",
-      runId: "post-fix",
-      hypothesisId: "A",
-    }),
-  }).catch(() => {});
-  // #endregion
-
-  return paths;
+  return locations.map((location) => ({
+    params: { location: location.data.slug },
+    props: { location: location.data },
+  }));
 }
 
 const { location } = Astro.props;

@@ -13,15 +13,14 @@ import {
 } from "../../utils/schema";
 import { getProgramPageTitle } from "../../utils/titles";
 import { formatMetaDescription } from "../../utils/descriptions";
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-  const programs = Object.values(
-    import.meta.glob("../../content/program/*.json", { eager: true })
-  );
+  const programs = await getCollection("programs");
 
-  return programs.map((program: any) => ({
-    params: { slug: program.default.slug },
-    props: { program: program.default },
+  return programs.map((program) => ({
+    params: { slug: program.data.slug },
+    props: { program: program.data },
   }));
 }
 

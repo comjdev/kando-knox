@@ -22,13 +22,16 @@ const imageAsset = getImageAsset(image);
 const backgroundImageUrl =
   typeof imageAsset === "object" ? imageAsset.src : image;
 
+import { getCollection } from "astro:content";
+
 // Load programs for sidebar
-const allPrograms = Object.values(
-  import.meta.glob("../../content/program/*.json", { eager: true })
-).map((program: any) => program.default);
+const allPrograms = await getCollection("programs");
 
 // Sort programs by id and take first 3 for sidebar
-const sidebarPrograms = allPrograms.sort((a, b) => a.id - b.id).slice(0, 3);
+const sidebarPrograms = allPrograms
+  .map((p) => p.data)
+  .sort((a, b) => a.id - b.id)
+  .slice(0, 3);
 ---
 
 <main class="pb-16 lg:pb-24 bg-white dark:bg-gray-900 antialiased">

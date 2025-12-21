@@ -13,10 +13,11 @@ interface Props {
 
 const { classes, locationName } = Astro.props;
 
+import { getCollection } from "astro:content";
+
 // Load all program content files
-const programFiles = Object.values(
-  import.meta.glob("../../content/program/*.json", { eager: true })
-).map((file: any) => file.default);
+const allPrograms = await getCollection("programs");
+const programFiles = allPrograms.map((p) => p.data);
 
 // Helper function to get program data from id
 function getProgramData(id: string) {

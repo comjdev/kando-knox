@@ -4,6 +4,7 @@ import TrialForm from "./shared/TrialForm.astro";
 import { PROGRAMS, SITE_CONFIG } from "../config";
 
 // Get blog posts and sort by date (newest first)
+// TODO: Migrate to getCollection("blog") once schema validation passes
 const blogPosts = import.meta.glob("../content/blog/*.md", { eager: true });
 const allPosts = Object.values(blogPosts).map((post: any) => ({
   title: post.frontmatter.title,

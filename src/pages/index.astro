@@ -17,6 +17,7 @@ import { formatMetaDescription } from "../utils/descriptions";
 import { generatePageTitle } from "../utils/titles";
 
 // Get all location names from location files
+// TODO: Migrate to getCollection("locations") once fully tested
 const allLocations = Object.values(
   import.meta.glob("../content/locations/*.json", { eager: true })
 ).map((location: any) => location.default);
@@ -69,17 +70,31 @@ const pageImage = "/img/about.jpg"; // Use a good homepage image
   <h1 class="sr-only">
     {SITE_CONFIG.title} - Karate & Brazilian Jiu-Jitsu Classes in Knox, Boronia
   </h1>
-  <HomeHero />
+  <section aria-label="Hero section">
+    <HomeHero />
+  </section>
 
-  <KandoInfo />
+  <section aria-label="About Kando Martial Arts">
+    <KandoInfo />
+  </section>
 
-  <Benefits />
+  <section aria-label="Benefits of martial arts">
+    <Benefits />
+  </section>
 
-  <Program />
+  <section aria-label="Our programs">
+    <Program />
+  </section>
 
-  <Team />
+  <section aria-label="Our team">
+    <Team />
+  </section>
 
-  <LatestPosts />
+  <section aria-label="Latest blog posts">
+    <LatestPosts />
+  </section>
 
-  <Testimonials />
+  <section aria-label="Testimonials">
+    <Testimonials />
+  </section>
 </Layout>

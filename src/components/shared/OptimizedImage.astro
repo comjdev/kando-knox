@@ -25,22 +25,48 @@ const {
   width,
   height,
   quality = 80,
-  format = "webp", // Default to WebP for best performance
+  format: requestedFormat = "webp", // Default to WebP for best performance
 } = Astro.props;
 
-// Resolve image path to asset if available
-const imageAsset = getImageAsset(typeof src === "string" ? src : undefined);
+// If src is already an ImageMetadata object (imported asset), use it directly
+// Otherwise, try to resolve it from the imageMap
+let finalSrc: ImageMetadata | string;
+let finalIsAsset: boolean;
 
-// Check if we have an asset import (ImageMetadata)
-const isAsset = typeof imageAsset === "object" && "src" in imageAsset;
+if (typeof src === "object" && "src" in src) {
+  // src is already an ImageMetadata object - use it directly
+  finalSrc = src as ImageMetadata;
+  finalIsAsset = true;
+} else if (typeof src === "string") {
+  // src is a string path - try to resolve it from imageMap
+  const imageAsset = getImageAsset(src);
+  if (typeof imageAsset === "object" && "src" in imageAsset) {
+    finalSrc = imageAsset;
+    finalIsAsset = true;
+  } else {
+    finalSrc = imageAsset as string;
+    finalIsAsset = false;
+  }
+} else {
+  // Fallback
+  finalSrc = src as string;
+  finalIsAsset = false;
+}
 
-// Use resolved asset or original src
-const finalSrc = isAsset
-  ? imageAsset
-  : typeof src === "object"
-    ? src
-    : imageAsset;
-const finalIsAsset = typeof finalSrc === "object" && "src" in finalSrc;
+// If source is already an ImageMetadata (imported asset), check if it's AVIF
+// and preserve the format if it's already optimized (AVIF or WebP)
+let format = requestedFormat;
+if (finalIsAsset && typeof finalSrc === "object" && "src" in finalSrc) {
+  const srcString = finalSrc.src?.toString() || "";
+  // If the source file is already AVIF, preserve it
+  if (srcString.includes(".avif") || srcString.endsWith(".avif")) {
+    format = "avif";
+  }
+  // If the source file is already WebP, preserve it
+  else if (srcString.includes(".webp") || srcString.endsWith(".webp")) {
+    format = "webp";
+  }
+}
 ---
 
 {

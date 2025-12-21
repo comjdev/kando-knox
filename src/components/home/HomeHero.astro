@@ -27,7 +27,7 @@ const slidesWithAssets = slides.map((slide) => {
 
 <div
   class="hero-carousel-wrapper relative z-0 w-full bg-[#111111]"
-  style="height: calc(100vh - 96px);"
+  style="height: calc(100dvh - 96px);"
 >
   <div class="carousel relative w-full h-full overflow-hidden z-0">
     <div class="list">
@@ -61,6 +61,7 @@ const slidesWithAssets = slides.map((slide) => {
                   <a
                     href={slide.buttonLink}
                     class="hero-button hidden mt-5 px-6 py-3 bg-primary-500 text-white no-underline rounded font-medium transition-all hover:bg-[#a67a0b] hover:-translate-y-0.5"
+                    aria-label={slide.buttonText}
                   >
                     {slide.buttonText}
                   </a>
@@ -81,6 +82,8 @@ const slidesWithAssets = slides.map((slide) => {
     >
       <button
         class="prev w-10 h-10 min-w-10 min-h-10 rounded-full border-2 border-white text-white bg-transparent outline-none text-[25px] font-bold transition-all cursor-pointer flex items-center justify-center hover:border-white hover:text-white hover:bg-transparent"
+        aria-label="Previous slide"
+        type="button"
       >
         <svg
           class="w-6 h-6 text-white"
@@ -101,6 +104,8 @@ const slidesWithAssets = slides.map((slide) => {
       </button>
       <button
         class="next w-10 h-10 min-w-10 min-h-10 rounded-full border-2 border-white text-white bg-transparent outline-none text-[25px] font-bold transition-all cursor-pointer flex items-center justify-center hover:border-white hover:text-white hover:bg-transparent"
+        aria-label="Next slide"
+        type="button"
       >
         <svg
           class="w-6 h-6 text-white"

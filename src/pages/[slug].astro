@@ -8,6 +8,7 @@ import { getCustomPageTitle, getAboutPageTitle } from "../utils/titles";
 import { SITE_CONFIG } from "../config";
 import { formatMetaDescription } from "../utils/descriptions";
 
+// TODO: Migrate to getCollection("pages") once schema validation passes
 export async function getStaticPaths() {
   const pages = Object.values(
     import.meta.glob("../content/pages/*.md", { eager: true })

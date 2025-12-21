@@ -7,6 +7,7 @@ import { SITE_CONFIG } from "../config";
 import { formatMetaDescription } from "../utils/descriptions";
 
 // Load all blog posts to extract categories
+// TODO: Migrate to getCollection("blog") once schema validation passes
 const blogPosts = import.meta.glob("../content/blog/*.md", { eager: true });
 const allPosts = Object.values(blogPosts).map((post: any) => ({
   category: post.frontmatter.category || null,

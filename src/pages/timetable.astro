@@ -14,17 +14,16 @@ interface ScheduleItem {
   instructor?: string;
 }
 
+import { getCollection } from "astro:content";
+
 // Load all programs
-const programModules = Object.values(
-  import.meta.glob("../content/program/*.json", { eager: true })
-);
+const allPrograms = await getCollection("programs");
 
 // Combine all schedules from all programs
 const allSchedules: ScheduleItem[] = [];
-programModules.forEach((programModule: any) => {
-  const program = programModule.default;
-  if (program.schedule && Array.isArray(program.schedule)) {
-    allSchedules.push(...program.schedule);
+allPrograms.forEach((program) => {
+  if (program.data.schedule && Array.isArray(program.data.schedule)) {
+    allSchedules.push(...program.data.schedule);
   }
 });
 
