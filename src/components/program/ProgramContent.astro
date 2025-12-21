@@ -1,4 +1,6 @@
 ---
+import OptimizedImage from "../shared/OptimizedImage.astro";
+
 interface ContentItem {
   title: string;
   description: string;
@@ -42,12 +44,13 @@ const { content = [], title, description } = Astro.props;
                 }`}
               >
                 <div>
-                  <img
+                  <OptimizedImage
                     src={item.image}
                     alt={item.title}
                     class="object-cover w-full rounded-lg shadow-lg"
                     loading="lazy"
                     decoding="async"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
                 <div class="w-full space-y-6 lg:max-w-lg shrink-0 xl:max-w-2xl">

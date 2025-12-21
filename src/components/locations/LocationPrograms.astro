@@ -1,5 +1,6 @@
 ---
 import { PROGRAMS } from "../../config";
+import OptimizedImage from "../shared/OptimizedImage.astro";
 
 interface Props {
   classes: Array<{
@@ -60,12 +61,13 @@ function getProgramData(id: string) {
             <div class="gap-8 items-center py-8 px-4 mx-auto max-w-7xl xl:gap-16 md:grid md:grid-cols-2 sm:py-8 lg:px-6">
               {isEven ? (
                 <>
-                  <img
-                    class="w-full rounded-lg"
+                  <OptimizedImage
                     src={image}
                     alt={`${classItem.heading} image`}
+                    class="w-full rounded-lg"
                     loading="lazy"
                     decoding="async"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   <div class="mt-4 md:mt-0">
                     <h3 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
@@ -122,12 +124,13 @@ function getProgramData(id: string) {
                       </svg>
                     </a>
                   </div>
-                  <img
-                    class="w-full rounded-lg"
+                  <OptimizedImage
                     src={image}
                     alt={`${classItem.heading} image`}
+                    class="w-full rounded-lg"
                     loading="lazy"
                     decoding="async"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
                 </>
               )}

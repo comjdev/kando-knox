@@ -1,4 +1,6 @@
 ---
+import OptimizedImage from "../shared/OptimizedImage.astro";
+
 interface Props {
   title: string;
   image?: string;
@@ -81,12 +83,14 @@ const { title, image, description, shortDescription, ageGroup } = Astro.props;
       {
         image && (
           <div class="max-w-5xl mx-auto mt-8">
-            <img
-              class="object-cover object-top w-full h-auto rounded-lg shadow-lg"
+            <OptimizedImage
               src={image}
               alt={title}
+              class="object-cover object-top w-full h-auto rounded-lg shadow-lg"
               loading="lazy"
               decoding="async"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+              quality={85}
             />
           </div>
         )

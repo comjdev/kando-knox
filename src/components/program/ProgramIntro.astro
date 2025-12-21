@@ -1,5 +1,7 @@
 ---
 import PrimaryButton from "../shared/PrimaryButton";
+import OptimizedImage from "../shared/OptimizedImage.astro";
+import bearCaveLogo from "../../assets/img/bear-cave-logo.avif";
 
 interface ScheduleItem {
   day: string;
@@ -71,12 +73,15 @@ const descriptionParagraphs = Array.isArray(description)
             <div class="pt-8 border-t border-gray-200 dark:border-gray-700">
               <div class="flex flex-col items-center gap-6 md:flex-row md:items-center">
                 <div class="shrink-0 pr-8 lg:pr-12">
-                  <img
-                    src="/img/bear-cave-logo.avif"
+                  <OptimizedImage
+                    src={bearCaveLogo}
                     alt="Bear Cave BJJ Knox Logo"
                     class="w-32 h-32 lg:w-48 lg:h-48 object-contain"
                     loading="lazy"
                     decoding="async"
+                    width={192}
+                    height={192}
+                    quality={90}
                   />
                 </div>
                 <div class="flex-1 space-y-4">

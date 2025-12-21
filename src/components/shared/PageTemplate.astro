@@ -1,4 +1,6 @@
 ---
+import OptimizedImage from "./OptimizedImage.astro";
+
 interface Props {
   title: string;
   description?: string;
@@ -91,12 +93,15 @@ const sidebarPrograms = allPrograms.sort((a, b) => a.id - b.id).slice(0, 3);
             sidebarPrograms.map((program) => (
               <div class="mb-6 flex items-center">
                 <a href={`/programs/${program.slug}`} class="shrink-0">
-                  <img
+                  <OptimizedImage
                     src={program.image || "/img/placeholder.jpg"}
                     class="mr-4 max-w-full w-24 h-24 rounded-lg object-cover"
                     alt={program.title}
                     loading="lazy"
                     decoding="async"
+                    width={96}
+                    height={96}
+                    sizes="96px"
                   />
                 </a>
                 <div>
@@ -124,12 +129,13 @@ const sidebarPrograms = allPrograms.sort((a, b) => a.id - b.id).slice(0, 3);
             href="/timetable"
             class="flex justify-center items-center mb-3 w-full h-48 bg-gray-100 rounded-lg dark:bg-gray-700 overflow-hidden"
           >
-            <img
+            <OptimizedImage
               src="/img/kando-knox-junior-martial-arts-3.jpg"
               alt="Junior Martial Arts students at Kando Martial Arts Knox"
               class="w-full h-full object-cover"
               loading="lazy"
               decoding="async"
+              sizes="(max-width: 768px) 100vw, 400px"
             />
           </a>
           <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">

@@ -1,4 +1,6 @@
 ---
+import OptimizedImage from "./OptimizedImage.astro";
+
 interface Props {
   title: string;
   slug: string;
@@ -15,13 +17,13 @@ const { title, slug, description, date, image, categories = [] } = Astro.props;
   class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col"
 >
   <a href={`/blog/${slug}`}>
-    <img
-      src={image ? image : "/img/default.jpg"}
+    <OptimizedImage
+      src={image || "/img/default.jpg"}
       alt={`Post Image for ${title}`}
       class="w-full h-64 object-cover"
       loading="lazy"
       decoding="async"
-      transition:name={`blog-image-${slug}`}
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
     />
   </a>
   <div class="p-4 flex flex-col flex-1">

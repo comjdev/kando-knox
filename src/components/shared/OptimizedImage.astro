@@ -1,0 +1,61 @@
+---
+import { Image, type ImageMetadata } from "astro:assets";
+
+interface Props {
+  src: string | ImageMetadata;
+  alt: string;
+  class?: string;
+  loading?: "lazy" | "eager";
+  decoding?: "async" | "sync" | "auto";
+  sizes?: string;
+  width?: number;
+  height?: number;
+  quality?: number;
+  format?: "avif" | "webp" | "png" | "jpg" | "jpeg";
+}
+
+const {
+  src,
+  alt,
+  class: className = "",
+  loading = "lazy",
+  decoding = "async",
+  sizes,
+  width,
+  height,
+  quality = 80,
+  format,
+} = Astro.props;
+
+// Check if src is an asset import (ImageMetadata)
+const isAsset = typeof src === "object" && "src" in src;
+
+// If it's an asset, use Astro's Image component for optimization
+// Otherwise, use regular img tag with optimization attributes
+---
+
+{
+  isAsset ? (
+    <Image
+      src={src as ImageMetadata}
+      alt={alt}
+      class={className}
+      loading={loading}
+      decoding={decoding}
+      sizes={sizes}
+      width={width}
+      height={height}
+      quality={quality}
+      format={format}
+    />
+  ) : (
+    <img
+      src={src as string}
+      alt={alt}
+      class={className}
+      loading={loading}
+      decoding={decoding}
+      sizes={sizes}
+    />
+  )
+}

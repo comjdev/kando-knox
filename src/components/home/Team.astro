@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import PrimaryButton from "../shared/PrimaryButton";
+import OptimizedImage from "../shared/OptimizedImage.astro";
 
 const teamMembers = await getCollection("team");
 // Sort by order field if present, otherwise by name
@@ -53,12 +54,13 @@ const team = teamMembers.sort((a, b) => {
         {
           team.map((member) => (
             <div class="relative overflow-hidden rounded-lg group">
-              <img
-                class="object-cover w-full h-[320px] lg:h-auto scale-100 ease-in duration-300 group-hover:scale-125"
+              <OptimizedImage
                 src={member.data.image}
                 alt={member.data.name}
+                class="object-cover w-full h-[320px] lg:h-auto scale-100 ease-in duration-300 group-hover:scale-125"
                 loading="lazy"
                 decoding="async"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
               <div class="absolute inset-0 grid items-end justify-center p-4 bg-linear-to-b from-transparent to-black/60">
                 <div class="text-center">

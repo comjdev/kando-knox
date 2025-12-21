@@ -4,6 +4,7 @@ import { SITE_CONFIG } from "../../config";
 import beltRanksData from "../../content/belt-ranks.json";
 import BeltRankFilter from "./BeltRankFilter";
 import DualFilter from "./DualFilter";
+import OptimizedImage from "./OptimizedImage.astro";
 
 interface ScheduleItem {
   day: string;
@@ -215,12 +216,15 @@ const days = Object.keys(scheduleByDay);
                                 return (
                                   instructorData && (
                                     <div class="flex items-center gap-3">
-                                      <img
-                                        class="object-cover w-12 h-12 rounded-full shrink-0"
+                                      <OptimizedImage
                                         src={instructorData.image}
                                         alt={item.instructor}
+                                        class="object-cover w-12 h-12 rounded-full shrink-0"
                                         loading="lazy"
                                         decoding="async"
+                                        width={48}
+                                        height={48}
+                                        sizes="48px"
                                       />
                                       <div>
                                         <p class="text-lg font-medium leading-tight text-gray-900 dark:text-white">
