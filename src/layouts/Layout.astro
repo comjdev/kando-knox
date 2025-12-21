@@ -50,7 +50,7 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
 ---
 
 <!doctype html>
-<html lang="en" class="light">
+<html lang="en-AU" class="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -122,6 +122,11 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
     />
     <ClientRouter />
     <title>{pageTitle}</title>
+    {/* Canonical URL */}
+    <link
+      rel="canonical"
+      href={url || `${SITE_CONFIG.url}${Astro.url.pathname}`}
+    />
     {/* SEO Meta Tags */}
     <SEO
       title={pageTitle}
