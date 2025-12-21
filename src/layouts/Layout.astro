@@ -75,7 +75,12 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
     <link rel="manifest" href="/icons/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     
-    {/* Resource Hints for Performance */}
+    {/* Resource Hints for Performance - Critical for faster loading */}
+    {/* Preconnect to Google Fonts (early connection for faster font loading) */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    {/* Preconnect to Google Analytics (early connection) */}
     <link rel="preconnect" href="https://www.googletagmanager.com" />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
     
@@ -119,12 +124,19 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
         background-color: rgb(31 41 55);
       }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {/* Google Fonts - Load with optimized strategy */}
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Teachers:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Teachers:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
     <ClientRouter />
     <title>{pageTitle}</title>
     {/* Canonical URL */}

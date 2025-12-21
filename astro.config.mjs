@@ -14,26 +14,47 @@ export default defineConfig({
     plugins: [tailwindcss()],
     build: {
       cssCodeSplit: true, // Split CSS per page for better caching
+      minify: "esbuild", // Use esbuild for faster minification (faster than terser)
+      sourcemap: false, // Disable source maps in production for smaller bundles
+      target: "esnext", // Target modern browsers for smaller output
       rollupOptions: {
         output: {
+          // Optimize chunk naming for better caching
+          chunkFileNames: "chunks/[name]-[hash].js",
+          entryFileNames: "entry/[name]-[hash].js",
+          assetFileNames: "assets/[name]-[hash][extname]",
           manualChunks: (id) => {
             // Split React vendor code
             if (
               id.includes("node_modules/react") ||
-              id.includes("node_modules/react-dom")
+              id.includes("node_modules/react-dom") ||
+              id.includes("node_modules/react/jsx-runtime")
             ) {
               return "react-vendor";
             }
-            // Split Flowbite
-            if (id.includes("node_modules/flowbite")) {
-              return "flowbite";
+            // Split Flowbite and related packages
+            if (
+              id.includes("node_modules/flowbite") ||
+              id.includes("node_modules/flowbite-react") ||
+              id.includes("node_modules/flowbite-typography")
+            ) {
+              return "flowbite-vendor";
+            }
+            // Split other large vendor dependencies
+            if (id.includes("node_modules")) {
+              // Group other node_modules into a vendor chunk
+              return "vendor";
             }
           },
         },
       },
+      // Warn about large chunks
+      chunkSizeWarningLimit: 500, // Warn if chunk exceeds 500KB
     },
     optimizeDeps: {
       include: ["react", "react-dom", "react/jsx-runtime"],
+      // Exclude Flowbite from pre-bundling (let it be bundled with the app)
+      exclude: ["flowbite", "flowbite-react"],
     },
   },
   integrations: [
