@@ -93,6 +93,13 @@ export default function Header() {
         return;
       }
 
+      // Don't close if click is from the hero slider buttons (user clicking slider controls)
+      // But allow closing if clicking elsewhere in the slider area
+      const carouselButton = target.closest(".carousel .prev, .carousel .next");
+      if (carouselButton) {
+        return; // Don't close when user clicks slider buttons
+      }
+
       if (
         isDropdownOpen &&
         dropdown &&

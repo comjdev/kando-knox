@@ -496,9 +496,21 @@ const slidesWithAssets = slides.map((slide) => {
       state.prevBtn.removeEventListener("click", state.prevHandler);
     }
 
-    // Create new handlers
-    state.nextHandler = () => handleSliderNavigation("next");
-    state.prevHandler = () => handleSliderNavigation("prev");
+    // Create new handlers - stop propagation for user clicks to prevent interfering with dropdown
+    state.nextHandler = (event) => {
+      if (event && event.isTrusted) {
+        // Only stop propagation for real user clicks, not programmatic calls
+        event.stopPropagation();
+      }
+      handleSliderNavigation("next");
+    };
+    state.prevHandler = (event) => {
+      if (event && event.isTrusted) {
+        // Only stop propagation for real user clicks, not programmatic calls
+        event.stopPropagation();
+      }
+      handleSliderNavigation("prev");
+    };
 
     // Add event listeners
     state.nextBtn.addEventListener("click", state.nextHandler);
@@ -580,6 +592,13 @@ const slidesWithAssets = slides.map((slide) => {
     afterSlideChange(); // Update progress bar and reset state
   }
 
+  // Stop event propagation for slider buttons to prevent interfering with other click handlers
+  function stopPropagation(event) {
+    if (event && event.stopPropagation) {
+      event.stopPropagation();
+    }
+  }
+
   // Updates after slide change
   function afterSlideChange() {
     updateProgressBar();
@@ -635,7 +654,9 @@ const slidesWithAssets = slides.map((slide) => {
     // Restart the auto-slide timer
     state.autoNextTimeout = setTimeout(() => {
       if (state.nextBtn && state.initialized) {
-        state.nextBtn.click();
+        // Call the handler directly instead of triggering a click event
+        // This prevents the click from bubbling and closing the dropdown
+        handleSliderNavigation("next");
       }
     }, TIME_AUTO_NEXT);
 
