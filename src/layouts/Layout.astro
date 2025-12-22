@@ -286,5 +286,100 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
         }
       });
     </script>
+
+    {/* Intelligent link prefetching - Intersection Observer for all internal links */}
+    <script is:inline>
+      (function () {
+        // Track prefetched URLs to avoid duplicates
+        const prefetchedUrls = new Set();
+
+        function prefetchLink(url) {
+          // Only prefetch internal links
+          if (!url || url.startsWith("http") || url.startsWith("//") || url.startsWith("#") || url.startsWith("mailto:") || url.startsWith("tel:")) {
+            return;
+          }
+
+          // Normalize URL (remove hash, trailing slash)
+          const normalizedUrl = url.split("#")[0].replace(/\/$/, "") || "/";
+          
+          if (prefetchedUrls.has(normalizedUrl)) {
+            return;
+          }
+
+          // Create prefetch link
+          const link = document.createElement("link");
+          link.rel = "prefetch";
+          link.href = normalizedUrl;
+          link.as = "document";
+          document.head.appendChild(link);
+          prefetchedUrls.add(normalizedUrl);
+        }
+
+        function initLinkPrefetching() {
+          if (!("IntersectionObserver" in window)) {
+            return; // Not supported, fallback to hover only
+          }
+
+          // Get all internal links
+          const allLinks = document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"]');
+          
+          if (allLinks.length === 0) {
+            return;
+          }
+
+          // Create Intersection Observer to prefetch links when they come into view
+          const observer = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  const link = entry.target;
+                  if (link.href) {
+                    prefetchLink(link.href);
+                  }
+                  // Unobserve after prefetching to avoid repeated work
+                  observer.unobserve(link);
+                }
+              });
+            },
+            {
+              // Start prefetching 200px before link is visible
+              rootMargin: "200px",
+              // Only trigger when any part of the link is visible
+              threshold: 0.01,
+            }
+          );
+
+          // Observe all internal links
+          allLinks.forEach(function (link) {
+            observer.observe(link);
+
+            // Also prefetch on hover for instant navigation (desktop enhancement)
+            // This works on desktop and provides instant navigation
+            link.addEventListener("mouseenter", function () {
+              if (link.href) {
+                prefetchLink(link.href);
+              }
+            }, { once: true }); // Only add listener once
+          });
+        }
+
+        // Initialize on DOM ready
+        function init() {
+          initLinkPrefetching();
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", init);
+        } else {
+          init();
+        }
+
+        // Re-initialize after ViewTransitions (new links may be added)
+        document.addEventListener("astro:page-load", function () {
+          // Small delay to ensure DOM is ready
+          setTimeout(init, 100);
+        });
+      })();
+    </script>
   </body>
 </html>

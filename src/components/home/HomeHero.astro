@@ -27,7 +27,7 @@ const slidesWithAssets = slides.map((slide) => {
 
 <div
   class="hero-carousel-wrapper relative z-0 w-full bg-[#111111]"
-  style="height: calc(100dvh - 96px);"
+  style="height: calc(100svh - 96px);"
 >
   <div class="carousel relative w-full h-full overflow-hidden z-0">
     <div class="list">
@@ -148,6 +148,7 @@ const slidesWithAssets = slides.map((slide) => {
     left: calc(var(--left-position) + 3%);
     transform: translate(0, 0px);
     transition: all var(--transition-time);
+    background-color: #2a2a2a; /* Dark gray background while image loads */
   }
 
   .carousel .list .item::after {
@@ -195,6 +196,24 @@ const slidesWithAssets = slides.map((slide) => {
   .carousel .list .item:nth-child(n + 7) {
     transition-delay: 0.4s;
     left: calc(var(--left-position) + 800px);
+  }
+
+  /* Mobile: Move preview cards lower and arrows to left side (screens smaller than 768px) */
+  @media (max-width: 767px) {
+    /* Preview cards - move lower on mobile */
+    .carousel .list .item:not(:nth-child(1)):not(:nth-child(2)) {
+      bottom: 20px;
+    }
+
+    /* Reposition arrows to very left side on mobile - use !important to override inline style */
+    .arrows {
+      bottom: 20px !important;
+      left: 20px !important;
+      width: auto !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+      align-items: flex-start !important;
+    }
   }
 
   /* Content positioning for preview slides */

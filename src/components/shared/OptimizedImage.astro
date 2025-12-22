@@ -13,6 +13,8 @@ interface Props {
   height?: number;
   quality?: number;
   format?: "avif" | "webp" | "png" | "jpg" | "jpeg";
+  placeholderColor?: string; // Optional custom placeholder background color
+  noBackground?: boolean; // Set to true for transparent images (like logos)
 }
 
 const {
@@ -26,6 +28,8 @@ const {
   height,
   quality = 80,
   format: requestedFormat = "webp", // Default to WebP for best performance
+  placeholderColor = "bg-gray-200 dark:bg-gray-700", // Default placeholder color
+  noBackground = false, // Default to showing background for loading indicator
 } = Astro.props;
 
 // If src is already an ImageMetadata object (imported asset), use it directly
@@ -70,29 +74,75 @@ if (finalIsAsset && typeof finalSrc === "object" && "src" in finalSrc) {
 ---
 
 {
-  finalIsAsset ? (
-    <Image
-      src={finalSrc as ImageMetadata}
-      alt={alt}
-      class={className}
-      loading={loading}
-      decoding={decoding}
-      sizes={sizes}
-      width={width}
-      height={height}
-      quality={quality}
-      format={format}
-    />
+  noBackground ? (
+    // For transparent images (like logos), render without background wrapper
+    finalIsAsset ? (
+      <Image
+        src={finalSrc as ImageMetadata}
+        alt={alt}
+        class={className}
+        loading={loading}
+        decoding={decoding}
+        sizes={sizes}
+        width={width}
+        height={height}
+        quality={quality}
+        format={format}
+      />
+    ) : (
+      <img
+        src={finalSrc as string}
+        alt={alt}
+        class={className}
+        loading={loading}
+        decoding={decoding}
+        sizes={sizes}
+        width={width}
+        height={height}
+      />
+    )
   ) : (
-    <img
-      src={finalSrc as string}
-      alt={alt}
-      class={className}
-      loading={loading}
-      decoding={decoding}
-      sizes={sizes}
-      width={width}
-      height={height}
-    />
+    // For regular images, use wrapper with background color
+    <div
+      class={`optimized-image-wrapper ${placeholderColor} ${className} relative overflow-hidden`}
+    >
+      {finalIsAsset ? (
+        <Image
+          src={finalSrc as ImageMetadata}
+          alt={alt}
+          class="optimized-image-main relative z-10 w-full h-full object-cover"
+          loading={loading}
+          decoding={decoding}
+          sizes={sizes}
+          width={width}
+          height={height}
+          quality={quality}
+          format={format}
+        />
+      ) : (
+        <img
+          src={finalSrc as string}
+          alt={alt}
+          class="optimized-image-main relative z-10 w-full h-full object-cover"
+          loading={loading}
+          decoding={decoding}
+          sizes={sizes}
+          width={width}
+          height={height}
+        />
+      )}
+    </div>
   )
 }
+
+<style>
+  .optimized-image-wrapper {
+    position: relative;
+  }
+
+  .optimized-image-main {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>
