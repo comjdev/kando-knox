@@ -74,6 +74,9 @@ if (finalIsAsset && typeof finalSrc === "object" && "src" in finalSrc) {
 
 // Check if className contains a height class (h-*)
 const hasHeightClass = /h-\d+|h-full|h-screen|h-auto/.test(className);
+// Check if both width and height classes are set (for square/rectangular containers)
+const hasExplicitDimensions =
+  /w-\d+/.test(className) && /h-\d+/.test(className);
 ---
 
 {
@@ -113,7 +116,7 @@ const hasHeightClass = /h-\d+|h-full|h-screen|h-auto/.test(className);
         <Image
           src={finalSrc as ImageMetadata}
           alt={alt}
-          class={`optimized-image-main relative z-10 w-full ${hasHeightClass ? "h-full object-cover" : ""}`}
+          class={`optimized-image-main relative z-10 w-full ${hasHeightClass || hasExplicitDimensions ? "h-full object-cover" : ""}`}
           loading={loading}
           decoding={decoding}
           sizes={sizes}
@@ -126,7 +129,7 @@ const hasHeightClass = /h-\d+|h-full|h-screen|h-auto/.test(className);
         <img
           src={finalSrc as string}
           alt={alt}
-          class={`optimized-image-main relative z-10 w-full ${hasHeightClass ? "h-full object-cover" : ""}`}
+          class={`optimized-image-main relative z-10 w-full ${hasHeightClass || hasExplicitDimensions ? "h-full object-cover" : ""}`}
           loading={loading}
           decoding={decoding}
           sizes={sizes}
@@ -146,7 +149,10 @@ const hasHeightClass = /h-\d+|h-full|h-screen|h-auto/.test(className);
     line-height: 0;
     /* Ensure border-radius clips background */
     overflow: hidden;
-    /* Ensure wrapper matches image size exactly */
+  }
+
+  /* Default to 100% width only when no explicit width class is set */
+  .optimized-image-wrapper:not([class*="w-"]) {
     width: 100%;
   }
 
@@ -159,11 +165,9 @@ const hasHeightClass = /h-\d+|h-full|h-screen|h-auto/.test(className);
     border-radius: inherit;
   }
 
-  /* When wrapper has height constraint, image should fill it */
-  .optimized-image-wrapper[class*="h-"] .optimized-image-main,
-  .optimized-image-wrapper[class*="h-full"] .optimized-image-main,
-  .optimized-image-wrapper[class*="h-screen"] .optimized-image-main {
-    height: 100%;
+  /* When wrapper has height constraint or explicit dimensions, image should fill it */
+  .optimized-image-wrapper[class*="h-"] .optimized-image-main {
+    height: 100% !important;
     object-fit: cover;
   }
 </style>

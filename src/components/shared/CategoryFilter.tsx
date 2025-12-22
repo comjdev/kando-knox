@@ -98,7 +98,7 @@ export default function CategoryFilter({
   };
 
   return (
-    <div className="flex justify-center mt-4">
+    <div className="flex justify-center mt-4 relative z-50">
       <div className="relative category-filter-dropdown">
         <label htmlFor="category-filter" className="sr-only">
           Filter by category
@@ -126,7 +126,7 @@ export default function CategoryFilter({
         </button>
 
         {isOpen && (
-          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-600 max-h-60 overflow-auto">
+          <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-600 max-h-60 overflow-auto">
             <button
               onClick={() => {
                 handleCategoryChange("all");

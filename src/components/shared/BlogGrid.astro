@@ -33,6 +33,7 @@ const posts = limit ? sortedPosts.slice(0, limit) : sortedPosts;
         <div
           data-category={categoryString}
           data-categories={JSON.stringify(postCategories)}
+          class="h-full"
         >
           <Card
             title={post.frontmatter.title}
