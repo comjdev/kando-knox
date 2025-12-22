@@ -71,6 +71,9 @@ if (finalIsAsset && typeof finalSrc === "object" && "src" in finalSrc) {
     format = "webp";
   }
 }
+
+// Check if className contains a height class (h-*)
+const hasHeightClass = /h-\d+|h-full|h-screen|h-auto/.test(className);
 ---
 
 {
@@ -110,7 +113,7 @@ if (finalIsAsset && typeof finalSrc === "object" && "src" in finalSrc) {
         <Image
           src={finalSrc as ImageMetadata}
           alt={alt}
-          class="optimized-image-main relative z-10 w-full h-full object-cover"
+          class={`optimized-image-main relative z-10 w-full ${hasHeightClass ? "h-full object-cover" : ""}`}
           loading={loading}
           decoding={decoding}
           sizes={sizes}
@@ -123,7 +126,7 @@ if (finalIsAsset && typeof finalSrc === "object" && "src" in finalSrc) {
         <img
           src={finalSrc as string}
           alt={alt}
-          class="optimized-image-main relative z-10 w-full h-full object-cover"
+          class={`optimized-image-main relative z-10 w-full ${hasHeightClass ? "h-full object-cover" : ""}`}
           loading={loading}
           decoding={decoding}
           sizes={sizes}
@@ -138,11 +141,29 @@ if (finalIsAsset && typeof finalSrc === "object" && "src" in finalSrc) {
 <style>
   .optimized-image-wrapper {
     position: relative;
+    display: block;
+    /* Ensure wrapper fits image dimensions exactly when no explicit height */
+    line-height: 0;
+    /* Ensure border-radius clips background */
+    overflow: hidden;
+    /* Ensure wrapper matches image size exactly */
+    width: 100%;
   }
 
   .optimized-image-main {
     display: block;
     width: 100%;
+    /* height: auto maintains aspect ratio when no height constraint is set */
     height: auto;
+    /* Ensure image respects border-radius */
+    border-radius: inherit;
+  }
+
+  /* When wrapper has height constraint, image should fill it */
+  .optimized-image-wrapper[class*="h-"] .optimized-image-main,
+  .optimized-image-wrapper[class*="h-full"] .optimized-image-main,
+  .optimized-image-wrapper[class*="h-screen"] .optimized-image-main {
+    height: 100%;
+    object-fit: cover;
   }
 </style>
