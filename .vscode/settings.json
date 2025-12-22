@@ -12,16 +12,7 @@
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "typescript.validate.enable": true,
+  "typescript.preferences.includePackageJsonAutoImports": "off"
 }
-
-
-
-
-
-
-
-
-
-
-

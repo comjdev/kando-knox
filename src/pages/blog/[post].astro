@@ -5,6 +5,8 @@ import { getBlogPostTitle } from "../../utils/titles";
 import { SITE_CONFIG } from "../../config";
 import { formatMetaDescription } from "../../utils/descriptions";
 import OptimizedImage from "../../components/shared/OptimizedImage.astro";
+import { getImageAsset } from "../../utils/imageMap";
+import { getImage } from "astro:assets";
 // Temporarily using import.meta.glob until Content Collections schema is fully configured
 // TODO: Migrate to getCollection("blog") once schema validation passes
 
@@ -69,10 +71,25 @@ const formatDate = (dateString: string | Date) => {
 };
 
 // Get featured image or use default
-const featuredImage =
+const featuredImagePath =
   post.frontmatter.image ||
   post.frontmatter.featuredImage ||
   "/img/default.jpg";
+
+// Resolve to optimized image asset and get WebP URL
+const featuredImageAsset = getImageAsset(featuredImagePath);
+let featuredImage: string;
+if (typeof featuredImageAsset === "object" && "src" in featuredImageAsset) {
+  // Get optimized WebP version
+  const optimizedImage = await getImage({
+    src: featuredImageAsset,
+    format: "webp",
+    quality: 80,
+  });
+  featuredImage = optimizedImage.src.toString();
+} else {
+  featuredImage = featuredImagePath;
+}
 
 // Format date for schema (ISO format)
 const formatDateForSchema = (dateString: string | Date) => {
@@ -371,8 +388,9 @@ const schema = getBlogPostingSchema(
                         alt={blogPost.title}
                         loading="lazy"
                         decoding="async"
-                        width={96}
-                        height={96}
+                        width={192}
+                        height={192}
+                        quality={90}
                         sizes="96px"
                       />
                     </a>
