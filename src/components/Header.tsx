@@ -349,10 +349,11 @@ export default function Header() {
                 Contact
               </a>
             </li>
-            <li className="mt-3 md:hidden">
+            <li className="mt-4 mb-4 px-3 md:hidden">
               <PrimaryButton
                 href="#footer-book-trial"
                 onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full text-center justify-center"
               >
                 Book a trial
               </PrimaryButton>
