@@ -43,11 +43,7 @@ import { generatePageTitle } from "../utils/titles";
 const pageTitle = title || generatePageTitle(SITE_CONFIG.title, ["Karate", "BJJ"]);
 const pageDescription = description || SITE_CONFIG.description;
 
-// Check if current date is between December 15 and 27
-const now = new Date();
-const month = now.getMonth(); // 0-11, where 11 is December
-const day = now.getDate();
-const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
+// Snow effect is now handled client-side in SnowParticles component
 ---
 
 <!doctype html>
@@ -198,7 +194,7 @@ const isDecember15to27 = month === 11 && day >= 15 && day <= 27;
       <slot />
     </main>
     <Footer />
-    {isDecember15to27 && <SnowParticles />}
+    <SnowParticles />
     {/* Flowbite - Deferred for better performance (non-critical, loads after page interactive) */}
     <script
       is:inline

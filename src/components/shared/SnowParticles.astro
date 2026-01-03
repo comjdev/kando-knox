@@ -1,6 +1,7 @@
 ---
 // Snow Particles Component
 // Based on: https://codepen.io/Alexandra-Sevigny/pen/PwPbgKG
+// Only shows during December 15-27
 ---
 
 <canvas id="snow-canvas"></canvas>
@@ -14,10 +15,37 @@
     height: 100%;
     pointer-events: none;
     z-index: 1;
+    display: none; /* Hidden by default, shown only during Christmas period */
   }
 </style>
 
 <script>
+  // Check if current date is between December 15 and 27
+  function isDecember15to27() {
+    const now = new Date();
+    const month = now.getMonth(); // 0-11, where 11 is December
+    const day = now.getDate();
+    return month === 11 && day >= 15 && day <= 27;
+  }
+
+  // Hide canvas if not in Christmas period
+  function checkDateAndShowCanvas() {
+    const canvas = document.getElementById("snow-canvas");
+    if (canvas) {
+      if (isDecember15to27()) {
+        canvas.style.display = "block";
+      } else {
+        canvas.style.display = "none";
+        // Clean up if animation is running
+        if (window.__snowParticles && window.__snowParticles.isAnimating) {
+          cleanupSnow();
+        }
+        return false; // Return false to prevent initialization
+      }
+    }
+    return true; // Return true to allow initialization
+  }
+
   // Use global state to persist across page navigations
   if (typeof window !== "undefined" && !window.__snowParticles) {
     window.__snowParticles = {
@@ -141,6 +169,8 @@
 
   // Initialize animation
   function initializeSnow() {
+    // Check date first - don't initialize if not Christmas period
+    if (!checkDateAndShowCanvas()) return;
     if (!initCanvas() || !isDarkMode()) return;
 
     // Set up resize handler if not already set
@@ -175,6 +205,14 @@
   if (typeof window !== "undefined") {
     // Function to check and initialize
     function checkAndInit() {
+      // First check if we're in the Christmas period
+      if (!isDecember15to27()) {
+        cleanupSnow();
+        const canvas = document.getElementById("snow-canvas");
+        if (canvas) canvas.style.display = "none";
+        return;
+      }
+      
       const isDark = isDarkMode();
       if (isDark && !state.isAnimating) {
         initializeSnow();
@@ -194,19 +232,26 @@
 
     // Initialize on DOM ready
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", checkAndInit);
+      document.addEventListener("DOMContentLoaded", () => {
+        checkDateAndShowCanvas();
+        checkAndInit();
+      });
     } else {
+      checkDateAndShowCanvas();
       checkAndInit();
     }
 
     // Reinitialize on Astro page load (ViewTransitions)
     document.addEventListener("astro:page-load", () => {
+      // Check date first
+      checkDateAndShowCanvas();
+      
       // Reset canvas reference on new page (DOM element gets replaced)
       state.canvas = null;
       state.ctx = null;
 
       // If animation is running, we need to reinitialize canvas but keep animation going
-      if (state.isAnimating && isDarkMode()) {
+      if (state.isAnimating && isDarkMode() && isDecember15to27()) {
         // Reinitialize canvas reference
         if (initCanvas()) {
           // Resize canvas to match new page dimensions

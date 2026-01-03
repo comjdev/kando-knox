@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import PrimaryButton from "../shared/PrimaryButton";
+import PrimaryButton from "../shared/PrimaryButton.astro";
 import OptimizedImage from "../shared/OptimizedImage.astro";
 
 const teamMembers = await getCollection("team");
@@ -39,7 +39,6 @@ const team = teamMembers.sort((a, b) => {
         </p>
         <div class="mt-4">
           <PrimaryButton
-            client:idle
             href="/contact"
             className="inline-flex items-center justify-center"
           >

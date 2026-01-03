@@ -1,0 +1,48 @@
+---
+interface Props {
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  className?: string;
+  target?: string;
+  rel?: string;
+  onClick?: string; // For inline event handlers in Astro
+  "aria-label"?: string;
+}
+
+const {
+  href,
+  type = "button",
+  className = "",
+  target,
+  rel,
+  onClick,
+  "aria-label": ariaLabel,
+} = Astro.props;
+
+const baseClasses =
+  "inline-block text-white bg-primary-500 dark:bg-primary-600 hover:bg-primary-600 dark:hover:bg-primary-700 focus:ring-4 focus:ring-primary-500 shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none transition-colors";
+const combinedClasses = `${baseClasses} ${className}`.trim();
+---
+
+{href ? (
+  <a
+    href={href}
+    class={combinedClasses}
+    target={target}
+    rel={rel}
+    onclick={onClick}
+    aria-label={ariaLabel}
+  >
+    <slot />
+  </a>
+) : (
+  <button
+    type={type}
+    class={combinedClasses}
+    onclick={onClick}
+    aria-label={ariaLabel}
+  >
+    <slot />
+  </button>
+)}
+

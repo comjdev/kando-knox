@@ -1,6 +1,6 @@
 ---
 import BlogGrid from "./BlogGrid.astro";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./PrimaryButton.astro";
 ---
 
 <section class="bg-white dark:bg-gray-900">
@@ -16,7 +16,7 @@ import PrimaryButton from "./PrimaryButton";
     </p>
     <BlogGrid limit={3} />
     <div class="flex justify-center mt-8">
-      <PrimaryButton client:idle href="/blog"> View all posts </PrimaryButton>
+      <PrimaryButton href="/blog"> View all posts </PrimaryButton>
     </div>
   </div>
 </section>

@@ -1,5 +1,5 @@
 ---
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./PrimaryButton.astro";
 import OptimizedImage from "./OptimizedImage.astro";
 import { getCollection } from "astro:content";
 
@@ -53,7 +53,6 @@ const programs = limit ? sortedPrograms.slice(0, limit) : sortedPrograms;
             </ul>
           )}
           <PrimaryButton
-            client:visible
             href={`/programs/${program.slug}`}
             className="w-fit mt-auto"
           >
