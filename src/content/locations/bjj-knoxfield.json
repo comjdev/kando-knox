@@ -1,0 +1,108 @@
+{
+  "title": "Brazilian Jiu-Jitsu Classes near Knoxfield",
+  "slug": "bjj-knoxfield",
+  "description": "High-quality Brazilian Jiu-Jitsu (BJJ) classes for kids, teens, and adults near Knoxfield. Based in Boronia, proudly serving Knoxfield and surrounding Knox suburbs.",
+  "image": "/img/hero/brazilian-jiu-jitsu-kando-knox-1.jpg",
+  "locationName": "Knoxfield",
+  "transitionName": "location-knoxfield-bjj",
+  "programType": "BJJ",
+  "programs": [
+    "junior-bjj-bear-cave-knox",
+    "teen-adult-bjj-brazilian-jiu-jitsu-knox"
+  ],
+  "faqs": "faqs-bjj.json",
+  "intro": {
+    "heading": "Brazilian Jiu-Jitsu & BJJ Training Near Knoxfield",
+    "description": "Our Brazilian Jiu-Jitsu programs welcome families from Knoxfield looking for professional BJJ training for kids, teens, and adults. Conveniently located in Boronia and serving the wider Knox area."
+  },
+  "kandoInfo": {
+    "heading": "Bear Cave Brazilian Jiu-Jitsu",
+    "description": [
+      "Welcome to Bear Cave Brazilian Jiu-Jitsu! Whether you're completely new to martial arts or an experienced BJJ practitioner, we have the perfect training environment for you. Our Boronia location is easily accessible for families from Knoxfield and throughout the Knox area.",
+      "At Bear Cave BJJ, you'll learn effective techniques from our experienced instructors. We teach all the essential moves and submissions you need to control your training partner on the mats, building practical self-defence skills that work in real-world situations. Knoxfield students benefit from our comprehensive approach to Brazilian Jiu-Jitsu training.",
+      "Our Brazilian Jiu-Jitsu classes help you build physical strength and boost confidence in a fun, supportive environment. Students from Knoxfield and surrounding suburbs develop not just technical skills, but also mental resilience and self-assurance that extends beyond the training mat.",
+      "Join our welcoming BJJ community where you'll meet new friends, share experiences, and be part of our Bear Cave family. Our Boronia location creates a friendly atmosphere where everyone supports each other's growth, whether you're aiming to compete or simply looking to get in shape.",
+      "Bear Cave Brazilian Jiu-Jitsu is committed to helping you reach your goals. Our experienced instructors are dedicated to your progress, providing structured training that adapts to your skill level and personal objectives. Families from Knoxfield appreciate our convenient location and flexible class schedules.",
+      "Ready to start your BJJ journey? Contact us to organise a trial class at our Boronia club and discover why Bear Cave Brazilian Jiu-Jitsu is the place to be for BJJ training near Knoxfield. Let's roll and have a blast together!"
+    ]
+  },
+  "servingArea": {
+    "heading": "Serving Knoxfield and nearby Knox suburbs",
+    "description": "Our Boronia-based BJJ academy welcomes students from Knoxfield and surrounding areas such as <a href=\"/locations/bjj-wantirna\" class=\"text-primary hover:underline\">Wantirna</a>, <a href=\"/locations/bjj-bayswater\" class=\"text-primary hover:underline\">Bayswater</a>, <a href=\"/locations/bjj-rowville\" class=\"text-primary hover:underline\">Rowville</a>, and <a href=\"/locations/bjj-ferntree-gully\" class=\"text-primary hover:underline\">Ferntree Gully</a>. We provide a supportive, family-friendly training environment for Brazilian Jiu-Jitsu."
+  },
+  "getToKando": {
+    "heading": "Bear Cave BJJ Knox - Getting to Our Boronia Academy from Knoxfield",
+    "description": [
+      "Bear Cave BJJ Knox proudly operates within Kando Martial Arts Knox, where shared values and a strong sense of community make it the perfect home for our team. Knoxfield families interested in Brazilian Jiu-Jitsu often find our academy to be an excellent fit, particularly those who value structured learning and character development alongside physical training.",
+      "We believe that good people create great training—and an even better community. That's why we've partnered with the Kando Martial Arts family, whose culture and approach align closely with our own. Together, we work to provide an engaging, complementary, and well-rounded training environment for all members, whether you're here to learn, grow, or push your boundaries.",
+      "The drive from Knoxfield to our Boronia academy usually takes around 10 to 15 minutes. Take Stud Road heading north toward Boronia, then turn onto Burwood Highway. From Burwood Highway, turn into Lewis Road, followed by a turn into Wadhurst Drive. Our facility is located at Unit 2/5 Wadhurst Drive, Boronia.",
+      "Knoxfield students appreciate the balance between accessibility and quality that our location provides. The manageable distance means families can commit to regular BJJ training while still accessing professional instruction. Many Knoxfield members become regular attendees, building strong connections within our Brazilian Jiu-Jitsu community."
+    ]
+  },
+  "classes": [
+    {
+      "id": "junior-bjj-bear-cave-knox",
+      "heading": "Junior Brazilian Jiu-Jitsu for Knoxfield Families",
+      "description": "For children aged 7-12, this junior BJJ program introduces Brazilian Jiu-Jitsu fundamentals through fun, structured activities. Families from Knoxfield value the confidence, coordination, and self-defense skills their children develop through BJJ training."
+    },
+    {
+      "id": "teen-adult-bjj-brazilian-jiu-jitsu-knox",
+      "heading": "Teen & Adult BJJ Training for Knoxfield Residents",
+      "description": "Our teen and adult Brazilian Jiu-Jitsu classes are suitable for students aged 13 and above from Knoxfield. Training focuses on practical self-defense, ground fighting techniques, and personal development in a respectful environment."
+    }
+  ],
+  "whyChooseUs": {
+    "heading": "Why families from Knoxfield choose Kando Martial Arts Knox for BJJ",
+    "description": "Families from Knoxfield trust Kando Martial Arts Knox for professional Brazilian Jiu-Jitsu instruction, a welcoming culture, and proven BJJ programs for all ages.",
+    "benefits": [
+      {
+        "icon": "users-group",
+        "heading": "Family Friendly",
+        "description": "We proudly welcome families from Knoxfield and across Knox, offering inclusive Brazilian Jiu-Jitsu classes for all ages and experience levels."
+      },
+      {
+        "icon": "calendar-month",
+        "heading": "Flexible Scheduling",
+        "description": "Our BJJ class timetable suits busy families from Knoxfield, with flexible training options throughout the week."
+      },
+      {
+        "icon": "face-laugh",
+        "heading": "Experienced Instructors",
+        "description": "Our qualified Brazilian Jiu-Jitsu instructors are dedicated to helping every student reach their personal goals through structured BJJ training."
+      }
+    ]
+  },
+  "benefits": [
+    {
+      "heading": "Physical Benefits",
+      "description": [
+        "Improves strength, flexibility & coordination",
+        "Boosts cardiovascular fitness & endurance",
+        "Develops balance, posture & body control",
+        "Encourages healthy, active lifestyles",
+        "Enhances overall motor skills"
+      ]
+    },
+    {
+      "heading": "Mental & Emotional Benefits",
+      "description": [
+        "Builds confidence & self-esteem",
+        "Improves focus, concentration & memory",
+        "Teaches discipline, patience & perseverance",
+        "Helps manage stress & emotions",
+        "Encourages goal-setting & resilience"
+      ]
+    },
+    {
+      "heading": "Life Skills & Personal Development",
+      "description": [
+        "Teaches respect, teamwork & leadership",
+        "Builds self-control & positive behaviour",
+        "Develops real-world self-defence awareness",
+        "Encourages responsibility & accountability",
+        "Supports long-term personal growth"
+      ]
+    }
+  ]
+}
+

@@ -13,7 +13,9 @@ import {
   getLocationLocalBusinessSchema,
   getLocationServiceSchema,
   getLocationFAQPageSchema,
+  getReviewSchema,
 } from "../../utils/schema";
+import googleReviews from "../../content/testimonials/google-reviews.json";
 import { getLocationPageTitle } from "../../utils/titles";
 import { SITE_CONFIG } from "../../config";
 import { formatMetaDescription } from "../../utils/descriptions";
@@ -76,36 +78,62 @@ if (typeof location.faqs === "string") {
   faqs = location.faqs;
 }
 
+// Generate page title - check if location has titleTag, otherwise use default
+// Determine if it's BJJ or Karate based on location data or default to Karate
+const programType = (location.programType || "Karate") as "Karate" | "BJJ";
+
 // Generate schemas for this location page
 // LocalBusiness schema (primary for local SEO) - includes full NAP and geographic data
 const localBusinessSchema = getLocationLocalBusinessSchema(
   location.locationName,
   location.slug
 );
-// Service schema (secondary) - location-specific service
+// Service schema (secondary) - location-specific service (dynamic based on programType)
 const serviceSchema = getLocationServiceSchema(
   location.locationName,
   location.slug,
-  location.title
+  location.title,
+  programType
 );
 // FAQPage schema - for rich snippets
 const faqSchema = getLocationFAQPageSchema(location.locationName);
+// Review schema - aggregate rating and reviews from Google
+// Filter out reviews without text
+const reviewsWithText = googleReviews.filter(
+  (review): review is typeof review & { text: string } => !!review.text
+);
+const googleBusinessUrl =
+  SITE_CONFIG.googleBusinessUrl || googleReviews[0]?.url || undefined;
+const reviewSchema = getReviewSchema(reviewsWithText, googleBusinessUrl);
 // Combine all schemas
-const schemas = [localBusinessSchema, serviceSchema, faqSchema];
-
-// Generate page title - check if location has titleTag, otherwise use default
-// Determine if it's BJJ or Karate based on location data or default to Karate
-// For now, all location pages are Karate (can be overridden with titleTag in JSON)
-const programType = (location.programType || "Karate") as "Karate" | "BJJ";
+const schemas = [localBusinessSchema, serviceSchema, faqSchema, reviewSchema];
 const pageTitle = location.titleTag
   ? location.titleTag
   : getLocationPageTitle(location.locationName, programType);
 
 // Format meta description - prioritize metaDescription field, then description
+// Use dynamic keywords based on program type
+const programKeywords =
+  programType === "BJJ"
+    ? [
+        "bjj classes",
+        "brazilian jiu-jitsu",
+        location.locationName,
+        "Knox",
+        "Boronia",
+        "martial arts",
+      ]
+    : [
+        "karate classes",
+        location.locationName,
+        "Knox",
+        "Boronia",
+        "martial arts",
+      ];
 const metaDesc = formatMetaDescription(
   location.metaDescription || location.description,
   undefined,
-  ["karate classes", location.locationName, "Knox", "Boronia", "martial arts"]
+  programKeywords
 );
 ---
 
@@ -122,6 +150,8 @@ const metaDesc = formatMetaDescription(
     description={location.description}
     image={featuredImage}
     transitionName={transitionName}
+    programType={programType}
+    locationName={location.locationName}
   >
     <!-- Intro Section -->
     {
@@ -231,6 +261,7 @@ const metaDesc = formatMetaDescription(
       <LocationPrograms
         classes={location.classes}
         locationName={location.locationName}
+        programType={programType}
       />
     )
   }
@@ -243,7 +274,14 @@ const metaDesc = formatMetaDescription(
   }
 
   <!-- Book a Trial Section -->
-  {location.programs && <LocationBookTrial programs={location.programs} />}
+  {
+    location.programs && (
+      <LocationBookTrial
+        programs={location.programs}
+        programType={programType}
+      />
+    )
+  }
 
   <!-- Why Choose Us Section -->
   {location.whyChooseUs && <WhyKando whyChooseUs={location.whyChooseUs} />}
@@ -253,14 +291,11 @@ const metaDesc = formatMetaDescription(
     faqs.length > 0 && (
       <LocationsFAQs
         faq={faqs}
-        title={`Frequently asked questions about karate in ${location.locationName}`}
+        title={`Frequently asked questions about ${programType === "BJJ" ? "Brazilian Jiu-Jitsu (BJJ)" : "karate"} in ${location.locationName}`}
       />
     )
   }
 
   <!-- Latest Posts Section -->
   <LatestPosts />
-
-  <!-- Testimonials Section -->
-  <Testimonials />
 </Layout>

@@ -291,6 +291,20 @@ export function getLocationLocalBusinessSchema(
       latitude: SITE_CONFIG.coordinates.latitude,
       longitude: SITE_CONFIG.coordinates.longitude,
     },
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "16:00",
+        closes: "20:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: "Saturday",
+        opens: "09:00",
+        closes: "12:00",
+      },
+    ],
     areaServed: [
       {
         "@type": "City",
@@ -309,22 +323,34 @@ export function getLocationLocalBusinessSchema(
 
 /**
  * Service schema for location pages
- * Represents karate training service for a specific location/city
+ * Represents martial arts training service for a specific location/city
  *
  * @param locationName - Name of the city/location being served
  * @param slug - URL slug for the location page
  * @param serviceName - Name of the service (e.g., "Karate Classes in Ferntree Gully")
+ * @param programType - Type of program: "Karate" or "BJJ" (defaults to "Karate")
  */
 export function getLocationServiceSchema(
   locationName: string,
   slug: string,
-  serviceName?: string
+  serviceName?: string,
+  programType: "Karate" | "BJJ" = "Karate"
 ) {
+  // Determine service type and name based on program type
+  const serviceTypeName =
+    programType === "BJJ"
+      ? "Brazilian Jiu-Jitsu Training"
+      : "Karate Training";
+  const defaultServiceName =
+    programType === "BJJ"
+      ? `Brazilian Jiu-Jitsu Classes in ${locationName}`
+      : `Karate Classes in ${locationName}`;
+
   return {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: serviceName || `Karate Classes in ${locationName}`,
-    serviceType: "Karate Training",
+    name: serviceName || defaultServiceName,
+    serviceType: serviceTypeName,
     provider: {
       "@type": "SportsActivityLocation",
       "@id": `${SITE_CONFIG.url}/#martial-arts-school`,

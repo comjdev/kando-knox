@@ -3,9 +3,10 @@ import BookTrial from "../shared/BookTrial.astro";
 
 interface Props {
   programs: string[];
+  programType?: "Karate" | "BJJ";
 }
 
-const { programs } = Astro.props;
+const { programs, programType = "Karate" } = Astro.props;
 
 import { getCollection } from "astro:content";
 
@@ -22,27 +23,47 @@ function getProgramTrial(programId: string) {
   return program?.trial || null;
 }
 
-// Map program IDs to their trial data and labels
-const programTabs = [
-  {
-    id: "pre-school-martial-arts",
-    label: "Pre-School",
-    trial: getProgramTrial("pre-school-martial-arts"),
-    title: "Pre-School Karate",
-  },
-  {
-    id: "junior-martial-arts",
-    label: "Junior",
-    trial: getProgramTrial("junior-martial-arts"),
-    title: "Junior Karate",
-  },
-  {
-    id: "adult-martial-arts",
-    label: "Teen & Adult",
-    trial: getProgramTrial("adult-martial-arts"),
-    title: "Teen & Adult Karate",
-  },
-].filter((tab) => tab.trial && programs.includes(tab.id)); // Only include tabs with trial data and in programs array
+// Map program IDs to their trial data and labels based on program type
+const allProgramTabs = programType === "BJJ"
+  ? [
+      {
+        id: "junior-bjj-bear-cave-knox",
+        label: "Junior",
+        trial: getProgramTrial("junior-bjj-bear-cave-knox"),
+        title: "Junior Brazilian Jiu-Jitsu",
+      },
+      {
+        id: "teen-adult-bjj-brazilian-jiu-jitsu-knox",
+        label: "Teen & Adult",
+        trial: getProgramTrial("teen-adult-bjj-brazilian-jiu-jitsu-knox"),
+        title: "Teen & Adult Brazilian Jiu-Jitsu",
+      },
+    ]
+  : [
+      {
+        id: "pre-school-martial-arts",
+        label: "Pre-School",
+        trial: getProgramTrial("pre-school-martial-arts"),
+        title: "Pre-School Karate",
+      },
+      {
+        id: "junior-martial-arts",
+        label: "Junior",
+        trial: getProgramTrial("junior-martial-arts"),
+        title: "Junior Karate",
+      },
+      {
+        id: "adult-martial-arts",
+        label: "Teen & Adult",
+        trial: getProgramTrial("adult-martial-arts"),
+        title: "Teen & Adult Karate",
+      },
+    ];
+
+// Only include tabs with trial data and in programs array
+const programTabs = allProgramTabs.filter(
+  (tab) => tab.trial && programs.includes(tab.id)
+);
 ---
 
 <section id="book-trial-section" class="bg-gray-100 dark:bg-gray-800">
@@ -50,7 +71,7 @@ const programTabs = [
     <h2
       class="mb-6 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white"
     >
-      Karate Trials
+      {programType === "BJJ" ? "Brazilian Jiu-Jitsu Trials" : "Karate Trials"}
     </h2>
 
     <!-- Tabs -->

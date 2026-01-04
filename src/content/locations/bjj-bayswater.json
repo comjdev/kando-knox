@@ -1,0 +1,108 @@
+{
+  "title": "Brazilian Jiu-Jitsu Classes near Bayswater",
+  "slug": "bjj-bayswater",
+  "description": "High-quality Brazilian Jiu-Jitsu (BJJ) classes for kids, teens, and adults near Bayswater. Based in Boronia, proudly serving Bayswater and surrounding Knox suburbs.",
+  "image": "/img/hero/brazilian-jiu-jitsu-kando-knox-1.jpg",
+  "locationName": "Bayswater",
+  "transitionName": "location-bayswater-bjj",
+  "programType": "BJJ",
+  "programs": [
+    "junior-bjj-bear-cave-knox",
+    "teen-adult-bjj-brazilian-jiu-jitsu-knox"
+  ],
+  "faqs": "faqs-bjj.json",
+  "intro": {
+    "heading": "Brazilian Jiu-Jitsu & BJJ Training Near Bayswater",
+    "description": "Our Brazilian Jiu-Jitsu programs welcome families from Bayswater looking for professional BJJ training for kids, teens, and adults. Conveniently located in Boronia and serving the wider Knox area."
+  },
+  "kandoInfo": {
+    "heading": "Bear Cave Brazilian Jiu-Jitsu",
+    "description": [
+      "Welcome to Bear Cave Brazilian Jiu-Jitsu! Whether you're completely new to martial arts or an experienced BJJ practitioner, we have the perfect training environment for you. Our Boronia location is conveniently accessible for families from Bayswater and throughout the Knox area.",
+      "At Bear Cave BJJ, you'll learn effective techniques from our experienced instructors. We teach all the essential moves and submissions you need to control your training partner on the mats, building practical self-defence skills that work in real-world situations. Bayswater students benefit from our structured approach to Brazilian Jiu-Jitsu training.",
+      "Our Brazilian Jiu-Jitsu classes help you build physical strength and boost confidence in a fun, supportive environment. Students from Bayswater and surrounding suburbs develop not just technical skills, but also mental resilience and self-assurance that extends beyond the training mat.",
+      "Join our welcoming BJJ community where you'll meet new friends, share experiences, and be part of our Bear Cave family. Our Boronia location creates a friendly atmosphere where everyone supports each other's growth, whether you're aiming to compete or simply looking to get in shape.",
+      "Bear Cave Brazilian Jiu-Jitsu is committed to helping you reach your goals. Our experienced instructors are dedicated to your progress, providing structured training that adapts to your skill level and personal objectives. Families from Bayswater appreciate our accessible location and flexible class schedules.",
+      "Excited to get started? Contact us to organise a trial class at our Boronia club and discover why Bear Cave Brazilian Jiu-Jitsu is the place to be for BJJ training near Bayswater. Let's roll and have a blast together!"
+    ]
+  },
+  "servingArea": {
+    "heading": "Serving Bayswater and nearby Knox suburbs",
+    "description": "Our Boronia-based BJJ academy welcomes students from Bayswater and surrounding areas such as <a href=\"/locations/bjj-wantirna\" class=\"text-primary hover:underline\">Wantirna</a>, Bayswater, <a href=\"/locations/bjj-rowville\" class=\"text-primary hover:underline\">Rowville</a>, and <a href=\"/locations/bjj-ferntree-gully\" class=\"text-primary hover:underline\">Ferntree Gully</a>. We provide a supportive, family-friendly training environment for Brazilian Jiu-Jitsu."
+  },
+  "getToKando": {
+    "heading": "Bear Cave BJJ Knox - Getting to Our Boronia Academy from Bayswater",
+    "description": [
+      "Bear Cave BJJ Knox proudly operates within Kando Martial Arts Knox, where shared values and a strong sense of community make it the perfect home for our team. Bayswater families seeking exceptional Brazilian Jiu-Jitsu training frequently choose our academy, drawn by our proven track record and convenient Boronia location.",
+      "We believe that good people create great training—and an even better community. That's why we've partnered with the Kando Martial Arts family, whose culture and approach align closely with our own. Together, we work to provide an engaging, complementary, and well-rounded training environment for all members, whether you're here to learn, grow, or push your boundaries.",
+      "The drive from Bayswater to our Boronia academy typically takes around 10 to 15 minutes. Coming from Bayswater, take Boronia Road heading toward Boronia, then turn left onto Lewis Road, followed by a turn into Wadhurst Drive. Our facility is located at Unit 2/5 Wadhurst Drive, Boronia, making it easily accessible for families throughout the Bayswater area.",
+      "Bayswater students benefit from our strategic location within Knox, with public transport options available for those who prefer not to drive. The proximity means families can easily commit to regular BJJ training schedules, attend belt promotions, and participate in special events without the burden of lengthy commutes."
+    ]
+  },
+  "classes": [
+    {
+      "id": "junior-bjj-bear-cave-knox",
+      "heading": "Junior Brazilian Jiu-Jitsu for Bayswater Families",
+      "description": "For children aged 7-12, this junior BJJ program introduces Brazilian Jiu-Jitsu fundamentals through fun, structured activities. Families from Bayswater value the confidence, coordination, and self-defense skills their children develop through BJJ training."
+    },
+    {
+      "id": "teen-adult-bjj-brazilian-jiu-jitsu-knox",
+      "heading": "Teen & Adult BJJ Training for Bayswater Residents",
+      "description": "Our teen and adult Brazilian Jiu-Jitsu classes are suitable for students aged 13 and above from Bayswater. Training focuses on practical self-defense, ground fighting techniques, and personal development in a respectful environment."
+    }
+  ],
+  "whyChooseUs": {
+    "heading": "Why families from Bayswater choose Kando Martial Arts Knox for BJJ",
+    "description": "Families from Bayswater trust Kando Martial Arts Knox for professional Brazilian Jiu-Jitsu instruction, a welcoming culture, and proven BJJ programs for all ages.",
+    "benefits": [
+      {
+        "icon": "users-group",
+        "heading": "Family Friendly",
+        "description": "We proudly welcome families from Bayswater and across Knox, offering inclusive Brazilian Jiu-Jitsu classes for all ages and experience levels."
+      },
+      {
+        "icon": "calendar-month",
+        "heading": "Flexible Scheduling",
+        "description": "Our BJJ class timetable suits busy families from Bayswater, with flexible training options throughout the week."
+      },
+      {
+        "icon": "face-laugh",
+        "heading": "Experienced Instructors",
+        "description": "Our qualified Brazilian Jiu-Jitsu instructors are dedicated to helping every student reach their personal goals through structured BJJ training."
+      }
+    ]
+  },
+  "benefits": [
+    {
+      "heading": "Physical Benefits",
+      "description": [
+        "Improves strength, flexibility & coordination",
+        "Boosts cardiovascular fitness & endurance",
+        "Develops balance, posture & body control",
+        "Encourages healthy, active lifestyles",
+        "Enhances overall motor skills"
+      ]
+    },
+    {
+      "heading": "Mental & Emotional Benefits",
+      "description": [
+        "Builds confidence & self-esteem",
+        "Improves focus, concentration & memory",
+        "Teaches discipline, patience & perseverance",
+        "Helps manage stress & emotions",
+        "Encourages goal-setting & resilience"
+      ]
+    },
+    {
+      "heading": "Life Skills & Personal Development",
+      "description": [
+        "Teaches respect, teamwork & leadership",
+        "Builds self-control & positive behaviour",
+        "Develops real-world self-defence awareness",
+        "Encourages responsibility & accountability",
+        "Supports long-term personal growth"
+      ]
+    }
+  ]
+}
+

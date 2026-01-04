@@ -9,9 +9,10 @@ interface Props {
     description: string;
   }>;
   locationName: string;
+  programType?: "Karate" | "BJJ";
 }
 
-const { classes, locationName } = Astro.props;
+const { classes, locationName, programType = "Karate" } = Astro.props;
 
 import { getCollection } from "astro:content";
 
@@ -40,15 +41,29 @@ function getProgramData(id: string) {
     <h2
       class="mb-12 text-4xl md:text-5xl font-extrabold text-center text-gray-900 dark:text-white"
     >
-      Our Karate Programs
+      {programType === "BJJ"
+        ? "Our Brazilian Jiu-Jitsu Programs"
+        : "Our Karate Programs"}
     </h2>
     <p
       class="max-w-4xl mx-auto mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400 text-center"
     >
-      Our karate programs are designed to help students learn the art of karate
-      in a safe and supportive environment. We proudly serve families from
-      {locationName} and across the Knox Council area, offering classes for all ages
-      and skill levels, from beginners to advanced students.
+      {programType === "BJJ" ? (
+        <>
+          Our Brazilian Jiu-Jitsu programs are designed to help students learn
+          the art of BJJ in a safe and supportive environment. We proudly serve
+          families from {locationName} and across the Knox Council area, offering
+          classes for all ages and skill levels, from beginners to advanced
+          students.
+        </>
+      ) : (
+        <>
+          Our karate programs are designed to help students learn the art of
+          karate in a safe and supportive environment. We proudly serve families
+          from {locationName} and across the Knox Council area, offering classes
+          for all ages and skill levels, from beginners to advanced students.
+        </>
+      )}
     </p>
     {
       classes.map((classItem, index) => {
@@ -64,7 +79,7 @@ function getProgramData(id: string) {
                 <>
                   <OptimizedImage
                     src={image}
-                    alt={`${classItem.heading} training at Kando Martial Arts Knox dojo in Boronia`}
+                    alt={`${classItem.heading} training at Kando Martial Arts Knox dojo in ${locationName}`}
                     class="w-full rounded-lg"
                     loading="lazy"
                     decoding="async"
@@ -127,7 +142,7 @@ function getProgramData(id: string) {
                   </div>
                   <OptimizedImage
                     src={image}
-                    alt={`${classItem.heading} training at Kando Martial Arts Knox dojo in Boronia`}
+                    alt={`${classItem.heading} training at Kando Martial Arts Knox dojo in ${locationName}`}
                     class="w-full rounded-lg"
                     loading="lazy"
                     decoding="async"

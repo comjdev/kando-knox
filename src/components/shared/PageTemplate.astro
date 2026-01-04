@@ -8,6 +8,8 @@ interface Props {
   description?: string;
   image?: string;
   transitionName?: string;
+  programType?: "Karate" | "BJJ";
+  locationName?: string;
 }
 
 const {
@@ -15,6 +17,8 @@ const {
   description,
   image = "/img/default.jpg",
   transitionName,
+  programType = "Karate",
+  locationName = "Boronia",
 } = Astro.props;
 
 // Resolve image to asset for optimized background image
@@ -27,11 +31,25 @@ import { getCollection } from "astro:content";
 // Load programs for sidebar
 const allPrograms = await getCollection("programs");
 
-// Sort programs by id and take first 3 for sidebar
-const sidebarPrograms = allPrograms
-  .map((p) => p.data)
-  .sort((a, b) => a.id - b.id)
-  .slice(0, 3);
+// Filter programs based on programType for sidebar
+const sidebarPrograms = programType === "BJJ"
+  ? allPrograms
+      .map((p) => p.data)
+      .filter(
+        (p: any) =>
+          p.slug === "junior-bjj-bear-cave-knox" ||
+          p.slug === "teen-adult-bjj-brazilian-jiu-jitsu-knox"
+      )
+      .sort((a: any, b: any) => a.id - b.id)
+  : allPrograms
+      .map((p) => p.data)
+      .filter(
+        (p: any) =>
+          p.slug === "pre-school-martial-arts-karate-knox" ||
+          p.slug === "junior-martial-arts-karate-knox" ||
+          p.slug === "adult-martial-arts-karate-knox"
+      )
+      .sort((a: any, b: any) => a.id - b.id);
 ---
 
 <main class="pb-16 lg:pb-24 bg-white dark:bg-gray-900 antialiased">
@@ -96,7 +114,7 @@ const sidebarPrograms = allPrograms
           <h4
             class="mb-4 text-sm font-bold text-gray-900 dark:text-white uppercase"
           >
-            Our Programs
+            {programType === "BJJ" ? "Our BJJ Programs" : "Our Karate Programs"}
           </h4>
 
           {
@@ -106,7 +124,7 @@ const sidebarPrograms = allPrograms
                   <OptimizedImage
                     src={program.image || "/img/placeholder.jpg"}
                     class="max-w-full w-24 h-24 rounded-lg object-cover aspect-square"
-                    alt={`${program.title} classes at Kando Martial Arts Knox in Boronia`}
+                    alt={`${program.title} classes at Kando Martial Arts Knox in ${locationName}`}
                     loading="lazy"
                     decoding="async"
                     width={192}

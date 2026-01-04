@@ -2,19 +2,23 @@
  * Meta Description Utility Functions
  *
  * Formats and validates meta descriptions for SEO
- * Target length: 160-300 characters (optimal: 155-160 for Google snippets)
+ * Target length: 155-160 characters (optimal for Google search result display)
  */
 
 import { SITE_CONFIG } from "../config";
 
+const OPTIMAL_LENGTH = 160; // Google typically shows 155-160 chars
+const MAX_LENGTH = 165; // Allow slight overflow for natural sentence endings
+const MIN_LENGTH = 120; // Minimum acceptable length
+
 /**
  * Format and validate meta description
- * Ensures description is between 160-300 characters for optimal SEO
+ * Optimizes description to 155-160 characters for optimal Google display
  *
  * @param description - Raw description from content (metaDescription field takes priority)
  * @param fallback - Fallback description if provided one is too short
  * @param keywords - Additional keywords/phrases to enhance description
- * @returns Formatted description within 160-300 character range
+ * @returns Formatted description optimized for 155-160 character display
  */
 export function formatMetaDescription(
   description: string | undefined,
@@ -30,22 +34,26 @@ export function formatMetaDescription(
   desc = desc.trim();
 
   // If description is too short, enhance with keywords and location info
-  if (desc.length < 160) {
+  if (desc.length < MIN_LENGTH) {
     const enhancements: string[] = [];
 
-    // Add keywords if provided
+    // Add keywords if provided (limit to avoid making too long)
     if (keywords && keywords.length > 0) {
-      enhancements.push(keywords.join(", "));
+      const keywordStr = keywords.slice(0, 3).join(", "); // Limit to first 3 keywords
+      if (keywordStr.length + desc.length < OPTIMAL_LENGTH) {
+        enhancements.push(keywordStr);
+      }
     }
 
-    // Add location info for context
+    // Add location info for context (only if not already present)
     if (
       !desc.toLowerCase().includes("knox") &&
       !desc.toLowerCase().includes("boronia")
     ) {
-      enhancements.push(
-        `Located in ${SITE_CONFIG.address.city}, serving the Knox area.`
-      );
+      const locationText = `Located in ${SITE_CONFIG.address.city}, serving the Knox area.`;
+      if (locationText.length + desc.length < OPTIMAL_LENGTH) {
+        enhancements.push(locationText);
+      }
     }
 
     if (enhancements.length > 0) {
@@ -54,47 +62,53 @@ export function formatMetaDescription(
     }
   }
 
-  // Truncate if too long (max 300 chars, try to keep at sentence boundary)
-  if (desc.length > 300) {
+  // Optimize length: target 155-160 characters for Google display
+  if (desc.length > MAX_LENGTH) {
     // Try to truncate at a sentence boundary (preferred)
-    let truncated = desc.substring(0, 297);
+    let truncated = desc.substring(0, OPTIMAL_LENGTH);
     const lastPeriod = truncated.lastIndexOf(".");
     const lastExclamation = truncated.lastIndexOf("!");
     const lastQuestion = truncated.lastIndexOf("?");
     const lastSentence = Math.max(lastPeriod, lastExclamation, lastQuestion);
 
-    if (lastSentence > 250) {
-      // Truncate at sentence end
+    // If we find a sentence end within reasonable range, use it
+    if (lastSentence > OPTIMAL_LENGTH - 30) {
       truncated = truncated.substring(0, lastSentence + 1);
     } else {
-      // Fallback to word boundary
+      // Fallback to word boundary near optimal length
       const lastSpace = truncated.lastIndexOf(" ");
-      if (lastSpace > 250) {
+      if (lastSpace > OPTIMAL_LENGTH - 20) {
         truncated = truncated.substring(0, lastSpace).trim() + "...";
       } else {
-        truncated = truncated.trim() + "...";
+        // Hard truncate at optimal length
+        truncated = truncated.substring(0, OPTIMAL_LENGTH).trim() + "...";
       }
     }
 
     desc = truncated;
   }
 
-  // If still too short after enhancements, add more context
-  if (desc.length < 160) {
-    const context =
-      "Professional martial arts training for kids, teens, and adults.";
+  // If still too short after enhancements, add concise context
+  if (desc.length < MIN_LENGTH) {
+    const context = "Professional martial arts training for all ages.";
     desc = `${desc} ${context}`.trim();
   }
 
-  // Final validation - ensure we're within bounds
-  if (desc.length > 300) {
-    desc = desc.substring(0, 297).trim() + "...";
+  // Final optimization: ensure we're within optimal range
+  if (desc.length > MAX_LENGTH) {
+    // One more pass to get it right
+    const truncated = desc.substring(0, OPTIMAL_LENGTH);
+    const lastSpace = truncated.lastIndexOf(" ");
+    desc = truncated.substring(0, lastSpace).trim() + "...";
   }
-  if (desc.length < 160 && desc.length > 0) {
-    // Add location as final resort
-    desc = `${desc} Serving Boronia and the Knox area.`.trim();
-    if (desc.length > 300) {
-      desc = desc.substring(0, 297).trim() + "...";
+
+  // Ensure minimum length
+  if (desc.length < MIN_LENGTH && desc.length > 0) {
+    const locationText = `Serving ${SITE_CONFIG.address.city} and the Knox area.`;
+    desc = `${desc} ${locationText}`.trim();
+    // If this makes it too long, truncate again
+    if (desc.length > MAX_LENGTH) {
+      desc = desc.substring(0, OPTIMAL_LENGTH).trim() + "...";
     }
   }
 
