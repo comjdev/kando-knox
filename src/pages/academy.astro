@@ -1,39 +1,77 @@
 ---
+import Layout from "../layouts/Layout.astro";
 import { SITE_CONFIG } from "../config";
+import { getCustomPageTitle } from "../utils/titles";
+import { formatMetaDescription } from "../utils/descriptions";
+
+const pageTitle = getCustomPageTitle(undefined, "Online Academy");
+const pageDescription = formatMetaDescription(
+  "Access our online academy with video tutorials and training resources for martial arts students.",
+  undefined,
+  ["online academy", "video training", "martial arts"]
+);
 ---
 
-<!doctype html>
-<html lang="en" class="light">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Online Academy | {SITE_CONFIG.title}</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        height: 100%;
-        overflow: hidden;
-      }
-      iframe {
-        width: 100%;
-        height: 100vh;
-        border: none;
-        display: block;
-      }
-    </style>
-  </head>
-  <body>
-    <iframe
-      src={SITE_CONFIG.academyUrl}
-      title="Kando Martial Arts Online Academy"
-      allow="fullscreen"
-      allowfullscreen></iframe>
-  </body>
-</html>
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  image="/img/default.jpg"
+  type="website"
+  url={`${SITE_CONFIG.url}/academy`}
+>
+  <section
+    class="bg-white dark:bg-gray-900 min-h-screen flex items-center justify-center"
+  >
+    <div class="max-w-2xl mx-auto px-4 py-16 text-center">
+      <div class="mb-8">
+        <svg
+          class="mx-auto w-16 h-16 text-primary-500 mb-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+          ></path>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          Online Academy
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+          Redirecting you to our online academy...
+        </p>
+        <div class="flex justify-center">
+          <div
+            class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"
+          >
+          </div>
+        </div>
+      </div>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        If you are not redirected automatically,{" "}
+        <a
+          href={SITE_CONFIG.academyUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary-500 hover:underline"
+        >
+          click here to access the academy
+        </a>
+        .
+      </p>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ academyUrl: SITE_CONFIG.academyUrl }}>
+    // Immediate redirect - best for user experience
+    window.location.replace(academyUrl);
+  </script>
+</Layout>
