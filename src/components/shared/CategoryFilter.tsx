@@ -99,7 +99,7 @@ export default function CategoryFilter({
 
   return (
     <div className="flex justify-center mt-4">
-      <div className="relative category-filter-dropdown">
+      <div className="relative category-filter-dropdown z-50">
         <label htmlFor="category-filter" className="sr-only">
           Filter by category
         </label>
@@ -107,7 +107,7 @@ export default function CategoryFilter({
           id="category-filter"
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-primary-500 dark:focus:border-primary-500 flex items-center gap-2 min-w-[200px] justify-between"
+          className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-primary-500 dark:focus:border-primary-500 flex items-center gap-2 min-w-[200px] justify-between relative z-50"
         >
           <span>{getSelectedLabel()}</span>
           <svg
@@ -126,7 +126,7 @@ export default function CategoryFilter({
         </button>
 
         {isOpen && (
-          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-600 max-h-60 overflow-auto">
+          <div className="absolute z-[100] w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-600 max-h-60 overflow-auto">
             <button
               onClick={() => {
                 handleCategoryChange("all");

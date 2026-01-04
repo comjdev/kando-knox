@@ -21,6 +21,14 @@
       "className": "Junior Brazilian Jiu-Jitsu",
       "beltRank": "All Belts",
       "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Saturday",
+      "timeFrom": "2:15 PM",
+      "timeTo": "3:00 PM",
+      "className": "Junior Brazilian Jiu-Jitsu",
+      "beltRank": "All Belts",
+      "instructor": "Sensei Andy"
     }
   ],
   "features": [

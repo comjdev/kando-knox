@@ -8,6 +8,14 @@
   "schedule": [
     {
       "day": "Monday",
+      "timeFrom": "11:00 AM",
+      "timeTo": "12:00 AM",
+      "className": "Bear Cave BJJ",
+      "beltRank": "All Belts",
+      "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Monday",
       "timeFrom": "8:00 PM",
       "timeTo": "9:00 PM",
       "className": "Bear Cave BJJ",

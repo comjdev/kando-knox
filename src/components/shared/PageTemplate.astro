@@ -102,15 +102,16 @@ const sidebarPrograms = allPrograms
           {
             sidebarPrograms.map((program) => (
               <div class="mb-6 flex items-center">
-                <a href={`/programs/${program.slug}`} class="shrink-0">
+                <a href={`/programs/${program.slug}`} class="shrink-0 mr-4">
                   <OptimizedImage
                     src={program.image || "/img/placeholder.jpg"}
-                    class="mr-4 max-w-full w-24 h-24 rounded-lg object-cover"
+                    class="max-w-full w-24 h-24 rounded-lg object-cover aspect-square"
                     alt={`${program.title} classes at Kando Martial Arts Knox in Boronia`}
                     loading="lazy"
                     decoding="async"
-                    width={96}
-                    height={96}
+                    width={192}
+                    height={192}
+                    quality={95}
                     sizes="96px"
                   />
                 </a>

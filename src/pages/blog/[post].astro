@@ -381,16 +381,16 @@ const schema = getBlogPostingSchema(
               sidebarPosts.length > 0 ? (
                 sidebarPosts.map((blogPost) => (
                   <div class="mb-6 flex items-center">
-                    <a href={`/blog/${blogPost.slug}`} class="shrink-0">
+                    <a href={`/blog/${blogPost.slug}`} class="shrink-0 mr-4">
                       <OptimizedImage
                         src={blogPost.image}
-                        class="mr-4 max-w-full w-24 h-24 rounded-lg object-cover"
+                        class="max-w-full w-24 h-24 rounded-lg object-cover aspect-square"
                         alt={blogPost.title}
                         loading="lazy"
                         decoding="async"
                         width={192}
                         height={192}
-                        quality={90}
+                        quality={95}
                         sizes="96px"
                       />
                     </a>
