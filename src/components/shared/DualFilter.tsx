@@ -9,7 +9,7 @@ interface ScheduleItem {
   timeTo: string;
   className: string;
   beltRank?: string | null;
-  instructor?: string;
+  instructor?: string | null;
 }
 
 // Helper function to get belt colors for a filter selection
