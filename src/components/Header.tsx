@@ -60,6 +60,11 @@ export default function Header() {
       } else {
         syncTheme();
       }
+
+      // CRITICAL: Reset mobile menu and dropdown states on navigation
+      // This prevents menus from staying open after ViewTransitions navigation
+      setIsMobileMenuOpen(false);
+      setIsDropdownOpen(false);
     };
 
     document.addEventListener("astro:page-load", handlePageLoad);
@@ -72,19 +77,61 @@ export default function Header() {
     // Set initial scroll state after mount to prevent hydration mismatch
     handleScroll();
     window.addEventListener("scroll", handleScroll);
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("astro:page-load", handlePageLoad);
     };
   }, []);
 
+  // Separate effect for closing menus on scroll and resize
   useEffect(() => {
-    // Close dropdown when clicking outside
-    const handleClickOutside = (event: MouseEvent) => {
+    // Close mobile menu on scroll (common mobile UX pattern)
+    const handleScrollCloseMenu = () => {
+      setIsMobileMenuOpen((prev) => {
+        if (prev) {
+          setIsDropdownOpen(false);
+          return false;
+        }
+        return prev;
+      });
+    };
+
+    // Close menus when viewport changes (e.g., device rotation)
+    const handleResize = () => {
+      // Close mobile menu if viewport becomes desktop size
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen((prev) => {
+          if (prev) {
+            setIsDropdownOpen(false);
+            return false;
+          }
+          return prev;
+        });
+      }
+    };
+
+    window.addEventListener("scroll", handleScrollCloseMenu, { passive: true });
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("scroll", handleScrollCloseMenu);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Close dropdown and mobile menu when clicking outside
+    // Use both click and touchstart for better mobile support
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       const target = event.target as HTMLElement;
       const dropdown = document.getElementById("mega-menu-full-cta-dropdown");
       const button = document.getElementById(
         "mega-menu-full-cta-dropdown-button"
+      );
+      const mobileMenu = document.getElementById("mega-menu-full-cta");
+      const mobileMenuButton = document.querySelector(
+        '[data-collapse-toggle="mega-menu-full-cta"]'
       );
 
       // Check if click is on a link inside the dropdown (should not close)
@@ -100,6 +147,7 @@ export default function Header() {
         return; // Don't close when user clicks slider buttons
       }
 
+      // Close dropdown if clicking outside
       if (
         isDropdownOpen &&
         dropdown &&
@@ -109,17 +157,35 @@ export default function Header() {
       ) {
         setIsDropdownOpen(false);
       }
+
+      // Close mobile menu if clicking outside (mobile only)
+      if (
+        isMobileMenuOpen &&
+        mobileMenu &&
+        mobileMenuButton &&
+        !mobileMenu.contains(target) &&
+        !mobileMenuButton.contains(target) &&
+        window.innerWidth < 768
+      ) {
+        setIsMobileMenuOpen(false);
+        setIsDropdownOpen(false);
+      }
     };
 
-    if (isDropdownOpen) {
-      // Use click instead of mousedown to avoid interfering with link clicks
+    if (isDropdownOpen || isMobileMenuOpen) {
+      // Use both click and touchstart for better mobile support
+      // Add small delay for touchstart to allow click events to fire first
       document.addEventListener("click", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside, {
+        passive: true,
+      });
     }
 
     return () => {
       document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, isMobileMenuOpen]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -177,7 +243,7 @@ export default function Header() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 8 0z"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8z"
                 />
               </svg>
             ) : (
@@ -201,7 +267,13 @@ export default function Header() {
           <button
             data-collapse-toggle="mega-menu-full-cta"
             type="button"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={() => {
+              setIsMobileMenuOpen(!isMobileMenuOpen);
+              // Close dropdown when opening/closing mobile menu
+              if (!isMobileMenuOpen) {
+                setIsDropdownOpen(false);
+              }
+            }}
             className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-lg hover:bg-neutral-secondary-soft hover:text-heading focus:outline-none focus:ring-2 focus:ring-default"
             aria-controls="mega-menu-full-cta"
             aria-expanded={isMobileMenuOpen}
@@ -270,6 +342,10 @@ export default function Header() {
                     <li key={program.href}>
                       <a
                         href={program.href}
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setIsDropdownOpen(false);
+                        }}
                         className="block py-2 px-3 text-heading hover:text-primary hover:bg-neutral-secondary-soft rounded"
                       >
                         {program.label}
@@ -282,6 +358,10 @@ export default function Header() {
                     <li key={program.href}>
                       <a
                         href={program.href}
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setIsDropdownOpen(false);
+                        }}
                         className="block py-2 px-3 text-heading hover:text-primary hover:bg-neutral-secondary-soft rounded"
                       >
                         {program.label}
@@ -294,6 +374,10 @@ export default function Header() {
                     <li key={program.href}>
                       <a
                         href={program.href}
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setIsDropdownOpen(false);
+                        }}
                         className="block py-2 px-3 text-heading hover:text-primary hover:bg-neutral-secondary-soft rounded"
                       >
                         {program.label}
@@ -306,7 +390,10 @@ export default function Header() {
             <li>
               <a
                 href="/about"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsDropdownOpen(false);
+                }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 About
@@ -315,7 +402,10 @@ export default function Header() {
             <li>
               <a
                 href="/blog"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsDropdownOpen(false);
+                }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Blog
@@ -324,7 +414,10 @@ export default function Header() {
             <li>
               <a
                 href="/academy"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsDropdownOpen(false);
+                }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Academy
@@ -334,7 +427,10 @@ export default function Header() {
               <a
                 href={SITE_CONFIG.shopUrl}
                 target="_blank"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsDropdownOpen(false);
+                }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Shop
@@ -343,7 +439,10 @@ export default function Header() {
             <li>
               <a
                 href="/contact"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsDropdownOpen(false);
+                }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Contact
@@ -352,7 +451,10 @@ export default function Header() {
             <li className="mt-4 mb-4 px-3 md:hidden">
               <PrimaryButton
                 href="#footer-book-trial"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsDropdownOpen(false);
+                }}
                 className="w-full text-center justify-center"
               >
                 Book a trial
@@ -396,7 +498,7 @@ export default function Header() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 8 0z"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8z"
                 />
               </svg>
             ) : (

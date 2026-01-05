@@ -67,7 +67,10 @@ export default defineConfig({
     },
   },
   integrations: [
-    react(),
+    react({
+      // Configure React to work better with ViewTransitions
+      experimentalReactChildren: true,
+    }),
     sitemap({
       changefreq: "weekly",
       priority: 0.7,

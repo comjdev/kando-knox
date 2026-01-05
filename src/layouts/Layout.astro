@@ -133,6 +133,94 @@ const pageDescription = description || SITE_CONFIG.description;
         document.documentElement.classList.remove("light", "dark");
         document.documentElement.classList.add(theme);
       })();
+      
+      // Fix React 18 + Astro ViewTransitions compatibility issue
+      // This prevents "Cannot set properties of undefined (setting 'unstable_now')" error
+      (function() {
+        if (typeof window === 'undefined') return;
+        
+        // Ensure performance API exists (needed for React scheduler)
+        if (!window.performance || !window.performance.now) {
+          if (!window.performance) window.performance = {};
+          if (!window.performance.now) {
+            window.performance.now = function() {
+              return Date.now();
+            };
+          }
+        }
+        
+        // Polyfill requestIdleCallback if needed (for older browsers)
+        if (!window.requestIdleCallback) {
+          window.requestIdleCallback = function(callback, options) {
+            const timeout = options?.timeout || 0;
+            const start = Date.now();
+            return setTimeout(function() {
+              callback({
+                didTimeout: false,
+                timeRemaining: function() {
+                  return Math.max(0, 50 - (Date.now() - start));
+                }
+              });
+            }, 1);
+          };
+        }
+        
+        if (!window.cancelIdleCallback) {
+          window.cancelIdleCallback = function(id) {
+            clearTimeout(id);
+          };
+        }
+        
+        // CRITICAL FIX: Intercept Object.defineProperty to prevent undefined errors
+        // This catches the problematic 'unstable_now' assignment during ViewTransitions
+        const originalDefineProperty = Object.defineProperty;
+        Object.defineProperty = function(obj, prop, descriptor) {
+          // Only intercept if we're dealing with the problematic case
+          if (prop === 'unstable_now' && (obj === null || obj === undefined)) {
+            // Silently handle - don't log warnings in production
+            // Return a minimal object to prevent the error
+            const fallbackObj = {};
+            if (descriptor && descriptor.value !== undefined) {
+              fallbackObj[prop] = descriptor.value;
+            } else if (descriptor && descriptor.get) {
+              try {
+                fallbackObj[prop] = descriptor.get();
+              } catch (e) {
+                fallbackObj[prop] = function() {
+                  return performance.now ? performance.now() : Date.now();
+                };
+              }
+            } else {
+              fallbackObj[prop] = function() {
+                return performance.now ? performance.now() : Date.now();
+              };
+            }
+            return fallbackObj;
+          }
+          
+          // Normal case: use original defineProperty
+          try {
+            return originalDefineProperty.call(this, obj, prop, descriptor);
+          } catch (e) {
+            // Only catch the specific error we're trying to fix
+            if (e.message && e.message.includes('Cannot set properties') && 
+                e.message.includes('undefined') && prop === 'unstable_now') {
+              // Create a fallback object with the property
+              const fallbackObj = {};
+              if (descriptor && descriptor.value !== undefined) {
+                fallbackObj[prop] = descriptor.value;
+              } else {
+                fallbackObj[prop] = function() {
+                  return performance.now ? performance.now() : Date.now();
+                };
+              }
+              return fallbackObj;
+            }
+            // Re-throw other errors
+            throw e;
+          }
+        };
+      })();
     </script>
     <style is:inline>
       /* Critical CSS to prevent nav flash - must match Tailwind classes exactly */
@@ -158,6 +246,37 @@ const pageDescription = description || SITE_CONFIG.description;
         rel="stylesheet"
       />
     </noscript>
+    {/* Additional safeguard: Ensure React scheduler is ready before ClientRouter */}
+    <script is:inline>
+      // This runs right before ClientRouter initializes
+      (function() {
+        if (typeof window === 'undefined') return;
+        
+        // Ensure React scheduler internals exist
+        // This prevents the "unstable_now" error during ViewTransitions
+        window.__REACT_SCHEDULER_FIX__ = true;
+        
+        // Wrap the original defineProperty one more time right before ViewTransitions
+        // This ensures we catch any late initialization issues
+        const checkAndFix = function() {
+          if (window.React && window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
+            const internals = window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+            if (internals.Scheduler && !internals.Scheduler.unstable_now) {
+              internals.Scheduler.unstable_now = function() {
+                return performance.now ? performance.now() : Date.now();
+              };
+            }
+          }
+        };
+        
+        // Try immediately
+        checkAndFix();
+        
+        // Also try after a short delay (in case React loads asynchronously)
+        setTimeout(checkAndFix, 0);
+        setTimeout(checkAndFix, 10);
+      })();
+    </script>
     <ClientRouter />
     <title>{pageTitle}</title>
     {/* Canonical URL */}

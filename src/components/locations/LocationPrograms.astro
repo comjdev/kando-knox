@@ -41,29 +41,34 @@ function getProgramData(id: string) {
     <h2
       class="mb-12 text-4xl md:text-5xl font-extrabold text-center text-gray-900 dark:text-white"
     >
-      {programType === "BJJ"
-        ? "Our Brazilian Jiu-Jitsu Programs"
-        : "Our Karate Programs"}
+      {
+        programType === "BJJ"
+          ? "Our Brazilian Jiu-Jitsu Programs"
+          : "Our Karate Programs"
+      }
     </h2>
     <p
       class="max-w-4xl mx-auto mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400 text-center"
     >
-      {programType === "BJJ" ? (
-        <>
-          Our Brazilian Jiu-Jitsu programs are designed to help students learn
-          the art of BJJ in a safe and supportive environment. We proudly serve
-          families from {locationName} and across the Knox Council area, offering
-          classes for all ages and skill levels, from beginners to advanced
-          students.
-        </>
-      ) : (
-        <>
-          Our karate programs are designed to help students learn the art of
-          karate in a safe and supportive environment. We proudly serve families
-          from {locationName} and across the Knox Council area, offering classes
-          for all ages and skill levels, from beginners to advanced students.
-        </>
-      )}
+      {
+        programType === "BJJ" ? (
+          <>
+            Our Brazilian Jiu-Jitsu programs are designed to help students learn
+            the art of BJJ in a safe and supportive environment. We proudly
+            serve families from {locationName} and across the Knox Council area,
+            offering classes for all ages and skill levels, from beginners to
+            advanced students.
+          </>
+        ) : (
+          <>
+            Our karate programs are designed to help students learn the art of
+            karate in a safe and supportive environment. We proudly serve
+            families from {locationName} and across the Knox Council area,
+            offering classes for all ages and skill levels, from beginners to
+            advanced students.
+          </>
+        )
+      }
     </p>
     {
       classes.map((classItem, index) => {
