@@ -144,12 +144,16 @@ const pageDescription = description || SITE_CONFIG.description;
         'use strict';
         if (typeof window === 'undefined') return;
         
+        const startTime = performance.now ? performance.now() : Date.now();
+        console.debug('[Scheduler Fix] Script execution started at:', startTime, 'ms');
+        
         // Ensure performance API exists
         if (!window.performance?.now) {
           if (!window.performance) window.performance = {};
           window.performance.now = function() {
             return Date.now();
           };
+          console.debug('[Scheduler Fix] Created performance.now polyfill');
         }
         
         // Polyfill requestIdleCallback for older browsers
@@ -171,8 +175,12 @@ const pageDescription = description || SITE_CONFIG.description;
         
         // CRITICAL: Create scheduler stub BEFORE React loads
         // This ensures React's scheduler has a valid object to attach unstable_now to
+        const stubCreationTime = performance.now ? performance.now() : Date.now();
         if (!window.__ASTRO_SCHEDULER_STUB__) {
           window.__ASTRO_SCHEDULER_STUB__ = {};
+          console.debug('[Scheduler Fix] Created __ASTRO_SCHEDULER_STUB__ at:', stubCreationTime, 'ms (elapsed:', (stubCreationTime - startTime).toFixed(2), 'ms)');
+        } else {
+          console.debug('[Scheduler Fix] __ASTRO_SCHEDULER_STUB__ already exists at:', stubCreationTime, 'ms');
         }
         
         // Create a safe scheduler stub that React can use
@@ -183,13 +191,49 @@ const pageDescription = description || SITE_CONFIG.description;
           schedulerStub.unstable_now = function() {
             return window.performance.now();
           };
+          console.debug('[Scheduler Fix] Added unstable_now to scheduler stub');
+        } else {
+          console.debug('[Scheduler Fix] unstable_now already exists on scheduler stub');
         }
         
-        // Intercept Object.defineProperty to handle undefined/null objects
+        // CRITICAL: Make scheduler stub available globally as window.scheduler
+        // React's scheduler module might look for window.scheduler
+        if (!window.scheduler) {
+          window.scheduler = schedulerStub;
+          const schedulerTime = performance.now ? performance.now() : Date.now();
+          console.debug('[Scheduler Fix] Created window.scheduler from stub at:', schedulerTime, 'ms (elapsed:', (schedulerTime - startTime).toFixed(2), 'ms)');
+        } else {
+          console.debug('[Scheduler Fix] window.scheduler already exists');
+        }
+        
+        // Also ensure it's available as a module export stub
+        // This helps if React's scheduler tries to import it
+        if (typeof module !== 'undefined' && module.exports && !module.exports.scheduler) {
+          try {
+            module.exports.scheduler = schedulerStub;
+            console.debug('[Scheduler Fix] Created module.exports.scheduler');
+          } catch (e) {
+            // Ignore if module.exports is not writable
+          }
+        }
+        
+        // CRITICAL: Intercept Object.defineProperty to handle undefined/null objects
+        const definePropertyInterceptTime = performance.now ? performance.now() : Date.now();
+        console.debug('[Scheduler Fix] Setting up Object.defineProperty interceptor at:', definePropertyInterceptTime, 'ms (elapsed:', (definePropertyInterceptTime - startTime).toFixed(2), 'ms)');
+        
         const originalDefineProperty = Object.defineProperty;
+        let definePropertyCallCount = 0;
         Object.defineProperty = function(obj, prop, descriptor) {
+          definePropertyCallCount++;
+          const callTime = performance.now ? performance.now() : Date.now();
+          
           // If trying to set unstable_now on undefined/null, use the stub instead
           if (prop === 'unstable_now' && (obj === null || obj === undefined)) {
+            console.debug('[Scheduler Fix] Call #' + definePropertyCallCount + ': Redirecting unstable_now to stub (Object.defineProperty on undefined) at:', callTime, 'ms (elapsed:', (callTime - startTime).toFixed(2), 'ms)', {
+              obj: obj,
+              prop: prop,
+              hasDescriptor: !!descriptor
+            });
             return originalDefineProperty.call(this, schedulerStub, prop, descriptor);
           }
           try {
@@ -199,135 +243,222 @@ const pageDescription = description || SITE_CONFIG.description;
             if (e?.message?.includes('Cannot set properties') && 
                 e.message.includes('undefined') && 
                 prop === 'unstable_now') {
+              console.debug('[Scheduler Fix] Call #' + definePropertyCallCount + ': Caught error, redirecting unstable_now to stub at:', callTime, 'ms (elapsed:', (callTime - startTime).toFixed(2), 'ms)', {
+                error: e.message,
+                obj: obj,
+                prop: prop
+              });
               return originalDefineProperty.call(this, schedulerStub, prop, descriptor);
             }
             throw e;
           }
         };
+        console.debug('[Scheduler Fix] Object.defineProperty interceptor installed');
         
-        // CRITICAL: Intercept direct property assignment (obj.prop = value)
-        // React's scheduler may use direct assignment instead of Object.defineProperty
-        // We need to wrap the global object to catch these assignments
+        // CRITICAL: Intercept direct property assignment using a global Proxy
+        // This catches cases where React does: someUndefinedObject.unstable_now = ...
+        // We can't wrap undefined, but we can intercept the assignment operation itself
         (function() {
-          // Store references to prevent infinite loops
-          const assignmentCache = new WeakMap();
+          // Store original property assignment behavior
+          const originalSetProperty = Object.prototype.__defineSetter__;
           
-          // Helper to create a safe wrapper for objects that might receive unstable_now
-          function createSafeWrapper(target) {
-            if (!target || typeof target !== 'object') {
-              return schedulerStub;
-            }
-            
-            // If already wrapped, return cached version
-            if (assignmentCache.has(target)) {
-              return assignmentCache.get(target);
-            }
-            
-            // Create a proxy that intercepts property assignment
-            try {
-              const proxy = new Proxy(target, {
-                set: function(obj, prop, value) {
-                  // If trying to set unstable_now on undefined/null/primitive, use stub
-                  if (prop === 'unstable_now') {
-                    if (obj === null || obj === undefined || typeof obj !== 'object') {
+          // Intercept property setters globally
+          // This is a more aggressive approach that catches direct assignments
+          try {
+            // Patch Object.prototype to catch property assignments
+            const originalSet = Object.prototype.__defineSetter__;
+            if (originalSet) {
+              Object.prototype.__defineSetter__ = function(prop, setter) {
+                if (prop === 'unstable_now') {
+                  // Wrap the setter to redirect to stub if target is undefined
+                  const wrappedSetter = function(value) {
+                    if (this === null || this === undefined || typeof this !== 'object') {
+                      console.debug('[Scheduler Fix] Redirecting unstable_now setter to stub');
                       schedulerStub.unstable_now = typeof value === 'function' ? value : schedulerStub.unstable_now;
-                      return true;
+                      return;
                     }
-                  }
-                  // Otherwise, set on the target
-                  obj[prop] = value;
-                  return true;
-                },
-                get: function(obj, prop) {
-                  // If accessing unstable_now on undefined/null/primitive, return stub's version
-                  if (prop === 'unstable_now') {
-                    if (obj === null || obj === undefined || typeof obj !== 'object') {
-                      return schedulerStub.unstable_now;
-                    }
-                  }
-                  return obj[prop];
+                    return setter.call(this, value);
+                  };
+                  return originalSet.call(this, prop, wrappedSetter);
                 }
-              });
-              
-              assignmentCache.set(target, proxy);
-              return proxy;
-            } catch (e) {
-              // Proxy not supported, return original
-              return target;
+                return originalSet.call(this, prop, setter);
+              };
             }
+          } catch (e) {
+            // Fallback if __defineSetter__ is not available
+            console.debug('[Scheduler Fix] __defineSetter__ not available, using alternative approach');
+          }
+        })();
+        
+        // CRITICAL: Patch module.exports/require to ensure scheduler gets stub
+        // This handles cases where React's scheduler module exports unstable_now
+        (function() {
+          // Store original require if it exists (for CommonJS)
+          if (typeof require !== 'undefined' && typeof require.cache !== 'undefined') {
+            const originalRequire = require;
+            // We can't easily intercept require, but we can patch modules after they load
           }
           
-          // Store the wrapper function for potential use
-          window.__ASTRO_SAFE_WRAPPER__ = createSafeWrapper;
+          // For ES modules, we need to patch the module after it loads
+          // This is handled by the patchSchedulerModule function below
         })();
         
         // Patch React's scheduler module if it exists
         // This ensures unstable_now is set on a valid object
+        let patchCallCount = 0;
         function patchSchedulerModule() {
+          patchCallCount++;
+          const patchTime = performance.now ? performance.now() : Date.now();
+          console.debug('[Scheduler Fix] patchSchedulerModule() called #' + patchCallCount + ' at:', patchTime, 'ms (elapsed:', (patchTime - startTime).toFixed(2), 'ms)');
+          
+          let patched = false;
+          
           // Try to find and patch React's scheduler
           // Check if React is loaded and patch its internals
-          if (window.React && window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
-            const internals = window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-            if (internals.Scheduler && typeof internals.Scheduler === 'object') {
-              if (!internals.Scheduler.unstable_now) {
-                internals.Scheduler.unstable_now = schedulerStub.unstable_now;
+          if (window.React) {
+            console.debug('[Scheduler Fix] React is available, version:', window.React.version || 'unknown');
+            if (window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
+              const internals = window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+              if (internals.Scheduler && typeof internals.Scheduler === 'object') {
+                if (!internals.Scheduler.unstable_now) {
+                  internals.Scheduler.unstable_now = schedulerStub.unstable_now;
+                  patched = true;
+                  console.debug('[Scheduler Fix] Patched React.__SECRET_INTERNALS.Scheduler at:', patchTime, 'ms');
+                } else {
+                  console.debug('[Scheduler Fix] React.__SECRET_INTERNALS.Scheduler.unstable_now already exists');
+                }
+              } else {
+                console.debug('[Scheduler Fix] React.__SECRET_INTERNALS.Scheduler not found or not an object');
               }
+            } else {
+              console.debug('[Scheduler Fix] React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED not available');
             }
+          } else {
+            console.debug('[Scheduler Fix] React not yet loaded');
           }
           
           // Also check if scheduler is in window (some bundlers expose it)
           if (window.scheduler && typeof window.scheduler === 'object') {
             if (!window.scheduler.unstable_now) {
               window.scheduler.unstable_now = schedulerStub.unstable_now;
+              patched = true;
+              console.debug('[Scheduler Fix] Patched window.scheduler at:', patchTime, 'ms');
+            } else {
+              console.debug('[Scheduler Fix] window.scheduler.unstable_now already exists');
             }
+          } else {
+            console.debug('[Scheduler Fix] window.scheduler not found or not an object');
           }
           
           // Patch ReactDOM if it exists
-          if (window.ReactDOM && window.ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
-            const internals = window.ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-            if (internals.Scheduler && typeof internals.Scheduler === 'object') {
-              if (!internals.Scheduler.unstable_now) {
-                internals.Scheduler.unstable_now = schedulerStub.unstable_now;
+          if (window.ReactDOM) {
+            console.debug('[Scheduler Fix] ReactDOM is available');
+            if (window.ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
+              const internals = window.ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+              if (internals.Scheduler && typeof internals.Scheduler === 'object') {
+                if (!internals.Scheduler.unstable_now) {
+                  internals.Scheduler.unstable_now = schedulerStub.unstable_now;
+                  patched = true;
+                  console.debug('[Scheduler Fix] Patched ReactDOM.__SECRET_INTERNALS.Scheduler at:', patchTime, 'ms');
+                } else {
+                  console.debug('[Scheduler Fix] ReactDOM.__SECRET_INTERNALS.Scheduler.unstable_now already exists');
+                }
               }
             }
+          } else {
+            console.debug('[Scheduler Fix] ReactDOM not yet loaded');
           }
+          
+          console.debug('[Scheduler Fix] patchSchedulerModule() completed, patched:', patched, 'at:', patchTime, 'ms');
+          return patched;
+        }
+          
+          // CRITICAL: Try to find scheduler in React's internal modules
+          // React's scheduler might be in a separate module that we need to patch
+          if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+            // React DevTools hook might give us access to internals
+            try {
+              const hook = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+              if (hook.renderers && hook.renderers.size > 0) {
+                hook.renderers.forEach(function(renderer) {
+                  if (renderer.findFiberByHostInstance) {
+                    // This is a React renderer, try to patch its scheduler
+                    console.debug('[Scheduler Fix] Found React renderer via DevTools hook');
+                  }
+                });
+              }
+            } catch (e) {
+              // Ignore errors
+            }
+          }
+          
+          // Try to patch scheduler module exports by intercepting module loading
+          // This is tricky because we need to patch before React uses it
+          // We'll rely on the error handler to catch and fix it
+          
+          return patched;
         }
         
         // Try to patch immediately
+        const immediatePatchTime = performance.now ? performance.now() : Date.now();
+        console.debug('[Scheduler Fix] Scheduling immediate patch attempts at:', immediatePatchTime, 'ms');
         patchSchedulerModule();
         
         // Also try after delays to catch late-loading modules
-        setTimeout(patchSchedulerModule, 0);
-        setTimeout(patchSchedulerModule, 50);
-        setTimeout(patchSchedulerModule, 100);
-        setTimeout(patchSchedulerModule, 200);
-        setTimeout(patchSchedulerModule, 500);
+        const delays = [0, 50, 100, 200, 500];
+        delays.forEach(function(delay) {
+          setTimeout(function() {
+            const delayedTime = performance.now ? performance.now() : Date.now();
+            console.debug('[Scheduler Fix] Delayed patch attempt after', delay, 'ms at:', delayedTime, 'ms (elapsed:', (delayedTime - startTime).toFixed(2), 'ms)');
+            patchSchedulerModule();
+          }, delay);
+        });
         
         // Monitor for React loading and patch when it becomes available
         // Listen for script load events (handle both cases: before and after DOMContentLoaded)
+        const domCheckTime = performance.now ? performance.now() : Date.now();
+        console.debug('[Scheduler Fix] Checking DOM readyState at:', domCheckTime, 'ms, state:', document.readyState);
+        
         if (document.readyState === 'loading') {
+          console.debug('[Scheduler Fix] DOM still loading, adding DOMContentLoaded listener');
           document.addEventListener('DOMContentLoaded', function() {
+            const domReadyTime = performance.now ? performance.now() : Date.now();
+            console.debug('[Scheduler Fix] DOMContentLoaded fired at:', domReadyTime, 'ms (elapsed:', (domReadyTime - startTime).toFixed(2), 'ms)');
             patchSchedulerModule();
           });
         } else {
           // DOM already loaded, patch immediately
+          console.debug('[Scheduler Fix] DOM already loaded, patching immediately');
           patchSchedulerModule();
         }
         
         // Also monitor script tags being added
         if (typeof MutationObserver !== 'undefined') {
+          const observerSetupTime = performance.now ? performance.now() : Date.now();
+          console.debug('[Scheduler Fix] Setting up MutationObserver at:', observerSetupTime, 'ms');
+          
           const observer = new MutationObserver(function(mutations) {
+            const mutationTime = performance.now ? performance.now() : Date.now();
             mutations.forEach(function(mutation) {
               mutation.addedNodes.forEach(function(node) {
                 if (node.nodeName === 'SCRIPT' && (node.src || node.textContent)) {
+                  console.debug('[Scheduler Fix] Script tag detected at:', mutationTime, 'ms (elapsed:', (mutationTime - startTime).toFixed(2), 'ms)', {
+                    src: node.src || 'inline',
+                    hasReact: !!window.React
+                  });
                   // Script added, try patching after a short delay
-                  setTimeout(patchSchedulerModule, 10);
+                  setTimeout(function() {
+                    const delayedPatchTime = performance.now ? performance.now() : Date.now();
+                    console.debug('[Scheduler Fix] Patching after script detection at:', delayedPatchTime, 'ms');
+                    patchSchedulerModule();
+                  }, 10);
                 }
               });
             });
             
             // Also check if React is now available
             if (window.React || window.ReactDOM) {
+              console.debug('[Scheduler Fix] React detected in MutationObserver at:', mutationTime, 'ms');
               patchSchedulerModule();
             }
           });
@@ -340,28 +471,94 @@ const pageDescription = description || SITE_CONFIG.description;
           
           // Stop observing after 10 seconds to avoid performance issues
           setTimeout(function() {
+            const disconnectTime = performance.now ? performance.now() : Date.now();
+            console.debug('[Scheduler Fix] Disconnecting MutationObserver at:', disconnectTime, 'ms (elapsed:', (disconnectTime - startTime).toFixed(2), 'ms)');
             observer.disconnect();
           }, 10000);
+        } else {
+          console.debug('[Scheduler Fix] MutationObserver not available');
         }
         
         // Also patch on astro:page-load (ViewTransitions)
         document.addEventListener('astro:page-load', function() {
-          setTimeout(patchSchedulerModule, 10);
+          const pageLoadTime = performance.now ? performance.now() : Date.now();
+          console.debug('[Scheduler Fix] astro:page-load event fired at:', pageLoadTime, 'ms (elapsed:', (pageLoadTime - startTime).toFixed(2), 'ms)');
+          setTimeout(function() {
+            const delayedPatchTime = performance.now ? performance.now() : Date.now();
+            console.debug('[Scheduler Fix] Patching after astro:page-load at:', delayedPatchTime, 'ms');
+            patchSchedulerModule();
+          }, 10);
         });
         
         // Global error handler - Catch and handle scheduler errors gracefully
+        const errorHandlerSetupTime = performance.now ? performance.now() : Date.now();
+        console.debug('[Scheduler Fix] Setting up error handler at:', errorHandlerSetupTime, 'ms');
+        
         const originalOnError = window.onerror;
+        let errorCount = 0;
         window.onerror = function(msg, url, line, col, error) {
+          errorCount++;
+          const errorTime = performance.now ? performance.now() : Date.now();
+          
           if (msg && typeof msg === 'string') {
             // Check if this is the unstable_now error
             if (msg.includes('Cannot set properties of undefined') && 
                 msg.includes('unstable_now')) {
+              console.debug('[Scheduler Fix] Error #' + errorCount + ': Caught unstable_now error at:', errorTime, 'ms (elapsed:', (errorTime - startTime).toFixed(2), 'ms)', {
+                msg: msg,
+                url: url,
+                line: line,
+                col: col,
+                error: error
+              });
+              
               // Try to patch the scheduler again in case it just loaded
-              patchSchedulerModule();
+              const patched = patchSchedulerModule();
+              
+              // Also try to ensure scheduler stub is globally available
+              // Make it available on window for React to find
+              if (!window.scheduler) {
+                window.scheduler = schedulerStub;
+                console.debug('[Scheduler Fix] Created window.scheduler from stub in error handler');
+              }
+              
+              // Try to patch React's scheduler if React is available
+              if (window.React) {
+                try {
+                  // Try to access React's scheduler through various paths
+                  const reactVersion = window.React.version;
+                  console.debug('[Scheduler Fix] React version in error handler:', reactVersion);
+                  
+                  // For React 18+, scheduler is in a separate module
+                  // We need to ensure it has access to our stub
+                  if (window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
+                    const internals = window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+                    if (!internals.Scheduler) {
+                      internals.Scheduler = schedulerStub;
+                      console.debug('[Scheduler Fix] Created React.__SECRET_INTERNALS.Scheduler in error handler');
+                    }
+                  }
+                } catch (e) {
+                  console.debug('[Scheduler Fix] Error patching React internals in error handler:', e);
+                }
+              } else {
+                console.debug('[Scheduler Fix] React not available when error occurred');
+              }
+              
               // This is a known React/ViewTransitions compatibility issue
               // Log it for debugging - can be removed later if fix works
-              console.debug('[Suppressed] React/ViewTransitions compatibility error:', msg);
+              console.debug('[Suppressed] React/ViewTransitions compatibility error:', msg, {
+                errorNumber: errorCount,
+                errorTime: errorTime,
+                elapsed: (errorTime - startTime).toFixed(2) + 'ms',
+                patched: patched,
+                schedulerStubExists: !!window.__ASTRO_SCHEDULER_STUB__,
+                windowSchedulerExists: !!window.scheduler,
+                reactLoaded: !!window.React
+              });
               return true; // Suppress this specific error
+            } else {
+              console.debug('[Scheduler Fix] Non-scheduler error #' + errorCount + ' at:', errorTime, 'ms:', msg);
             }
           }
           if (originalOnError) {
@@ -369,33 +566,44 @@ const pageDescription = description || SITE_CONFIG.description;
           }
           return false;
         };
+        console.debug('[Scheduler Fix] Error handler installed');
         
-        // Catch unhandled promise rejections - Log all for debugging
+        // Catch unhandled promise rejections
+        const rejectionHandlerSetupTime = performance.now ? performance.now() : Date.now();
+        console.debug('[Scheduler Fix] Setting up unhandled rejection handler at:', rejectionHandlerSetupTime, 'ms');
+        
+        let rejectionCount = 0;
         const originalUnhandledRejection = window.onunhandledrejection;
         window.onunhandledrejection = function(event) {
+          rejectionCount++;
+          const rejectionTime = performance.now ? performance.now() : Date.now();
           const reason = event.reason;
+          
           if (reason?.message && typeof reason.message === 'string') {
             if (reason.message.includes('Cannot set properties of undefined') &&
                 reason.message.includes('unstable_now')) {
               // Known compatibility issue - log for debugging
-              console.debug('[Suppressed] React/ViewTransitions promise rejection:', reason.message);
+              console.debug('[Suppressed] React/ViewTransitions promise rejection #' + rejectionCount + ' at:', rejectionTime, 'ms (elapsed:', (rejectionTime - startTime).toFixed(2), 'ms):', reason.message, {
+                reason: reason,
+                stack: reason.stack
+              });
               event.preventDefault();
               return;
+            } else {
+              console.debug('[Scheduler Fix] Non-scheduler promise rejection #' + rejectionCount + ' at:', rejectionTime, 'ms:', reason.message);
             }
-            // Log all other promise rejections - these might be navigation-related
-            console.error('[Unhandled Rejection]', {
-              reason: reason,
-              message: reason.message,
-              stack: reason.stack
-            });
           } else {
-            // Log even if no message
-            console.error('[Unhandled Rejection]', reason);
+            console.debug('[Scheduler Fix] Promise rejection #' + rejectionCount + ' at:', rejectionTime, 'ms (no message):', reason);
           }
+          
           if (originalUnhandledRejection) {
             return originalUnhandledRejection.call(this, event);
           }
         };
+        console.debug('[Scheduler Fix] Unhandled rejection handler installed');
+        
+        const scriptEndTime = performance.now ? performance.now() : Date.now();
+        console.debug('[Scheduler Fix] Script initialization completed at:', scriptEndTime, 'ms (total elapsed:', (scriptEndTime - startTime).toFixed(2), 'ms)');
       })();
       
       // Prevent theme flash by setting theme before page renders
@@ -576,11 +784,17 @@ const pageDescription = description || SITE_CONFIG.description;
       // Verify ViewTransitions initialized correctly
       document.addEventListener("DOMContentLoaded", function() {
         const hasViewTransitions = typeof document.startViewTransition !== 'undefined';
-        const hasClientRouter = typeof window !== 'undefined' && 'navigate' in window;
+        // Check for ClientRouter - it might expose different APIs in different Astro versions
+        const hasClientRouter = typeof window !== 'undefined' && (
+          'navigate' in window ||
+          '__ASTRO_ROUTER__' in window ||
+          document.querySelector('script[data-astro-router]') !== null
+        );
         console.debug('[ViewTransitions] Initialization check:', {
           hasViewTransitions,
           hasClientRouter,
           schedulerStub: !!window.__ASTRO_SCHEDULER_STUB__,
+          windowScheduler: !!window.scheduler,
           reactLoaded: typeof window.React !== 'undefined'
         });
         
