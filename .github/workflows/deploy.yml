@@ -8,7 +8,7 @@ on:
 
 env:
   NODE_VERSION: "20"
-  AWS_REGION: "ap-east-1" # Sydney region - adjust if needed
+  AWS_REGION: "us-east-1" # US East (N. Virginia) - required for CloudFront SSL certificates
 
 jobs:
   build-and-deploy:
