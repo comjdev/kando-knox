@@ -139,42 +139,44 @@ const pageDescription = description || SITE_CONFIG.description;
         
         // CRITICAL: Create scheduler stub IMMEDIATELY (synchronously)
         // This must exist before ClientRouter's JavaScript executes
+        var schedulerStubObj = {
+          unstable_now: function() {
+            return window.performance.now();
+          }
+        };
+        
         if (!window.__ASTRO_SCHEDULER_STUB__) {
-          window.__ASTRO_SCHEDULER_STUB__ = {
-            unstable_now: function() {
-              return window.performance.now();
-            }
-          };
+          window.__ASTRO_SCHEDULER_STUB__ = schedulerStubObj;
         }
         
         // CRITICAL: Make scheduler stub available globally as window.scheduler
         // ClientRouter and React's scheduler module might look for window.scheduler
         if (!window.scheduler) {
-          window.scheduler = window.__ASTRO_SCHEDULER_STUB__;
+          window.scheduler = schedulerStubObj;
         }
-      })();
-      
-      // React/ViewTransitions Compatibility Fix
-      //
-      // The Issue:
-      // - React 18's scheduler uses unstable_now
-      // - ViewTransitions (ClientRouter) also needs unstable_now
-      // - ClientRouter's JavaScript tries to set unstable_now on undefined before our fix runs
-      //
-      // The Solution:
-      // - Scheduler stub created IMMEDIATELY above (synchronously)
-      // - ClientRouter loads immediately (small, ~7KB)
-      // - React loads lazily (client:idle, ~44KB)
-      // - This polyfill ensures performance.now() and requestIdleCallback exist
-      //
-      // User Experience:
-      // - Links work immediately (HTML, no JS needed)
-      // - Smooth transitions after ClientRouter loads (~50ms)
-      // - Interactive features after React loads (~100-500ms)
-      (function() {
-        'use strict';
-        if (typeof window === 'undefined') return;
         
+        // Store reference for use later in the script
+        var schedulerStub = window.__ASTRO_SCHEDULER_STUB__;
+        
+        // React/ViewTransitions Compatibility Fix
+        //
+        // The Issue:
+        // - React 18's scheduler uses unstable_now
+        // - ViewTransitions (ClientRouter) also needs unstable_now
+        // - ClientRouter's JavaScript tries to set unstable_now on undefined before our fix runs
+        //
+        // The Solution:
+        // - Scheduler stub created IMMEDIATELY above (synchronously)
+        // - ClientRouter loads immediately (small, ~7KB)
+        // - React loads lazily (client:idle, ~44KB)
+        // - This polyfill ensures performance.now() and requestIdleCallback exist
+        //
+        // User Experience:
+        // - Links work immediately (HTML, no JS needed)
+        // - Smooth transitions after ClientRouter loads (~50ms)
+        // - Interactive features after React loads (~100-500ms)
+        
+        // Continue with the rest of the compatibility fix
         const startTime = performance.now ? performance.now() : Date.now();
         console.debug('[Scheduler Fix] Script execution started at:', startTime, 'ms');
         
@@ -205,8 +207,8 @@ const pageDescription = description || SITE_CONFIG.description;
         }
         
         // Get the scheduler stub (should already exist from the immediate creation above)
-        const schedulerStub = window.__ASTRO_SCHEDULER_STUB__;
-        const stubCheckTime = performance.now ? performance.now() : Date.now();
+        // schedulerStub is already defined in the outer scope above
+        var stubCheckTime = performance.now ? performance.now() : Date.now();
         
         if (schedulerStub) {
           console.debug('[Scheduler Fix] Scheduler stub found at:', stubCheckTime, 'ms (elapsed:', (stubCheckTime - startTime).toFixed(2), 'ms)');
@@ -220,13 +222,14 @@ const pageDescription = description || SITE_CONFIG.description;
           }
         } else {
           console.error('[Scheduler Fix] ERROR: Scheduler stub not found! Creating now...');
-          window.__ASTRO_SCHEDULER_STUB__ = {
+          schedulerStub = {
             unstable_now: function() {
               return window.performance.now();
             }
           };
+          window.__ASTRO_SCHEDULER_STUB__ = schedulerStub;
           if (!window.scheduler) {
-            window.scheduler = window.__ASTRO_SCHEDULER_STUB__;
+            window.scheduler = schedulerStub;
           }
         }
         
