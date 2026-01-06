@@ -195,6 +195,67 @@ export default function Header() {
     document.documentElement.classList.add(newTheme);
   };
 
+  const closeMenus = () => {
+    setIsMobileMenuOpen(false);
+    setIsDropdownOpen(false);
+  };
+
+  const ThemeToggleButton = ({ className = "" }: { className?: string }) => (
+    <button
+      onClick={toggleTheme}
+      className={`inline-flex items-center justify-center p-2.5 w-10 h-10 text-heading bg-neutral-secondary-soft rounded-lg hover:bg-neutral-secondary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${className}`}
+      aria-label="Toggle dark mode"
+      type="button"
+    >
+      {mounted && theme === "light" ? (
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+          />
+        </svg>
+      ) : mounted && theme === "dark" ? (
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8z"
+          />
+        </svg>
+      ) : (
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+          />
+        </svg>
+      )}
+    </button>
+  );
+
   return (
     <nav
       className={`sticky top-0 z-[1100] border-default transition-all ${
@@ -208,68 +269,12 @@ export default function Header() {
           <Logo className="h-16" />
         </a>
         <div className="flex items-center gap-2 md:hidden">
-          <button
-            onClick={toggleTheme}
-            className="inline-flex items-center justify-center p-2.5 w-10 h-10 text-heading bg-neutral-secondary-soft rounded-lg hover:bg-neutral-secondary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
-            aria-label="Toggle dark mode"
-            type="button"
-          >
-            {mounted && theme === "light" ? (
-              // Moon icon for dark mode
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                />
-              </svg>
-            ) : mounted && theme === "dark" ? (
-              // Sun icon for light mode
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8z"
-                />
-              </svg>
-            ) : (
-              // Placeholder during SSR to prevent hydration mismatch
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                />
-              </svg>
-            )}
-          </button>
+          <ThemeToggleButton />
           <button
             data-collapse-toggle="mega-menu-full-cta"
             type="button"
             onClick={() => {
               setIsMobileMenuOpen(!isMobileMenuOpen);
-              // Close dropdown when opening/closing mobile menu
               if (!isMobileMenuOpen) {
                 setIsDropdownOpen(false);
               }
@@ -336,48 +341,11 @@ export default function Header() {
               {/* Mobile program links - shown when dropdown is open */}
               {isDropdownOpen && (
                 <ul className="md:hidden pl-8 mt-2 space-y-2 border-l-2 border-light">
-                  {PROGRAMS.filter(
-                    (program) => program.group === "Martial Arts"
-                  ).map((program) => (
+                  {PROGRAMS.map((program) => (
                     <li key={program.href}>
                       <a
                         href={program.href}
-                        onClick={() => {
-                          setIsMobileMenuOpen(false);
-                          setIsDropdownOpen(false);
-                        }}
-                        className="block py-2 px-3 text-heading hover:text-primary hover:bg-neutral-secondary-soft rounded"
-                      >
-                        {program.label}
-                      </a>
-                    </li>
-                  ))}
-                  {PROGRAMS.filter(
-                    (program) => program.group === "Brazilian Jiu-Jitsu"
-                  ).map((program) => (
-                    <li key={program.href}>
-                      <a
-                        href={program.href}
-                        onClick={() => {
-                          setIsMobileMenuOpen(false);
-                          setIsDropdownOpen(false);
-                        }}
-                        className="block py-2 px-3 text-heading hover:text-primary hover:bg-neutral-secondary-soft rounded"
-                      >
-                        {program.label}
-                      </a>
-                    </li>
-                  ))}
-                  {PROGRAMS.filter(
-                    (program) => program.group === "Self-Defence"
-                  ).map((program) => (
-                    <li key={program.href}>
-                      <a
-                        href={program.href}
-                        onClick={() => {
-                          setIsMobileMenuOpen(false);
-                          setIsDropdownOpen(false);
-                        }}
+                        onClick={closeMenus}
                         className="block py-2 px-3 text-heading hover:text-primary hover:bg-neutral-secondary-soft rounded"
                       >
                         {program.label}
@@ -390,10 +358,7 @@ export default function Header() {
             <li>
               <a
                 href="/about"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  setIsDropdownOpen(false);
-                }}
+                onClick={closeMenus}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 About
@@ -402,10 +367,7 @@ export default function Header() {
             <li>
               <a
                 href="/blog"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  setIsDropdownOpen(false);
-                }}
+                onClick={closeMenus}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Blog
@@ -414,10 +376,7 @@ export default function Header() {
             <li>
               <a
                 href="/academy"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  setIsDropdownOpen(false);
-                }}
+                onClick={closeMenus}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Academy
@@ -427,10 +386,7 @@ export default function Header() {
               <a
                 href={SITE_CONFIG.shopUrl}
                 target="_blank"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  setIsDropdownOpen(false);
-                }}
+                onClick={closeMenus}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Shop
@@ -439,10 +395,7 @@ export default function Header() {
             <li>
               <a
                 href="/contact"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  setIsDropdownOpen(false);
-                }}
+                onClick={closeMenus}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Contact
@@ -451,10 +404,7 @@ export default function Header() {
             <li className="mt-4 mb-4 px-3 md:hidden">
               <PrimaryButton
                 href="#footer-book-trial"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  setIsDropdownOpen(false);
-                }}
+                onClick={closeMenus}
                 className="w-full text-center justify-center"
               >
                 Book a trial
@@ -463,62 +413,7 @@ export default function Header() {
           </ul>
         </div>
         <div className="hidden md:flex md:order-2 md:items-center md:gap-3">
-          <button
-            onClick={toggleTheme}
-            className="inline-flex items-center justify-center p-2.5 w-10 h-10 text-heading bg-neutral-secondary-soft rounded-lg hover:bg-neutral-secondary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
-            aria-label="Toggle dark mode"
-            type="button"
-          >
-            {mounted && theme === "light" ? (
-              // Moon icon for dark mode
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                />
-              </svg>
-            ) : mounted && theme === "dark" ? (
-              // Sun icon for light mode
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8z"
-                />
-              </svg>
-            ) : (
-              // Placeholder during SSR to prevent hydration mismatch
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                />
-              </svg>
-            )}
-          </button>
+          <ThemeToggleButton />
           <PrimaryButton href="#footer-book-trial">Book a trial</PrimaryButton>
         </div>
       </div>
@@ -541,9 +436,7 @@ export default function Header() {
                 <li key={program.href}>
                   <a
                     href={program.href}
-                    onClick={() => {
-                      setIsDropdownOpen(false);
-                    }}
+                    onClick={closeMenus}
                     className="block hover:text-primary group"
                   >
                     <span className="font-medium group-hover:underline">
@@ -639,9 +532,7 @@ export default function Header() {
             </p>
             <a
               href="/timetable"
-              onClick={() => {
-                setIsDropdownOpen(false);
-              }}
+              onClick={closeMenus}
               className="inline-flex items-center text-sm font-medium text-primary hover:underline"
             >
               View timetable

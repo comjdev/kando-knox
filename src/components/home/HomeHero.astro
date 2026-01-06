@@ -548,7 +548,6 @@ const slidesWithAssets = slides.map((slide) => {
     afterSlideChange();
 
     state.initialized = true;
-    console.log("[HeroSlider] Initialized successfully");
     return true;
   }
 
@@ -576,7 +575,6 @@ const slidesWithAssets = slides.map((slide) => {
   // Resets the running time animation
   function resetAnimation() {
     if (!state.runningTimeBar) {
-      console.error("[HeroSlider] Running time bar not found");
       return;
     }
     state.runningTimeBar.style.animation = "none"; // Remove current animation
@@ -589,14 +587,12 @@ const slidesWithAssets = slides.map((slide) => {
   // Handles slider navigation (next/prev)
   function handleSliderNavigation(direction) {
     if (!state.list || !state.carousel) {
-      console.error("[HeroSlider] List or carousel not found");
       return;
     }
 
     const sliderItems = state.list.querySelectorAll(".item"); // Get all current items in the list
 
     if (sliderItems.length === 0) {
-      console.error("[HeroSlider] No slider items found");
       return;
     }
 
@@ -704,10 +700,6 @@ const slidesWithAssets = slides.map((slide) => {
       setTimeout(() => {
         retryInitialization(maxAttempts, attempt + 1);
       }, delay);
-    } else {
-      console.error(
-        `[HeroSlider] Initialization failed after ${maxAttempts} attempts. Hero slider may not be available on this page.`
-      );
     }
   }
 

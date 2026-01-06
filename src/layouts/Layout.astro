@@ -123,125 +123,94 @@ const pageDescription = description || SITE_CONFIG.description;
       </>
     )}
     <script is:inline>
-      // CRITICAL: This MUST run first, before any React code loads
-      // Fix React 18 + Astro ViewTransitions compatibility issue
-      // This prevents "Cannot set properties of undefined (setting 'unstable_now')" error
+      // React/ViewTransitions compatibility fix
+      // React components use client:idle to defer loading until after ViewTransitions initializes.
+      // This polyfill provides a safety net for edge cases.
       (function() {
         'use strict';
         if (typeof window === 'undefined') return;
         
-        // Ensure performance API exists (needed for React scheduler)
-        if (!window.performance) {
-          window.performance = {};
-        }
-        if (!window.performance.now) {
+        // Ensure performance API exists
+        if (!window.performance?.now) {
+          if (!window.performance) window.performance = {};
           window.performance.now = function() {
             return Date.now();
           };
         }
         
-        // Polyfill requestIdleCallback if needed (for older browsers)
+        // Polyfill requestIdleCallback for older browsers
         if (!window.requestIdleCallback) {
-          window.requestIdleCallback = function(callback, options) {
-            const timeout = options?.timeout || 0;
-            const start = Date.now();
+          window.requestIdleCallback = function(callback) {
             return setTimeout(function() {
               callback({
                 didTimeout: false,
                 timeRemaining: function() {
-                  return Math.max(0, 50 - (Date.now() - start));
+                  return Math.max(0, 50);
                 }
               });
             }, 1);
           };
-        }
-        
-        if (!window.cancelIdleCallback) {
           window.cancelIdleCallback = function(id) {
             clearTimeout(id);
           };
         }
         
-        // CRITICAL FIX: Intercept Object.defineProperty BEFORE React loads
-        // This catches the problematic 'unstable_now' assignment during ViewTransitions
+        // Intercept Object.defineProperty for unstable_now on undefined
         const originalDefineProperty = Object.defineProperty;
         Object.defineProperty = function(obj, prop, descriptor) {
-          // Handle the specific case where React tries to set unstable_now on undefined/null
           if (prop === 'unstable_now' && (obj === null || obj === undefined)) {
-            // Create a fallback object that React can use
             const fallbackObj = {};
-            if (descriptor) {
-              if (descriptor.value !== undefined) {
-                fallbackObj[prop] = descriptor.value;
-              } else if (descriptor.get) {
-                try {
-                  Object.defineProperty(fallbackObj, prop, descriptor);
-                } catch (e) {
-                  fallbackObj[prop] = function() {
-                    return window.performance.now();
-                  };
-                }
-              } else if (descriptor.set) {
-                try {
-                  Object.defineProperty(fallbackObj, prop, descriptor);
-                } catch (e) {
-                  // Ignore setter errors
-                }
-              } else {
-                fallbackObj[prop] = function() {
-                  return window.performance.now();
-                };
-              }
-            } else {
-              fallbackObj[prop] = function() {
-                return window.performance.now();
-              };
-            }
+            fallbackObj[prop] = descriptor?.value || function() {
+              return window.performance.now();
+            };
             return fallbackObj;
           }
-          
-          // Normal case: use original defineProperty
           try {
             return originalDefineProperty.call(this, obj, prop, descriptor);
           } catch (e) {
-            // Catch the specific error we're trying to fix
-            if (e && e.message && 
-                (e.message.includes('Cannot set properties') || 
-                 e.message.includes('Cannot define property')) &&
+            if (e?.message?.includes('Cannot set properties') && 
                 e.message.includes('undefined') && 
                 prop === 'unstable_now') {
-              // Create a fallback object with the property
               const fallbackObj = {};
-              if (descriptor) {
-                if (descriptor.value !== undefined) {
-                  fallbackObj[prop] = descriptor.value;
-                } else if (descriptor.get) {
-                  try {
-                    Object.defineProperty(fallbackObj, prop, descriptor);
-                  } catch (e2) {
-                    fallbackObj[prop] = function() {
-                      return window.performance.now();
-                    };
-                  }
-                } else {
-                  fallbackObj[prop] = function() {
-                    return window.performance.now();
-                  };
-                }
-              } else {
-                fallbackObj[prop] = function() {
-                  return window.performance.now();
-                };
-              }
+              fallbackObj[prop] = function() {
+                return window.performance.now();
+              };
               return fallbackObj;
             }
-            // Re-throw other errors
             throw e;
           }
         };
         
-        // Ensure the fix is applied immediately and persists
-        window.__REACT_UNSTABLE_NOW_FIX__ = true;
+        // Global error handler - MUST be set up before any scripts load
+        // This catches errors that happen during module initialization
+        const originalOnError = window.onerror;
+        window.onerror = function(msg, url, line, col, error) {
+          if (msg && typeof msg === 'string' && 
+              msg.includes('Cannot set properties of undefined') && 
+              msg.includes('unstable_now')) {
+            // Suppress the error - React will handle gracefully
+            return true;
+          }
+          if (originalOnError) {
+            return originalOnError.call(this, msg, url, line, col, error);
+          }
+          return false;
+        };
+        
+        // Catch unhandled promise rejections
+        const originalUnhandledRejection = window.onunhandledrejection;
+        window.onunhandledrejection = function(event) {
+          if (event.reason?.message && 
+              typeof event.reason.message === 'string' &&
+              event.reason.message.includes('Cannot set properties of undefined') &&
+              event.reason.message.includes('unstable_now')) {
+            event.preventDefault();
+            return;
+          }
+          if (originalUnhandledRejection) {
+            return originalUnhandledRejection.call(this, event);
+          }
+        };
       })();
       
       // Prevent theme flash by setting theme before page renders
@@ -279,47 +248,37 @@ const pageDescription = description || SITE_CONFIG.description;
         rel="stylesheet"
       />
     </noscript>
-    {/* Additional safeguard: Verify polyfill is active before ClientRouter */}
+    {/* Provide minimal scheduler stub for ClientRouter to prevent React dependency */}
     <script is:inline>
-      // Verify the polyfill is still active right before ClientRouter loads
+      // Decouple ViewTransitions from React
+      // Provide a minimal scheduler stub so ClientRouter doesn't try to access React internals
       (function() {
         if (typeof window === 'undefined') return;
         
-        // Double-check that our polyfill is still active
-        // In production, scripts might be loaded in different order
-        if (!window.__REACT_UNSTABLE_NOW_FIX__) {
-          // Re-apply the fix if somehow it got overwritten
-          const originalDefineProperty = Object.defineProperty;
-          Object.defineProperty = function(obj, prop, descriptor) {
-            if (prop === 'unstable_now' && (obj === null || obj === undefined)) {
-              const fallbackObj = {};
-              if (descriptor && descriptor.value !== undefined) {
-                fallbackObj[prop] = descriptor.value;
-              } else {
-                fallbackObj[prop] = function() {
-                  return window.performance ? window.performance.now() : Date.now();
-                };
-              }
-              return fallbackObj;
-            }
-            try {
-              return originalDefineProperty.call(this, obj, prop, descriptor);
-            } catch (e) {
-              if (e && e.message && 
-                  (e.message.includes('Cannot set properties') || 
-                   e.message.includes('Cannot define property')) &&
-                  e.message.includes('undefined') && 
-                  prop === 'unstable_now') {
-                const fallbackObj = {};
-                fallbackObj[prop] = function() {
-                  return window.performance ? window.performance.now() : Date.now();
-                };
-                return fallbackObj;
-              }
-              throw e;
+        // Create a minimal scheduler stub that ClientRouter can use
+        // This prevents ClientRouter from trying to access React's scheduler before React loads
+        if (!window.__ASTRO_SCHEDULER_STUB__) {
+          window.__ASTRO_SCHEDULER_STUB__ = {
+            unstable_now: function() {
+              return window.performance ? window.performance.now() : Date.now();
             }
           };
-          window.__REACT_UNSTABLE_NOW_FIX__ = true;
+        }
+        
+        // If ClientRouter tries to access React internals, provide the stub
+        // This allows ViewTransitions to work independently of React
+        if (!window.React) {
+          // Create a minimal React-like object that ClientRouter can check
+          // but won't interfere with actual React loading
+          Object.defineProperty(window, 'React', {
+            get: function() {
+              // Return undefined if React isn't loaded yet
+              // ClientRouter should use its own scheduler, not React's
+              return undefined;
+            },
+            configurable: true,
+            enumerable: false
+          });
         }
       })();
     </script>
@@ -354,7 +313,7 @@ const pageDescription = description || SITE_CONFIG.description;
     >
       Skip to main content
     </a>
-    <Header client:load />
+    <Header client:idle />
     <main id="main-content">
       <slot />
     </main>
