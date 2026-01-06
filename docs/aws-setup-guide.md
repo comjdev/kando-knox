@@ -96,6 +96,11 @@ The deployment uses:
    - **Cache policy**: `CachingOptimized` (or create custom)
    - **Origin request policy**: `None` (or `CORS-S3Origin` if needed)
    - **Response headers policy**: `SecurityHeadersPolicy` (recommended)
+   - **Compress objects automatically**: ✅ **Enable** (This enables Brotli/Gzip compression)
+     - CloudFront automatically compresses HTML, CSS, JS, JSON, SVG, XML, and other text-based files
+     - Brotli compression is used when supported by the browser (better compression)
+     - Gzip is used as fallback for older browsers
+     - **Impact**: Reduces bandwidth usage by 20-70% for text-based files
 
 5. Configure **Settings**:
    - **Price class**: `Use only North America and Europe` (or `Use all edge locations` for best performance)

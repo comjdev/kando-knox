@@ -51,6 +51,8 @@ jobs:
             --delete
           # Note: CloudFront invalidation ensures fresh content after deployments
           # 1 day cache is safe since site updates monthly on average
+          # CloudFront will automatically compress these files (Brotli/Gzip) if compression is enabled
+          # Do NOT pre-compress files - CloudFront handles compression on-the-fly
 
       - name: Upload CSS files to S3 (1 year cache)
         run: |
@@ -60,6 +62,8 @@ jobs:
             --cache-control "public, max-age=31536000, immutable" \
             --content-type "text/css" \
             --delete
+          # CloudFront will automatically compress CSS files (Brotli/Gzip) if compression is enabled
+          # This reduces bandwidth usage by 20-70% for text-based files
 
       - name: Upload JavaScript files to S3 (1 year cache)
         run: |
@@ -70,6 +74,8 @@ jobs:
             --cache-control "public, max-age=31536000, immutable" \
             --content-type "application/javascript" \
             --delete
+          # CloudFront will automatically compress JS files (Brotli/Gzip) if compression is enabled
+          # This significantly reduces JavaScript bundle sizes in transit
 
       - name: Upload WebP images to S3 (1 year cache)
         run: |
@@ -137,21 +143,57 @@ jobs:
             --cache-control "public, max-age=604800" \
             --delete
 
+      - name: Verify CloudFront compression is enabled
+        env:
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+        run: |
+          if [ -n "$CLOUDFRONT_DISTRIBUTION_ID" ]; then
+            echo "🔍 Checking CloudFront compression configuration..."
+            # Get the default cache behavior to check compression settings
+            COMPRESS_ENABLED=$(aws cloudfront get-distribution-config \
+              --id $CLOUDFRONT_DISTRIBUTION_ID \
+              --query 'DistributionConfig.DefaultCacheBehavior.Compress' \
+              --output text 2>/dev/null || echo "unknown")
+            
+            if [ "$COMPRESS_ENABLED" = "true" ]; then
+              echo "✅ CloudFront compression is enabled (Brotli/Gzip)"
+            elif [ "$COMPRESS_ENABLED" = "false" ]; then
+              echo "⚠️  CloudFront compression is DISABLED"
+              echo "   Please enable 'Compress objects automatically' in CloudFront distribution settings"
+              echo "   See: docs/aws-setup-guide.md for instructions"
+            else
+              echo "ℹ️  Could not verify compression status (this is OK if distribution is still deploying)"
+            fi
+          else
+            echo "⚠️  CLOUDFRONT_DISTRIBUTION_ID not set, skipping compression check"
+          fi
+
       - name: Invalidate CloudFront cache
         env:
           CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
         run: |
           if [ -n "$CLOUDFRONT_DISTRIBUTION_ID" ]; then
+            echo "🔄 Invalidating CloudFront cache..."
             aws cloudfront create-invalidation \
               --distribution-id $CLOUDFRONT_DISTRIBUTION_ID \
               --paths "/*"
+            echo "✅ Cache invalidation initiated"
           else
             echo "⚠️  CLOUDFRONT_DISTRIBUTION_ID not set, skipping cache invalidation"
           fi
 
       - name: Deployment summary
         run: |
-          echo "✅ Deployment complete!"
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ Deployment Complete!"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "📦 S3 Bucket: ${{ secrets.S3_BUCKET_NAME }}"
           echo "🌐 CloudFront Distribution: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}"
           echo "🚀 Site URL: https://knoxmartialarts.com.au"
+          echo ""
+          echo "💡 Performance Tips:"
+          echo "   • Ensure CloudFront compression is enabled (Brotli/Gzip)"
+          echo "   • Check compression status in the verification step above"
+          echo "   • See docs/PERFORMANCE-OPTIMIZATION.md for details"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
