@@ -169,53 +169,200 @@ const pageDescription = description || SITE_CONFIG.description;
           };
         }
         
-        // Intercept Object.defineProperty for unstable_now on undefined
+        // CRITICAL: Create scheduler stub BEFORE React loads
+        // This ensures React's scheduler has a valid object to attach unstable_now to
+        if (!window.__ASTRO_SCHEDULER_STUB__) {
+          window.__ASTRO_SCHEDULER_STUB__ = {};
+        }
+        
+        // Create a safe scheduler stub that React can use
+        const schedulerStub = window.__ASTRO_SCHEDULER_STUB__;
+        
+        // Ensure unstable_now exists on the stub with a proper implementation
+        if (!schedulerStub.unstable_now) {
+          schedulerStub.unstable_now = function() {
+            return window.performance.now();
+          };
+        }
+        
+        // Intercept Object.defineProperty to handle undefined/null objects
         const originalDefineProperty = Object.defineProperty;
         Object.defineProperty = function(obj, prop, descriptor) {
+          // If trying to set unstable_now on undefined/null, use the stub instead
           if (prop === 'unstable_now' && (obj === null || obj === undefined)) {
-            const fallbackObj = {};
-            fallbackObj[prop] = descriptor?.value || function() {
-              return window.performance.now();
-            };
-            return fallbackObj;
+            return originalDefineProperty.call(this, schedulerStub, prop, descriptor);
           }
           try {
             return originalDefineProperty.call(this, obj, prop, descriptor);
           } catch (e) {
+            // If error is about setting unstable_now on undefined, use stub
             if (e?.message?.includes('Cannot set properties') && 
                 e.message.includes('undefined') && 
                 prop === 'unstable_now') {
-              const fallbackObj = {};
-              fallbackObj[prop] = function() {
-                return window.performance.now();
-              };
-              return fallbackObj;
+              return originalDefineProperty.call(this, schedulerStub, prop, descriptor);
             }
             throw e;
           }
         };
         
-        // Global error handler - Log all errors for debugging
-        // Only suppress specific React/ViewTransitions compatibility errors
+        // CRITICAL: Intercept direct property assignment (obj.prop = value)
+        // React's scheduler may use direct assignment instead of Object.defineProperty
+        // We need to wrap the global object to catch these assignments
+        (function() {
+          // Store references to prevent infinite loops
+          const assignmentCache = new WeakMap();
+          
+          // Helper to create a safe wrapper for objects that might receive unstable_now
+          function createSafeWrapper(target) {
+            if (!target || typeof target !== 'object') {
+              return schedulerStub;
+            }
+            
+            // If already wrapped, return cached version
+            if (assignmentCache.has(target)) {
+              return assignmentCache.get(target);
+            }
+            
+            // Create a proxy that intercepts property assignment
+            try {
+              const proxy = new Proxy(target, {
+                set: function(obj, prop, value) {
+                  // If trying to set unstable_now on undefined/null/primitive, use stub
+                  if (prop === 'unstable_now') {
+                    if (obj === null || obj === undefined || typeof obj !== 'object') {
+                      schedulerStub.unstable_now = typeof value === 'function' ? value : schedulerStub.unstable_now;
+                      return true;
+                    }
+                  }
+                  // Otherwise, set on the target
+                  obj[prop] = value;
+                  return true;
+                },
+                get: function(obj, prop) {
+                  // If accessing unstable_now on undefined/null/primitive, return stub's version
+                  if (prop === 'unstable_now') {
+                    if (obj === null || obj === undefined || typeof obj !== 'object') {
+                      return schedulerStub.unstable_now;
+                    }
+                  }
+                  return obj[prop];
+                }
+              });
+              
+              assignmentCache.set(target, proxy);
+              return proxy;
+            } catch (e) {
+              // Proxy not supported, return original
+              return target;
+            }
+          }
+          
+          // Store the wrapper function for potential use
+          window.__ASTRO_SAFE_WRAPPER__ = createSafeWrapper;
+        })();
+        
+        // Patch React's scheduler module if it exists
+        // This ensures unstable_now is set on a valid object
+        function patchSchedulerModule() {
+          // Try to find and patch React's scheduler
+          // Check if React is loaded and patch its internals
+          if (window.React && window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
+            const internals = window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+            if (internals.Scheduler && typeof internals.Scheduler === 'object') {
+              if (!internals.Scheduler.unstable_now) {
+                internals.Scheduler.unstable_now = schedulerStub.unstable_now;
+              }
+            }
+          }
+          
+          // Also check if scheduler is in window (some bundlers expose it)
+          if (window.scheduler && typeof window.scheduler === 'object') {
+            if (!window.scheduler.unstable_now) {
+              window.scheduler.unstable_now = schedulerStub.unstable_now;
+            }
+          }
+          
+          // Patch ReactDOM if it exists
+          if (window.ReactDOM && window.ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
+            const internals = window.ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+            if (internals.Scheduler && typeof internals.Scheduler === 'object') {
+              if (!internals.Scheduler.unstable_now) {
+                internals.Scheduler.unstable_now = schedulerStub.unstable_now;
+              }
+            }
+          }
+        }
+        
+        // Try to patch immediately
+        patchSchedulerModule();
+        
+        // Also try after delays to catch late-loading modules
+        setTimeout(patchSchedulerModule, 0);
+        setTimeout(patchSchedulerModule, 50);
+        setTimeout(patchSchedulerModule, 100);
+        setTimeout(patchSchedulerModule, 200);
+        setTimeout(patchSchedulerModule, 500);
+        
+        // Monitor for React loading and patch when it becomes available
+        // Listen for script load events (handle both cases: before and after DOMContentLoaded)
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() {
+            patchSchedulerModule();
+          });
+        } else {
+          // DOM already loaded, patch immediately
+          patchSchedulerModule();
+        }
+        
+        // Also monitor script tags being added
+        if (typeof MutationObserver !== 'undefined') {
+          const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              mutation.addedNodes.forEach(function(node) {
+                if (node.nodeName === 'SCRIPT' && (node.src || node.textContent)) {
+                  // Script added, try patching after a short delay
+                  setTimeout(patchSchedulerModule, 10);
+                }
+              });
+            });
+            
+            // Also check if React is now available
+            if (window.React || window.ReactDOM) {
+              patchSchedulerModule();
+            }
+          });
+          
+          // Observe the document for script additions
+          observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+          });
+          
+          // Stop observing after 10 seconds to avoid performance issues
+          setTimeout(function() {
+            observer.disconnect();
+          }, 10000);
+        }
+        
+        // Also patch on astro:page-load (ViewTransitions)
+        document.addEventListener('astro:page-load', function() {
+          setTimeout(patchSchedulerModule, 10);
+        });
+        
+        // Global error handler - Catch and handle scheduler errors gracefully
         const originalOnError = window.onerror;
         window.onerror = function(msg, url, line, col, error) {
-          // Log all errors for debugging (even if we suppress some)
           if (msg && typeof msg === 'string') {
+            // Check if this is the unstable_now error
             if (msg.includes('Cannot set properties of undefined') && 
                 msg.includes('unstable_now')) {
+              // Try to patch the scheduler again in case it just loaded
+              patchSchedulerModule();
               // This is a known React/ViewTransitions compatibility issue
-              // Log it but don't show to user
+              // Log it for debugging - can be removed later if fix works
               console.debug('[Suppressed] React/ViewTransitions compatibility error:', msg);
               return true; // Suppress this specific error
             }
-            // Log all other errors - these might be navigation-related
-            console.error('[Error Handler]', {
-              message: msg,
-              url: url,
-              line: line,
-              col: col,
-              error: error
-            });
           }
           if (originalOnError) {
             return originalOnError.call(this, msg, url, line, col, error);
@@ -230,7 +377,7 @@ const pageDescription = description || SITE_CONFIG.description;
           if (reason?.message && typeof reason.message === 'string') {
             if (reason.message.includes('Cannot set properties of undefined') &&
                 reason.message.includes('unstable_now')) {
-              // Known compatibility issue - log but suppress
+              // Known compatibility issue - log for debugging
               console.debug('[Suppressed] React/ViewTransitions promise rejection:', reason.message);
               event.preventDefault();
               return;
