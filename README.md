@@ -94,12 +94,12 @@ npm run preview
 
 ## 📜 Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build production site |
+| Command           | Description                      |
+| ----------------- | -------------------------------- |
+| `npm run dev`     | Start development server         |
+| `npm run build`   | Build production site            |
 | `npm run preview` | Preview production build locally |
-| `npm run astro` | Run Astro CLI commands |
+| `npm run astro`   | Run Astro CLI commands           |
 
 ## 🌐 Deployment
 
@@ -138,6 +138,7 @@ Configure these in **Settings → Secrets and variables → Actions**:
 ### Location Pages
 
 SEO-optimized location pages for:
+
 - Bayswater
 - Boronia
 - Croydon
@@ -152,6 +153,7 @@ Each location has unique content for both Karate and BJJ programs.
 ### Blog
 
 Martial arts blog covering:
+
 - Benefits for kids
 - Adult health benefits
 - Self-defence topics
@@ -170,6 +172,7 @@ Martial arts blog covering:
 ### Site Configuration
 
 Edit `src/config.ts` to update:
+
 - Site title and description
 - Contact information
 - Social media links
@@ -184,6 +187,7 @@ Edit `src/config.ts` to update:
 ### Content
 
 Content is managed through Astro Content Collections:
+
 - **Blog Posts**: `src/content/blog/*.md`
 - **Locations**: `src/content/locations/*.json`
 - **Programs**: `src/content/program/*.json`
