@@ -123,9 +123,23 @@ const pageDescription = description || SITE_CONFIG.description;
       </>
     )}
     <script is:inline>
-      // React/ViewTransitions compatibility fix
-      // React components use client:idle to defer loading until after ViewTransitions initializes.
-      // This polyfill provides a safety net for edge cases.
+      // React/ViewTransitions Compatibility Fix
+      //
+      // The Issue:
+      // - React 18's scheduler uses unstable_now
+      // - ViewTransitions (ClientRouter) also needs unstable_now
+      // - If React loads before ClientRouter initializes, it can cause conflicts
+      //
+      // The Solution:
+      // - ClientRouter loads immediately (small, ~7KB)
+      // - React loads lazily (client:idle, ~44KB)
+      // - By the time React loads, ClientRouter is already initialized
+      // - This polyfill ensures performance.now() and requestIdleCallback exist
+      //
+      // User Experience:
+      // - Links work immediately (HTML, no JS needed)
+      // - Smooth transitions after ClientRouter loads (~50ms)
+      // - Interactive features after React loads (~100-500ms)
       (function() {
         'use strict';
         if (typeof window === 'undefined') return;
@@ -181,15 +195,27 @@ const pageDescription = description || SITE_CONFIG.description;
           }
         };
         
-        // Global error handler - MUST be set up before any scripts load
-        // This catches errors that happen during module initialization
+        // Global error handler - Log all errors for debugging
+        // Only suppress specific React/ViewTransitions compatibility errors
         const originalOnError = window.onerror;
         window.onerror = function(msg, url, line, col, error) {
-          if (msg && typeof msg === 'string' && 
-              msg.includes('Cannot set properties of undefined') && 
-              msg.includes('unstable_now')) {
-            // Suppress the error - React will handle gracefully
-            return true;
+          // Log all errors for debugging (even if we suppress some)
+          if (msg && typeof msg === 'string') {
+            if (msg.includes('Cannot set properties of undefined') && 
+                msg.includes('unstable_now')) {
+              // This is a known React/ViewTransitions compatibility issue
+              // Log it but don't show to user
+              console.debug('[Suppressed] React/ViewTransitions compatibility error:', msg);
+              return true; // Suppress this specific error
+            }
+            // Log all other errors - these might be navigation-related
+            console.error('[Error Handler]', {
+              message: msg,
+              url: url,
+              line: line,
+              col: col,
+              error: error
+            });
           }
           if (originalOnError) {
             return originalOnError.call(this, msg, url, line, col, error);
@@ -197,15 +223,27 @@ const pageDescription = description || SITE_CONFIG.description;
           return false;
         };
         
-        // Catch unhandled promise rejections
+        // Catch unhandled promise rejections - Log all for debugging
         const originalUnhandledRejection = window.onunhandledrejection;
         window.onunhandledrejection = function(event) {
-          if (event.reason?.message && 
-              typeof event.reason.message === 'string' &&
-              event.reason.message.includes('Cannot set properties of undefined') &&
-              event.reason.message.includes('unstable_now')) {
-            event.preventDefault();
-            return;
+          const reason = event.reason;
+          if (reason?.message && typeof reason.message === 'string') {
+            if (reason.message.includes('Cannot set properties of undefined') &&
+                reason.message.includes('unstable_now')) {
+              // Known compatibility issue - log but suppress
+              console.debug('[Suppressed] React/ViewTransitions promise rejection:', reason.message);
+              event.preventDefault();
+              return;
+            }
+            // Log all other promise rejections - these might be navigation-related
+            console.error('[Unhandled Rejection]', {
+              reason: reason,
+              message: reason.message,
+              stack: reason.stack
+            });
+          } else {
+            // Log even if no message
+            console.error('[Unhandled Rejection]', reason);
           }
           if (originalUnhandledRejection) {
             return originalUnhandledRejection.call(this, event);
@@ -248,40 +286,35 @@ const pageDescription = description || SITE_CONFIG.description;
         rel="stylesheet"
       />
     </noscript>
-    {/* Provide minimal scheduler stub for ClientRouter to prevent React dependency */}
-    <script is:inline>
-      // Decouple ViewTransitions from React
-      // Provide a minimal scheduler stub so ClientRouter doesn't try to access React internals
-      (function() {
-        if (typeof window === 'undefined') return;
-        
-        // Create a minimal scheduler stub that ClientRouter can use
-        // This prevents ClientRouter from trying to access React's scheduler before React loads
-        if (!window.__ASTRO_SCHEDULER_STUB__) {
-          window.__ASTRO_SCHEDULER_STUB__ = {
-            unstable_now: function() {
-              return window.performance ? window.performance.now() : Date.now();
-            }
-          };
-        }
-        
-        // If ClientRouter tries to access React internals, provide the stub
-        // This allows ViewTransitions to work independently of React
-        if (!window.React) {
-          // Create a minimal React-like object that ClientRouter can check
-          // but won't interfere with actual React loading
-          Object.defineProperty(window, 'React', {
-            get: function() {
-              // Return undefined if React isn't loaded yet
-              // ClientRouter should use its own scheduler, not React's
-              return undefined;
-            },
-            configurable: true,
-            enumerable: false
-          });
-        }
-      })();
-    </script>
+    {/* 
+      ARCHITECTURE: Progressive Enhancement
+      
+      Loading Strategy:
+      1. HTML loads (server-rendered) ✅
+         - Links work immediately (full page reloads)
+         - User sees content instantly
+      
+      2. ClientRouter loads immediately (small ~7KB gzipped) ✅
+         - Enables smooth page transitions
+         - If user clicks before it loads: full page reload (still works!)
+         - After it loads: smooth transitions
+      
+      3. React loads lazily (client:idle, ~44KB gzipped) ✅
+         - Loads when browser is idle (~100-500ms)
+         - Adds interactivity (dropdowns, mobile menu)
+         - By this time, ClientRouter is already initialized
+      
+      Why ClientRouter loads immediately:
+      - Very small bundle (~7KB)
+      - Better UX: smooth transitions available sooner
+      - If it's not loaded yet, links still work (full page reload)
+      
+      Why React loads lazily:
+      - Large bundle (~44KB)
+      - Non-critical for initial render
+      - Progressive enhancement: page works without it
+    */}
+    {/* ClientRouter: Small bundle, loads immediately for better UX */}
     <ClientRouter />
     <title>{pageTitle}</title>
     {/* Canonical URL */}
@@ -313,6 +346,18 @@ const pageDescription = description || SITE_CONFIG.description;
     >
       Skip to main content
     </a>
+    {/* 
+      React: Large bundle, loads lazily (client:idle)
+      - Loads when browser is idle (~100-500ms after page load)
+      - ClientRouter is already initialized by this point
+      - Navigation works via ViewTransitions (or full page reload if not loaded yet)
+      - React adds interactivity (dropdowns, mobile menu) when ready
+      
+      User Experience:
+      - First ~100-500ms: Links work (full page reload if ClientRouter not ready)
+      - After ClientRouter loads: Smooth transitions
+      - After React loads: Interactive features (dropdowns, mobile menu)
+    */}
     <Header client:idle />
     <main id="main-content">
       <slot />
@@ -381,8 +426,25 @@ const pageDescription = description || SITE_CONFIG.description;
         applyTheme();
       });
 
+      // Verify ViewTransitions initialized correctly
+      document.addEventListener("DOMContentLoaded", function() {
+        const hasViewTransitions = typeof document.startViewTransition !== 'undefined';
+        const hasClientRouter = typeof window !== 'undefined' && 'navigate' in window;
+        console.debug('[ViewTransitions] Initialization check:', {
+          hasViewTransitions,
+          hasClientRouter,
+          schedulerStub: !!window.__ASTRO_SCHEDULER_STUB__,
+          reactLoaded: typeof window.React !== 'undefined'
+        });
+        
+        if (!hasViewTransitions && !hasClientRouter) {
+          console.warn('[ViewTransitions] ViewTransitions not initialized - navigation will use full page reloads');
+        }
+      });
+
       // Apply on page load (ViewTransitions) - Non-blocking
       document.addEventListener("astro:page-load", () => {
+        console.debug("[ViewTransitions] Page loaded via ViewTransitions");
         applyTheme();
         // Use requestIdleCallback for non-critical operations
         function handlePageLoad() {

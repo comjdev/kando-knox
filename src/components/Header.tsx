@@ -195,9 +195,14 @@ export default function Header() {
     document.documentElement.classList.add(newTheme);
   };
 
-  const closeMenus = () => {
+  const closeMenus = (e?: React.MouseEvent) => {
+    // Don't prevent default - let the link navigate normally
     setIsMobileMenuOpen(false);
     setIsDropdownOpen(false);
+    // Log for debugging
+    if (e?.currentTarget instanceof HTMLAnchorElement) {
+      console.debug("[Header] Closing menus, navigating to:", e.currentTarget.href);
+    }
   };
 
   const ThemeToggleButton = ({ className = "" }: { className?: string }) => (
@@ -345,7 +350,10 @@ export default function Header() {
                     <li key={program.href}>
                       <a
                         href={program.href}
-                        onClick={closeMenus}
+                        onClick={(e) => {
+                          closeMenus(e);
+                          // Ensure navigation happens - don't prevent default
+                        }}
                         className="block py-2 px-3 text-heading hover:text-primary hover:bg-neutral-secondary-soft rounded"
                       >
                         {program.label}
@@ -358,7 +366,10 @@ export default function Header() {
             <li>
               <a
                 href="/about"
-                onClick={closeMenus}
+                onClick={(e) => {
+                  closeMenus(e);
+                  // Let ViewTransitions handle navigation
+                }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 About
@@ -367,7 +378,10 @@ export default function Header() {
             <li>
               <a
                 href="/blog"
-                onClick={closeMenus}
+                onClick={(e) => {
+                  closeMenus(e);
+                  // Let ViewTransitions handle navigation
+                }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Blog
@@ -376,7 +390,10 @@ export default function Header() {
             <li>
               <a
                 href="/academy"
-                onClick={closeMenus}
+                onClick={(e) => {
+                  closeMenus(e);
+                  // Let ViewTransitions handle navigation
+                }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Academy
@@ -386,7 +403,11 @@ export default function Header() {
               <a
                 href={SITE_CONFIG.shopUrl}
                 target="_blank"
-                onClick={closeMenus}
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  closeMenus(e);
+                  // External link - let browser handle it
+                }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Shop
@@ -395,7 +416,10 @@ export default function Header() {
             <li>
               <a
                 href="/contact"
-                onClick={closeMenus}
+                onClick={(e) => {
+                  closeMenus(e);
+                  // Let ViewTransitions handle navigation
+                }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
                 Contact
