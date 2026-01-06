@@ -158,6 +158,35 @@ const pageDescription = description || SITE_CONFIG.description;
         // Store reference for use later in the script
         var schedulerStub = window.__ASTRO_SCHEDULER_STUB__;
         
+        // TEST MODE: Simulate production error in dev mode
+        // Add ?test-scheduler=true to URL or run: localStorage.setItem('testScheduler', 'true')
+        var testMode = false;
+        try {
+          var urlParams = new URLSearchParams(window.location.search);
+          testMode = urlParams.get('test-scheduler') === 'true' || localStorage.getItem('testScheduler') === 'true';
+        } catch (e) {
+          // Ignore if URLSearchParams not available
+        }
+        
+        if (testMode) {
+          console.warn('[Scheduler Fix] TEST MODE ENABLED - Simulating production error scenario');
+          // Temporarily remove scheduler stub to test error handling
+          // This simulates the production scenario where the stub might not be ready
+          var originalStub = window.__ASTRO_SCHEDULER_STUB__;
+          var originalScheduler = window.scheduler;
+          
+          // Clear them temporarily
+          delete window.__ASTRO_SCHEDULER_STUB__;
+          delete window.scheduler;
+          
+          // Restore after a short delay to test if our fix catches the error
+          setTimeout(function() {
+            window.__ASTRO_SCHEDULER_STUB__ = originalStub;
+            window.scheduler = originalScheduler;
+            console.warn('[Scheduler Fix] TEST MODE: Restored scheduler stub');
+          }, 100);
+        }
+        
         // React/ViewTransitions Compatibility Fix
         //
         // The Issue:
@@ -177,7 +206,7 @@ const pageDescription = description || SITE_CONFIG.description;
         // - Interactive features after React loads (~100-500ms)
         
         // Continue with the rest of the compatibility fix
-        const startTime = performance.now ? performance.now() : Date.now();
+        var startTime = performance.now ? performance.now() : Date.now();
         console.debug('[Scheduler Fix] Script execution started at:', startTime, 'ms');
         
         // Ensure performance API exists
@@ -245,14 +274,14 @@ const pageDescription = description || SITE_CONFIG.description;
         }
         
         // CRITICAL: Intercept Object.defineProperty to handle undefined/null objects
-        const definePropertyInterceptTime = performance.now ? performance.now() : Date.now();
+        var definePropertyInterceptTime = performance.now ? performance.now() : Date.now();
         console.debug('[Scheduler Fix] Setting up Object.defineProperty interceptor at:', definePropertyInterceptTime, 'ms (elapsed:', (definePropertyInterceptTime - startTime).toFixed(2), 'ms)');
         
-        const originalDefineProperty = Object.defineProperty;
-        let definePropertyCallCount = 0;
+        var originalDefineProperty = Object.defineProperty;
+        var definePropertyCallCount = 0;
         Object.defineProperty = function(obj, prop, descriptor) {
           definePropertyCallCount++;
-          const callTime = performance.now ? performance.now() : Date.now();
+          var callTime = performance.now ? performance.now() : Date.now();
           
           // If trying to set unstable_now on undefined/null, use the stub instead
           if (prop === 'unstable_now' && (obj === null || obj === undefined)) {
@@ -301,10 +330,10 @@ const pageDescription = description || SITE_CONFIG.description;
         
         // Patch React's scheduler module if it exists
         // This ensures unstable_now is set on a valid object
-        let patchCallCount = 0;
+        var patchCallCount = 0;
         function patchSchedulerModule() {
           patchCallCount++;
-          const patchTime = performance.now ? performance.now() : Date.now();
+          var patchTime = performance.now ? performance.now() : Date.now();
           console.debug('[Scheduler Fix] patchSchedulerModule() called #' + patchCallCount + ' at:', patchTime, 'ms (elapsed:', (patchTime - startTime).toFixed(2), 'ms)');
           
           let patched = false;
@@ -314,7 +343,7 @@ const pageDescription = description || SITE_CONFIG.description;
           if (window.React) {
             console.debug('[Scheduler Fix] React is available, version:', window.React.version || 'unknown');
             if (window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
-              const internals = window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+              var internals = window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
               if (internals.Scheduler && typeof internals.Scheduler === 'object') {
                 if (!internals.Scheduler.unstable_now) {
                   internals.Scheduler.unstable_now = schedulerStub.unstable_now;
@@ -350,7 +379,7 @@ const pageDescription = description || SITE_CONFIG.description;
           if (window.ReactDOM) {
             console.debug('[Scheduler Fix] ReactDOM is available');
             if (window.ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
-              const internals = window.ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+              var internals = window.ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
               if (internals.Scheduler && typeof internals.Scheduler === 'object') {
                 if (!internals.Scheduler.unstable_now) {
                   internals.Scheduler.unstable_now = schedulerStub.unstable_now;
@@ -374,7 +403,7 @@ const pageDescription = description || SITE_CONFIG.description;
           if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
             // React DevTools hook might give us access to internals
             try {
-              const hook = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+              var hook = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
               if (hook.renderers && hook.renderers.size > 0) {
                 hook.renderers.forEach(function(renderer) {
                   if (renderer.findFiberByHostInstance) {
@@ -396,15 +425,15 @@ const pageDescription = description || SITE_CONFIG.description;
         }
         
         // Try to patch immediately
-        const immediatePatchTime = performance.now ? performance.now() : Date.now();
+        var immediatePatchTime = performance.now ? performance.now() : Date.now();
         console.debug('[Scheduler Fix] Scheduling immediate patch attempts at:', immediatePatchTime, 'ms');
         patchSchedulerModule();
         
         // Also try after delays to catch late-loading modules
-        const delays = [0, 50, 100, 200, 500];
+        var delays = [0, 50, 100, 200, 500];
         delays.forEach(function(delay) {
           setTimeout(function() {
-            const delayedTime = performance.now ? performance.now() : Date.now();
+            var delayedTime = performance.now ? performance.now() : Date.now();
             console.debug('[Scheduler Fix] Delayed patch attempt after', delay, 'ms at:', delayedTime, 'ms (elapsed:', (delayedTime - startTime).toFixed(2), 'ms)');
             patchSchedulerModule();
           }, delay);
@@ -412,13 +441,13 @@ const pageDescription = description || SITE_CONFIG.description;
         
         // Monitor for React loading and patch when it becomes available
         // Listen for script load events (handle both cases: before and after DOMContentLoaded)
-        const domCheckTime = performance.now ? performance.now() : Date.now();
+        var domCheckTime = performance.now ? performance.now() : Date.now();
         console.debug('[Scheduler Fix] Checking DOM readyState at:', domCheckTime, 'ms, state:', document.readyState);
         
         if (document.readyState === 'loading') {
           console.debug('[Scheduler Fix] DOM still loading, adding DOMContentLoaded listener');
           document.addEventListener('DOMContentLoaded', function() {
-            const domReadyTime = performance.now ? performance.now() : Date.now();
+            var domReadyTime = performance.now ? performance.now() : Date.now();
             console.debug('[Scheduler Fix] DOMContentLoaded fired at:', domReadyTime, 'ms (elapsed:', (domReadyTime - startTime).toFixed(2), 'ms)');
             patchSchedulerModule();
           });
@@ -430,11 +459,11 @@ const pageDescription = description || SITE_CONFIG.description;
         
         // Also monitor script tags being added
         if (typeof MutationObserver !== 'undefined') {
-          const observerSetupTime = performance.now ? performance.now() : Date.now();
+          var observerSetupTime = performance.now ? performance.now() : Date.now();
           console.debug('[Scheduler Fix] Setting up MutationObserver at:', observerSetupTime, 'ms');
           
-          const observer = new MutationObserver(function(mutations) {
-            const mutationTime = performance.now ? performance.now() : Date.now();
+          var observer = new MutationObserver(function(mutations) {
+            var mutationTime = performance.now ? performance.now() : Date.now();
             mutations.forEach(function(mutation) {
               mutation.addedNodes.forEach(function(node) {
                 if (node.nodeName === 'SCRIPT' && (node.src || node.textContent)) {
@@ -444,7 +473,7 @@ const pageDescription = description || SITE_CONFIG.description;
                   });
                   // Script added, try patching after a short delay
                   setTimeout(function() {
-                    const delayedPatchTime = performance.now ? performance.now() : Date.now();
+                    var delayedPatchTime = performance.now ? performance.now() : Date.now();
                     console.debug('[Scheduler Fix] Patching after script detection at:', delayedPatchTime, 'ms');
                     patchSchedulerModule();
                   }, 10);
@@ -467,7 +496,7 @@ const pageDescription = description || SITE_CONFIG.description;
           
           // Stop observing after 10 seconds to avoid performance issues
           setTimeout(function() {
-            const disconnectTime = performance.now ? performance.now() : Date.now();
+            var disconnectTime = performance.now ? performance.now() : Date.now();
             console.debug('[Scheduler Fix] Disconnecting MutationObserver at:', disconnectTime, 'ms (elapsed:', (disconnectTime - startTime).toFixed(2), 'ms)');
             observer.disconnect();
           }, 10000);
@@ -477,24 +506,24 @@ const pageDescription = description || SITE_CONFIG.description;
         
         // Also patch on astro:page-load (ViewTransitions)
         document.addEventListener('astro:page-load', function() {
-          const pageLoadTime = performance.now ? performance.now() : Date.now();
+          var pageLoadTime = performance.now ? performance.now() : Date.now();
           console.debug('[Scheduler Fix] astro:page-load event fired at:', pageLoadTime, 'ms (elapsed:', (pageLoadTime - startTime).toFixed(2), 'ms)');
           setTimeout(function() {
-            const delayedPatchTime = performance.now ? performance.now() : Date.now();
+            var delayedPatchTime = performance.now ? performance.now() : Date.now();
             console.debug('[Scheduler Fix] Patching after astro:page-load at:', delayedPatchTime, 'ms');
             patchSchedulerModule();
           }, 10);
         });
         
         // Global error handler - Catch and handle scheduler errors gracefully
-        const errorHandlerSetupTime = performance.now ? performance.now() : Date.now();
+        var errorHandlerSetupTime = performance.now ? performance.now() : Date.now();
         console.debug('[Scheduler Fix] Setting up error handler at:', errorHandlerSetupTime, 'ms');
         
-        const originalOnError = window.onerror;
-        let errorCount = 0;
+        var originalOnError = window.onerror;
+        var errorCount = 0;
         window.onerror = function(msg, url, line, col, error) {
           errorCount++;
-          const errorTime = performance.now ? performance.now() : Date.now();
+          var errorTime = performance.now ? performance.now() : Date.now();
           
           if (msg && typeof msg === 'string') {
             // Check if this is the unstable_now error
@@ -509,7 +538,7 @@ const pageDescription = description || SITE_CONFIG.description;
               });
               
               // Try to patch the scheduler again in case it just loaded
-              const patched = patchSchedulerModule();
+              var patched = patchSchedulerModule();
               
               // Also try to ensure scheduler stub is globally available
               // Make it available on window for React to find
@@ -522,13 +551,13 @@ const pageDescription = description || SITE_CONFIG.description;
               if (window.React) {
                 try {
                   // Try to access React's scheduler through various paths
-                  const reactVersion = window.React.version;
+                  var reactVersion = window.React.version;
                   console.debug('[Scheduler Fix] React version in error handler:', reactVersion);
                   
                   // For React 18+, scheduler is in a separate module
                   // We need to ensure it has access to our stub
                   if (window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
-                    const internals = window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+                    var internals = window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
                     if (!internals.Scheduler) {
                       internals.Scheduler = schedulerStub;
                       console.debug('[Scheduler Fix] Created React.__SECRET_INTERNALS.Scheduler in error handler');
@@ -565,14 +594,14 @@ const pageDescription = description || SITE_CONFIG.description;
         console.debug('[Scheduler Fix] Error handler installed');
         
         // Catch unhandled promise rejections
-        const rejectionHandlerSetupTime = performance.now ? performance.now() : Date.now();
+        var rejectionHandlerSetupTime = performance.now ? performance.now() : Date.now();
         console.debug('[Scheduler Fix] Setting up unhandled rejection handler at:', rejectionHandlerSetupTime, 'ms');
         
-        let rejectionCount = 0;
-        const originalUnhandledRejection = window.onunhandledrejection;
+        var rejectionCount = 0;
+        var originalUnhandledRejection = window.onunhandledrejection;
         window.onunhandledrejection = function(event) {
           rejectionCount++;
-          const rejectionTime = performance.now ? performance.now() : Date.now();
+          var rejectionTime = performance.now ? performance.now() : Date.now();
           const reason = event.reason;
           
           if (reason?.message && typeof reason.message === 'string') {
@@ -598,7 +627,7 @@ const pageDescription = description || SITE_CONFIG.description;
         };
         console.debug('[Scheduler Fix] Unhandled rejection handler installed');
         
-        const scriptEndTime = performance.now ? performance.now() : Date.now();
+        var scriptEndTime = performance.now ? performance.now() : Date.now();
         console.debug('[Scheduler Fix] Script initialization completed at:', scriptEndTime, 'ms (total elapsed:', (scriptEndTime - startTime).toFixed(2), 'ms)');
       })();
       
