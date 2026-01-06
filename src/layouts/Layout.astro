@@ -123,17 +123,48 @@ const pageDescription = description || SITE_CONFIG.description;
       </>
     )}
     <script is:inline>
+      // CRITICAL: Create scheduler stub IMMEDIATELY, before any other scripts run
+      // This must execute synchronously to prevent ClientRouter from trying to set unstable_now on undefined
+      (function() {
+        'use strict';
+        if (typeof window === 'undefined') return;
+        
+        // Ensure performance API exists FIRST
+        if (!window.performance || !window.performance.now) {
+          if (!window.performance) window.performance = {};
+          window.performance.now = function() {
+            return Date.now();
+          };
+        }
+        
+        // CRITICAL: Create scheduler stub IMMEDIATELY (synchronously)
+        // This must exist before ClientRouter's JavaScript executes
+        if (!window.__ASTRO_SCHEDULER_STUB__) {
+          window.__ASTRO_SCHEDULER_STUB__ = {
+            unstable_now: function() {
+              return window.performance.now();
+            }
+          };
+        }
+        
+        // CRITICAL: Make scheduler stub available globally as window.scheduler
+        // ClientRouter and React's scheduler module might look for window.scheduler
+        if (!window.scheduler) {
+          window.scheduler = window.__ASTRO_SCHEDULER_STUB__;
+        }
+      })();
+      
       // React/ViewTransitions Compatibility Fix
       //
       // The Issue:
       // - React 18's scheduler uses unstable_now
       // - ViewTransitions (ClientRouter) also needs unstable_now
-      // - If React loads before ClientRouter initializes, it can cause conflicts
+      // - ClientRouter's JavaScript tries to set unstable_now on undefined before our fix runs
       //
       // The Solution:
+      // - Scheduler stub created IMMEDIATELY above (synchronously)
       // - ClientRouter loads immediately (small, ~7KB)
       // - React loads lazily (client:idle, ~44KB)
-      // - By the time React loads, ClientRouter is already initialized
       // - This polyfill ensures performance.now() and requestIdleCallback exist
       //
       // User Experience:
@@ -173,37 +204,30 @@ const pageDescription = description || SITE_CONFIG.description;
           };
         }
         
-        // CRITICAL: Create scheduler stub BEFORE React loads
-        // This ensures React's scheduler has a valid object to attach unstable_now to
-        const stubCreationTime = performance.now ? performance.now() : Date.now();
-        if (!window.__ASTRO_SCHEDULER_STUB__) {
-          window.__ASTRO_SCHEDULER_STUB__ = {};
-          console.debug('[Scheduler Fix] Created __ASTRO_SCHEDULER_STUB__ at:', stubCreationTime, 'ms (elapsed:', (stubCreationTime - startTime).toFixed(2), 'ms)');
-        } else {
-          console.debug('[Scheduler Fix] __ASTRO_SCHEDULER_STUB__ already exists at:', stubCreationTime, 'ms');
-        }
-        
-        // Create a safe scheduler stub that React can use
+        // Get the scheduler stub (should already exist from the immediate creation above)
         const schedulerStub = window.__ASTRO_SCHEDULER_STUB__;
+        const stubCheckTime = performance.now ? performance.now() : Date.now();
         
-        // Ensure unstable_now exists on the stub with a proper implementation
-        if (!schedulerStub.unstable_now) {
-          schedulerStub.unstable_now = function() {
-            return window.performance.now();
+        if (schedulerStub) {
+          console.debug('[Scheduler Fix] Scheduler stub found at:', stubCheckTime, 'ms (elapsed:', (stubCheckTime - startTime).toFixed(2), 'ms)');
+          
+          // Ensure unstable_now exists on the stub
+          if (!schedulerStub.unstable_now) {
+            schedulerStub.unstable_now = function() {
+              return window.performance.now();
+            };
+            console.debug('[Scheduler Fix] Added unstable_now to scheduler stub');
+          }
+        } else {
+          console.error('[Scheduler Fix] ERROR: Scheduler stub not found! Creating now...');
+          window.__ASTRO_SCHEDULER_STUB__ = {
+            unstable_now: function() {
+              return window.performance.now();
+            }
           };
-          console.debug('[Scheduler Fix] Added unstable_now to scheduler stub');
-        } else {
-          console.debug('[Scheduler Fix] unstable_now already exists on scheduler stub');
-        }
-        
-        // CRITICAL: Make scheduler stub available globally as window.scheduler
-        // React's scheduler module might look for window.scheduler
-        if (!window.scheduler) {
-          window.scheduler = schedulerStub;
-          const schedulerTime = performance.now ? performance.now() : Date.now();
-          console.debug('[Scheduler Fix] Created window.scheduler from stub at:', schedulerTime, 'ms (elapsed:', (schedulerTime - startTime).toFixed(2), 'ms)');
-        } else {
-          console.debug('[Scheduler Fix] window.scheduler already exists');
+          if (!window.scheduler) {
+            window.scheduler = window.__ASTRO_SCHEDULER_STUB__;
+          }
         }
         
         // Also ensure it's available as a module export stub
@@ -255,40 +279,9 @@ const pageDescription = description || SITE_CONFIG.description;
         };
         console.debug('[Scheduler Fix] Object.defineProperty interceptor installed');
         
-        // CRITICAL: Intercept direct property assignment using a global Proxy
-        // This catches cases where React does: someUndefinedObject.unstable_now = ...
-        // We can't wrap undefined, but we can intercept the assignment operation itself
-        (function() {
-          // Store original property assignment behavior
-          const originalSetProperty = Object.prototype.__defineSetter__;
-          
-          // Intercept property setters globally
-          // This is a more aggressive approach that catches direct assignments
-          try {
-            // Patch Object.prototype to catch property assignments
-            const originalSet = Object.prototype.__defineSetter__;
-            if (originalSet) {
-              Object.prototype.__defineSetter__ = function(prop, setter) {
-                if (prop === 'unstable_now') {
-                  // Wrap the setter to redirect to stub if target is undefined
-                  const wrappedSetter = function(value) {
-                    if (this === null || this === undefined || typeof this !== 'object') {
-                      console.debug('[Scheduler Fix] Redirecting unstable_now setter to stub');
-                      schedulerStub.unstable_now = typeof value === 'function' ? value : schedulerStub.unstable_now;
-                      return;
-                    }
-                    return setter.call(this, value);
-                  };
-                  return originalSet.call(this, prop, wrappedSetter);
-                }
-                return originalSet.call(this, prop, setter);
-              };
-            }
-          } catch (e) {
-            // Fallback if __defineSetter__ is not available
-            console.debug('[Scheduler Fix] __defineSetter__ not available, using alternative approach');
-          }
-        })();
+        // Note: Direct property assignment interception removed
+        // __defineSetter__ is deprecated and causes syntax errors in modern browsers
+        // We rely on Object.defineProperty interception and error handling instead
         
         // CRITICAL: Patch module.exports/require to ensure scheduler gets stub
         // This handles cases where React's scheduler module exports unstable_now
