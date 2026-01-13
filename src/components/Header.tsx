@@ -18,34 +18,53 @@ export default function Header() {
 
     // Sync theme state with DOM and ensure consistency
     const syncTheme = () => {
-      // Check if HTML element already has theme class (set by inline script)
-      const htmlHasDark = document.documentElement.classList.contains("dark");
-      const htmlHasLight = document.documentElement.classList.contains("light");
-      if (htmlHasDark || htmlHasLight) {
-        const initialTheme = htmlHasDark ? "dark" : "light";
+      try {
+        // Always check localStorage first to ensure persistence
+        const savedTheme = localStorage.getItem("theme") as
+          | "light"
+          | "dark"
+          | null;
+
+        if (savedTheme) {
+          // Use saved theme and ensure DOM matches
+          setTheme(savedTheme);
+          document.documentElement.classList.remove("light", "dark");
+          document.documentElement.classList.add(savedTheme);
+          return;
+        }
+
+        // Check if HTML element already has theme class (set by inline script)
+        const htmlHasDark = document.documentElement.classList.contains("dark");
+        const htmlHasLight =
+          document.documentElement.classList.contains("light");
+        if (htmlHasDark || htmlHasLight) {
+          const initialTheme = htmlHasDark ? "dark" : "light";
+          setTheme(initialTheme);
+          // Save to localStorage for persistence
+          localStorage.setItem("theme", initialTheme);
+          return;
+        }
+
+        // Fallback to system preference
+        const systemPrefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const initialTheme = systemPrefersDark ? "dark" : "light";
         setTheme(initialTheme);
-        return;
-      }
-
-      // Fallback to localStorage or system preference
-      const savedTheme = localStorage.getItem("theme") as
-        | "light"
-        | "dark"
-        | null;
-      if (savedTheme) {
-        setTheme(savedTheme);
         document.documentElement.classList.remove("light", "dark");
-        document.documentElement.classList.add(savedTheme);
-        return;
+        document.documentElement.classList.add(initialTheme);
+        // Save to localStorage for persistence
+        localStorage.setItem("theme", initialTheme);
+      } catch (e) {
+        // If localStorage is not available, use system preference
+        const systemPrefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const initialTheme = systemPrefersDark ? "dark" : "light";
+        setTheme(initialTheme);
+        document.documentElement.classList.remove("light", "dark");
+        document.documentElement.classList.add(initialTheme);
       }
-
-      const systemPrefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      const initialTheme = systemPrefersDark ? "dark" : "light";
-      setTheme(initialTheme);
-      document.documentElement.classList.remove("light", "dark");
-      document.documentElement.classList.add(initialTheme);
     };
 
     syncTheme();
@@ -95,7 +114,9 @@ export default function Header() {
     window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("scroll", handleScrollCloseMenu, { passive: true });
+      window.removeEventListener("scroll", handleScrollCloseMenu, {
+        passive: true,
+      });
       window.removeEventListener("resize", handleResize);
     };
   }, []);
@@ -184,7 +205,7 @@ export default function Header() {
   const ThemeToggleButton = ({ className = "" }: { className?: string }) => (
     <button
       onClick={toggleTheme}
-      className={`inline-flex items-center justify-center p-2.5 w-10 h-10 text-heading bg-neutral-secondary-soft rounded-lg hover:bg-neutral-secondary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors ${className}`}
+      className={`inline-flex items-center justify-center p-2.5 w-10 h-10 text-heading bg-neutral-secondary-soft rounded-lg hover:bg-neutral-secondary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors cursor-pointer ${className}`}
       aria-label="Toggle dark mode"
       type="button"
     >
@@ -294,7 +315,7 @@ export default function Header() {
               <button
                 id="mega-menu-full-cta-dropdown-button"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center justify-between w-full py-2 px-3 font-medium text-heading border-b border-light md:w-auto hover:bg-neutral-secondary-soft hover:text-primary md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
+                className="flex items-center justify-between w-full py-2 px-3 font-medium text-heading border-b border-light md:w-auto hover:bg-neutral-secondary-soft hover:text-primary md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 cursor-pointer"
                 aria-expanded={isDropdownOpen}
                 aria-haspopup="true"
               >

@@ -296,6 +296,79 @@ export default function ScrollAnimations() {
           });
         });
       });
+
+      // Animate testimonial cards with slow slide-up effect and staggered appearance
+      // Perfect for masonry layout - cards cascade in sequence
+      const testimonialCards = Array.from(mainContent.querySelectorAll("[data-testimonial-card]"));
+      if (testimonialCards.length > 0) {
+        // Set initial state for all cards
+        gsap.set(testimonialCards, {
+          opacity: 0,
+          y: 40, // Start further down for more pronounced slide-up
+          willChange: "opacity, transform",
+        });
+
+        // Find the testimonials section container
+        const testimonialsSection = testimonialCards[0]?.closest("section");
+        if (testimonialsSection) {
+          // Check which cards are initially visible
+          const viewportHeight = window.innerHeight;
+          const initiallyVisible: Element[] = [];
+          const notInitiallyVisible: Element[] = [];
+
+          testimonialCards.forEach((card) => {
+            const rect = card.getBoundingClientRect();
+            // Check if card is in viewport or close to it
+            if (rect.top < viewportHeight * 1.2) {
+              initiallyVisible.push(card);
+            } else {
+              notInitiallyVisible.push(card);
+            }
+          });
+
+          // Animate initially visible cards with stagger when section comes into view
+          if (initiallyVisible.length > 0) {
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: testimonialsSection,
+                start: "top 85%",
+                toggleActions: "play none none none",
+                invalidateOnRefresh: true,
+              },
+            });
+
+            // Animate initially visible cards with stagger
+            tl.to(initiallyVisible, {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+              willChange: "auto",
+              stagger: {
+                amount: 0.8, // Total stagger time across visible cards
+                from: "start",
+              },
+            });
+          }
+
+          // Animate remaining cards individually as they scroll into view
+          notInitiallyVisible.forEach((card, index) => {
+            gsap.to(card, {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+              willChange: "auto",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 90%",
+                toggleActions: "play none none none",
+                invalidateOnRefresh: true,
+              },
+            });
+          });
+        }
+      }
     };
 
     // Wait for DOM and other scripts to initialize

@@ -126,15 +126,28 @@ const pageDescription = description || SITE_CONFIG.description;
       (function () {
         if (typeof window === 'undefined') return;
         
-        // Prevent theme flash by setting theme before page renders
-      (function () {
-        const savedTheme = localStorage.getItem("theme");
-        const systemPrefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        const theme = savedTheme || (systemPrefersDark ? "dark" : "light");
-        document.documentElement.classList.remove("light", "dark");
-        document.documentElement.classList.add(theme);
+        try {
+          const savedTheme = localStorage.getItem("theme");
+          const systemPrefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+          const theme = savedTheme || (systemPrefersDark ? "dark" : "light");
+          document.documentElement.classList.remove("light", "dark");
+          document.documentElement.classList.add(theme);
+          
+          // Ensure theme is saved to localStorage if it wasn't already
+          if (!savedTheme) {
+            localStorage.setItem("theme", theme);
+          }
+        } catch (e) {
+          // If localStorage is not available (e.g., private browsing), fallback to system preference
+          const systemPrefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+          const theme = systemPrefersDark ? "dark" : "light";
+          document.documentElement.classList.remove("light", "dark");
+          document.documentElement.classList.add(theme);
+        }
       })();
     </script>
     <style is:inline>

@@ -48,8 +48,8 @@ const pageDescription = formatMetaDescription(
       </div>
       <div class="testimonials-masonry">
         {
-          reviewsWithText.slice(0, 50).map((review) => (
-            <figure class="p-6 bg-gray-50 rounded-lg dark:bg-gray-800">
+          reviewsWithText.slice(0, 50).map((review, index) => (
+            <figure class="p-6 bg-gray-50 rounded-lg dark:bg-gray-800" data-testimonial-card>
               <blockquote class="text-sm text-gray-500 dark:text-gray-400">
                 <h2 class="text-lg font-bold mb-2">{review.name} </h2>
 
