@@ -7,6 +7,42 @@ export default function ScrollAnimations() {
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
+    // Set initial states IMMEDIATELY to prevent flash
+    // Use a script that runs before React hydration if possible
+    const setInitialStyles = () => {
+      const mainContent = document.querySelector("main#main-content");
+      if (!mainContent) return;
+
+      const allSections = Array.from(mainContent.querySelectorAll("section"));
+      const sectionsToAnimate = allSections.filter((section) => {
+        const hasHeroCarousel = section.querySelector(".hero-carousel-wrapper");
+        return !hasHeroCarousel;
+      });
+
+      // Immediately hide first section images to prevent flash
+      const firstSection = sectionsToAnimate[0];
+      if (firstSection) {
+        const firstSectionImages = firstSection.querySelectorAll("img");
+        firstSectionImages.forEach((img) => {
+          // Skip hero carousel images and bear cave logo
+          if (img.closest(".hero-carousel-wrapper")) return;
+          if (img.alt?.toLowerCase().includes("bear cave") || 
+              img.src?.toLowerCase().includes("bear-cave")) return;
+          
+          // Set inline style immediately to prevent flash
+          img.style.setProperty("opacity", "0", "important");
+          img.style.setProperty("filter", "blur(10px)", "important");
+          img.style.setProperty("will-change", "opacity, filter", "important");
+        });
+      }
+    };
+
+    // Run immediately
+    setInitialStyles();
+    
+    // Also run on next tick to catch any late-loading images
+    requestAnimationFrame(setInitialStyles);
+
     // Wait a bit to ensure hero slider and navigation are initialized
     const initAnimations = () => {
       // Only target sections that are direct children of main, excluding hero section
@@ -14,21 +50,74 @@ export default function ScrollAnimations() {
       const mainContent = document.querySelector("main#main-content");
       if (!mainContent) return;
 
-      // Get all sections except the first one (hero)
-      const sections = Array.from(mainContent.querySelectorAll("section")).slice(1);
+      // Get all sections
+      const allSections = Array.from(mainContent.querySelectorAll("section"));
 
-      if (sections.length === 0) {
+      if (allSections.length === 0) {
         return;
       }
 
       // Filter out any sections that might be part of hero slider
-      const sectionsToAnimate = sections.filter((section) => {
+      const sectionsToAnimate = allSections.filter((section) => {
         // Exclude hero section and any section containing hero carousel
         const hasHeroCarousel = section.querySelector(".hero-carousel-wrapper");
         return !hasHeroCarousel;
       });
 
-      sectionsToAnimate.forEach((section) => {
+      // Animate the first section's images (program header or similar)
+      // Use a subtle blur-to-clear fade-in that waits for image to load
+      const firstSection = sectionsToAnimate[0];
+      if (firstSection) {
+        // Find all images in the first section (typically the header image)
+        const firstSectionImages = firstSection.querySelectorAll("img");
+        firstSectionImages.forEach((img) => {
+          // Skip if image is part of hero carousel or bear cave logo
+          if (img.closest(".hero-carousel-wrapper")) {
+            return;
+          }
+          // Skip bear cave logo
+          if (img.alt?.toLowerCase().includes("bear cave") || 
+              img.src?.toLowerCase().includes("bear-cave")) {
+            return;
+          }
+
+          // Ensure initial state is set (in case it wasn't set earlier)
+          gsap.set(img, {
+            opacity: 0,
+            filter: "blur(10px)",
+            willChange: "opacity, filter",
+          });
+
+          // Function to animate the image
+          const animateImage = () => {
+            gsap.to(img, {
+              opacity: 1,
+              filter: "blur(0px)",
+              duration: 1.2,
+              ease: "power2.out",
+              willChange: "auto",
+            });
+          };
+
+          // Check if image is already loaded
+          if (img.complete && img.naturalHeight !== 0) {
+            // Image is already loaded, animate immediately
+            animateImage();
+          } else {
+            // Wait for image to load, then animate
+            img.addEventListener("load", animateImage, { once: true });
+            // Fallback: if load event doesn't fire (e.g., cached images), check after a delay
+            setTimeout(() => {
+              if (img.complete && img.naturalHeight !== 0) {
+                animateImage();
+              }
+            }, 100);
+          }
+        });
+      }
+
+      // Animate sections (skip first section for section-level animation)
+      sectionsToAnimate.slice(1).forEach((section) => {
         // Set initial state - hidden and slightly below
         // Use will-change for better performance
         gsap.set(section, {
@@ -53,6 +142,40 @@ export default function ScrollAnimations() {
             invalidateOnRefresh: true,
           },
         });
+
+        // Animate images within each section
+        const images = section.querySelectorAll("img");
+        images.forEach((img) => {
+          // Skip if image is already animated, part of hero carousel, or bear cave logo
+          if (img.closest(".hero-carousel-wrapper")) {
+            return;
+          }
+          // Skip bear cave logo
+          if (img.alt?.toLowerCase().includes("bear cave") || 
+              img.src?.toLowerCase().includes("bear-cave")) {
+            return;
+          }
+
+          gsap.set(img, {
+            opacity: 0,
+            scale: 0.95,
+            willChange: "opacity, transform",
+          });
+
+          gsap.to(img, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "power2.out",
+            willChange: "auto",
+            scrollTrigger: {
+              trigger: img,
+              start: "top 85%",
+              toggleActions: "play none none none",
+              invalidateOnRefresh: true,
+            },
+          });
+        });
       });
     };
 
@@ -68,17 +191,42 @@ export default function ScrollAnimations() {
     return () => {
       clearTimeout(timeoutId);
       ScrollTrigger.getAll().forEach((trigger) => {
-        // Only kill triggers that we created (check if they're for our sections)
+        // Kill triggers that we created (sections and images)
         const triggerElement = trigger.trigger;
-        if (triggerElement && triggerElement.tagName === "SECTION") {
-          const hasHeroCarousel = triggerElement.querySelector(".hero-carousel-wrapper");
-          if (!hasHeroCarousel) {
-            trigger.kill();
+        if (triggerElement) {
+          // Check if it's a section (not hero carousel) or an image
+          if (triggerElement.tagName === "SECTION") {
+            const hasHeroCarousel = triggerElement.querySelector(".hero-carousel-wrapper");
+            if (!hasHeroCarousel) {
+              trigger.kill();
+            }
+          } else if (triggerElement.tagName === "IMG") {
+            // Only kill image triggers that aren't part of hero carousel
+            if (!triggerElement.closest(".hero-carousel-wrapper")) {
+              trigger.kill();
+            }
           }
         }
       });
     };
   }, []);
 
-  return null; // This component doesn't render anything
+  return (
+    <style>
+      {`
+        /* Hide images in first non-hero section initially to prevent flash */
+        /* GSAP will animate them after they load */
+        /* Exclude bear cave logo */
+        main#main-content > section:first-of-type img:not(.hero-carousel-wrapper img):not([alt*="Bear Cave"]):not([src*="bear-cave"]) {
+          opacity: 0;
+          filter: blur(10px);
+        }
+        /* On program pages, the first section is the header with the big image */
+        main#main-content > section:nth-of-type(2) img:not(.hero-carousel-wrapper img):not([alt*="Bear Cave"]):not([src*="bear-cave"]) {
+          opacity: 0;
+          filter: blur(10px);
+        }
+      `}
+    </style>
+  );
 }

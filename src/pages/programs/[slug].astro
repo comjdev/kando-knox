@@ -7,6 +7,7 @@ import ProgramContent from "../../components/program/ProgramContent.astro";
 import ProgramFAQs from "../../components/program/ProgramFAQs.astro";
 import BookTrial from "../../components/shared/BookTrial.astro";
 import ProgramTimetable from "../../components/shared/Timetable.astro";
+import ScrollAnimations from "../../components/home/ScrollAnimations";
 import {
   getProgramServiceSchema,
   getProgramFAQPageSchema,
@@ -84,4 +85,7 @@ const metaDesc = formatMetaDescription(
   <ProgramTimetable schedule={program.schedule} title={program.title} />
 
   <ProgramFAQs faq={program.faq} />
+
+  <!-- Scroll animations - loads after page is interactive to avoid conflicts -->
+  <ScrollAnimations client:idle />
 </Layout>

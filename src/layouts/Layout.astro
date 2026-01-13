@@ -202,6 +202,42 @@ const pageDescription = description || SITE_CONFIG.description;
     </main>
     <Footer />
     <SnowParticles />
+    <!-- Prevent flash of images before GSAP animations - runs immediately -->
+    <script is:inline>
+      (function() {
+        // Hide first section images immediately to prevent flash
+        function hideFirstSectionImages() {
+          const mainContent = document.querySelector("main#main-content");
+          if (mainContent) {
+            const sections = Array.from(mainContent.querySelectorAll("section"));
+            const firstNonHeroSection = sections.find(section => 
+              !section.querySelector(".hero-carousel-wrapper")
+            );
+            if (firstNonHeroSection) {
+              const images = firstNonHeroSection.querySelectorAll("img:not(.hero-carousel-wrapper img)");
+              images.forEach(img => {
+                // Skip bear cave logo
+                if (img.alt && img.alt.toLowerCase().includes("bear cave")) return;
+                if (img.src && img.src.toLowerCase().includes("bear-cave")) return;
+                
+                img.style.opacity = "0";
+                img.style.filter = "blur(10px)";
+              });
+            }
+          }
+        }
+        
+        // Run immediately if DOM is ready, otherwise wait
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', hideFirstSectionImages);
+        } else {
+          hideFirstSectionImages();
+        }
+        
+        // Also run on next tick to catch any late-loading images
+        setTimeout(hideFirstSectionImages, 0);
+      })();
+    </script>
     {/* Flowbite - Deferred for better performance (non-critical, loads after page interactive) */}
     <script
       is:inline
