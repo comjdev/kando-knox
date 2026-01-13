@@ -37,6 +37,13 @@
       "className": "Bear Cave BJJ",
       "beltRank": "All Belts",
       "instructor": "Sensei Andy"
+    },
+    {
+      "day": "Friday",
+      "timeFrom": "6:30 PM",
+      "timeTo": "8:00 PM",
+      "className": "Bear Cave BJJ Open Mat",
+      "beltRank": "All Belts"
     }
   ],
   "features": [

@@ -63,6 +63,13 @@
       "instructor": "Sensei Andy"
     },
     {
+      "day": "Friday",
+      "timeFrom": "6:30 PM",
+      "timeTo": "8:00 PM",
+      "className": "Teen & Adult Martial Arts Open Mat",
+      "beltRank": "All Belts"
+    },
+    {
       "day": "Saturday",
       "timeFrom": "1:15 PM",
       "timeTo": "2:15 PM",
