@@ -32,18 +32,42 @@ const slidesWithAssets = slides.map((slide) => {
   <div class="carousel relative w-full h-full overflow-hidden z-0">
     <div class="list">
       {
-        slidesWithAssets.map((slide) => {
+        slidesWithAssets.map((slide, index) => {
           // Get optimized image URL from asset
           const imageUrl =
             typeof slide.imageAsset === "object"
               ? slide.imageAsset.src
               : slide.image;
 
+          // Use actual <img> tag with fetchpriority="high" for first slide (LCP optimization)
+          const isFirstSlide = index === 0;
+          const imageAsset = slide.imageAsset;
+
           return (
             <div
               class="item absolute rounded-[20px] overflow-hidden bg-cover bg-center shadow-[0_25px_50px_rgba(0,0,0,0.7)] z-10 transition-all"
-              style={`background-image: url(${imageUrl});`}
+              style={isFirstSlide ? undefined : `background-image: url(${imageUrl});`}
             >
+              {isFirstSlide && typeof imageAsset === "object" ? (
+                <Image
+                  src={imageAsset}
+                  alt={`${slide.title} - ${slide.name}`}
+                  fetchpriority="high"
+                  loading="eager"
+                  class="absolute inset-0 w-full h-full object-cover"
+                  width={1920}
+                  height={1080}
+                  quality={85}
+                />
+              ) : isFirstSlide ? (
+                <img
+                  src={imageUrl}
+                  alt={`${slide.title} - ${slide.name}`}
+                  fetchpriority="high"
+                  loading="eager"
+                  class="absolute inset-0 w-full h-full object-cover"
+                />
+              ) : null}
               <div class="content absolute text-left text-white z-[3] left-0 w-full p-2.5 transition-all">
                 <div
                   class="title relative uppercase font-bold leading-none mb-2.5 text-white text-xs transition-all"

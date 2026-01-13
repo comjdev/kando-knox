@@ -71,6 +71,56 @@ const pageDescription = description || SITE_CONFIG.description;
     <link rel="manifest" href="/icons/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     
+    {/* Async CSS Loading - Convert render-blocking CSS to async loading */}
+    <script is:inline>
+      // Convert stylesheet links to async loading using media="print" trick
+      // This prevents CSS from blocking initial render
+      (function() {
+        function makeAsync(link) {
+          if (link.hasAttribute('data-async')) return;
+          
+          const href = link.href || link.getAttribute('href');
+          if (!href) return;
+          
+          // Mark as processed
+          link.setAttribute('data-async', 'true');
+          
+          // Change media to print to make it non-blocking
+          link.media = 'print';
+          
+          // Switch back to 'all' once loaded
+          link.onload = function() {
+            this.media = 'all';
+            this.onload = null;
+          };
+          
+          // Fallback: switch after a short delay if onload doesn't fire
+          setTimeout(function() {
+            if (link.media === 'print') {
+              link.media = 'all';
+            }
+          }, 100);
+        }
+        
+        function processStylesheets() {
+          const stylesheets = document.querySelectorAll('head link[rel="stylesheet"]:not([data-async])');
+          stylesheets.forEach(makeAsync);
+        }
+        
+        // Process immediately if head exists
+        if (document.head) {
+          processStylesheets();
+          
+          // Watch for new stylesheets added by Astro
+          const observer = new MutationObserver(processStylesheets);
+          observer.observe(document.head, { childList: true });
+        } else {
+          // Wait for head
+          document.addEventListener('DOMContentLoaded', processStylesheets);
+        }
+      })();
+    </script>
+    
     {/* Resource Hints for Performance - Critical for faster loading */}
     {/* Preconnect to Google Fonts (early connection for faster font loading) */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
