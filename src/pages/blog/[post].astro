@@ -79,13 +79,11 @@ const featuredImagePath =
 
 // Resolve to optimized image asset
 const featuredImageAsset = getImageAsset(featuredImagePath);
-let featuredImageForDisplay: string | typeof featuredImageAsset;
-let featuredImageUrl: string; // For schema and meta tags
 
+// Get optimized image URL for schema and meta tags
+let featuredImageUrl: string;
 if (typeof featuredImageAsset === "object" && "src" in featuredImageAsset) {
-  // Use the asset directly for OptimizedImage component
-  featuredImageForDisplay = featuredImageAsset;
-  // Get URL for schema and meta tags
+  // Get optimized WebP version for meta tags
   const optimizedImage = await getImage({
     src: featuredImageAsset,
     format: "webp",
@@ -93,7 +91,6 @@ if (typeof featuredImageAsset === "object" && "src" in featuredImageAsset) {
   });
   featuredImageUrl = optimizedImage.src.toString();
 } else {
-  featuredImageForDisplay = featuredImagePath;
   featuredImageUrl = featuredImagePath;
 }
 
@@ -133,29 +130,32 @@ const schema = getBlogPostingSchema(
       class="w-full h-[460px] xl:h-[537px] relative overflow-hidden"
       transition:name={`blog-image-${post.frontmatter.slug}`}
     >
-      {typeof featuredImageForDisplay === "object" && "src" in featuredImageForDisplay ? (
-        <OptimizedImage
-          src={featuredImageForDisplay}
-          alt={post.frontmatter.title}
-          class="absolute inset-0 w-full h-full object-cover"
-          loading="eager"
-          decoding="sync"
-          fetchpriority="high"
-          width={1920}
-          height={1080}
-          quality={85}
-          noBackground={true}
-        />
-      ) : (
-        <img
-          src={featuredImageForDisplay}
-          alt={post.frontmatter.title}
-          class="absolute inset-0 w-full h-full object-cover"
-          loading="eager"
-          decoding="sync"
-          fetchpriority="high"
-        />
-      )}
+      {
+        typeof featuredImageAsset === "object" &&
+        "src" in featuredImageAsset ? (
+          <OptimizedImage
+            src={featuredImageAsset}
+            alt={post.frontmatter.title}
+            class="absolute inset-0 w-full h-full object-cover"
+            loading="eager"
+            decoding="sync"
+            fetchpriority="high"
+            width={1920}
+            height={1080}
+            quality={85}
+            noBackground={true}
+          />
+        ) : (
+          <img
+            src={featuredImagePath}
+            alt={post.frontmatter.title}
+            class="absolute inset-0 w-full h-full object-cover"
+            loading="eager"
+            decoding="sync"
+            fetchpriority="high"
+          />
+        )
+      }
       <div class="absolute inset-0 bg-black/50 z-10"></div>
 
       <div
@@ -174,13 +174,13 @@ const schema = getBlogPostingSchema(
           )
         }
         <h1
-          class="mb-4 max-w-4xl text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl break-words"
+          class="mb-4 max-w-4xl text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl wrap-break-word"
         >
           {post.frontmatter.title}
         </h1>
         {
           post.frontmatter.description && (
-            <p class="text-lg font-normal text-gray-300 max-w-4xl leading-relaxed break-words">
+            <p class="text-lg font-normal text-gray-300 max-w-4xl leading-relaxed wrap-break-word">
               {post.frontmatter.description}
             </p>
           )

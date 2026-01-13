@@ -147,10 +147,44 @@ const days = Object.keys(scheduleByDay);
                   </h3>
 
                   {Object.entries(daySchedule).map(
-                    ([programName, programItems]) => (
+                    ([programName, programItems]) => {
+                      // Check if program name contains "Open Mat" (case-insensitive)
+                      const openMatMatch = programName.match(/(open mat)/i);
+                      const hasOpenMat = !!openMatMatch;
+                      const tooltipId = `tooltip-openmat-${dayIndex}-${programName.replace(/\s+/g, '-')}`;
+                      
+                      return (
                       <div class="program-group" data-program={programName}>
-                        <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 pt-4 border-t border-gray-200 dark:border-gray-700 first:border-t-0 first:pt-0">
-                          {programName}
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 pt-4 border-t border-gray-200 dark:border-gray-700 first:border-t-0 first:pt-0 relative">
+                          {hasOpenMat ? (
+                            <>
+                              {programName.split(/(open mat)/i).map((part, idx) => {
+                                if (part.toLowerCase() === 'open mat') {
+                                  return (
+                                    <span key={idx}>
+                                      <span
+                                        data-tooltip-target={tooltipId}
+                                        class="text-primary-500 dark:text-primary-400 cursor-help"
+                                      >
+                                        {part}
+                                      </span>
+                                    </span>
+                                  );
+                                }
+                                return <span key={idx}>{part}</span>;
+                              })}
+                              <div
+                                id={tooltipId}
+                                role="tooltip"
+                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 dark:bg-gray-700 rounded-lg shadow-sm opacity-0 tooltip"
+                              >
+                                Training time with no instructor.
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                              </div>
+                            </>
+                          ) : (
+                            programName
+                          )}
                         </h4>
                         {programItems.map((item, itemIndex) => (
                           <div
@@ -245,7 +279,8 @@ const days = Object.keys(scheduleByDay);
                           </div>
                         ))}
                       </div>
-                    )
+                      );
+                    }
                   )}
                 </div>
               );

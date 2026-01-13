@@ -17,7 +17,7 @@ const sortedPosts = Object.values(blogPosts).sort((a: any, b: any) => {
 const posts = limit ? sortedPosts.slice(0, limit) : sortedPosts;
 ---
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 items-stretch">
   {
     posts.map((post: any) => {
       // Support both single category (string) and multiple categories (array)
@@ -33,6 +33,7 @@ const posts = limit ? sortedPosts.slice(0, limit) : sortedPosts;
         <div
           data-category={categoryString}
           data-categories={JSON.stringify(postCategories)}
+          class="flex"
         >
           <Card
             title={post.frontmatter.title}
