@@ -4,6 +4,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function ScrollAnimations() {
   useEffect(() => {
+    // Check for reduced motion preference - respect user accessibility settings
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    
+    // If user prefers reduced motion, skip all animations
+    if (prefersReducedMotion) {
+      return;
+    }
+
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
@@ -12,6 +20,16 @@ export default function ScrollAnimations() {
     const setInitialStyles = () => {
       const mainContent = document.querySelector("main#main-content");
       if (!mainContent) return;
+
+      // Immediately hide header elements with background images (location pages)
+      const headerElements = mainContent.querySelectorAll("header[style*='background-image']");
+      headerElements.forEach((header) => {
+        if (!header.closest(".hero-carousel-wrapper")) {
+          header.style.setProperty("opacity", "0", "important");
+          header.style.setProperty("filter", "blur(10px)", "important");
+          header.style.setProperty("will-change", "opacity, filter", "important");
+        }
+      });
 
       const allSections = Array.from(mainContent.querySelectorAll("section"));
       const sectionsToAnimate = allSections.filter((section) => {
@@ -59,12 +77,12 @@ export default function ScrollAnimations() {
 
     // Wait a bit to ensure hero slider and navigation are initialized
     const initAnimations = () => {
-      // Only target sections that are direct children of main, excluding hero section
-      // Use very specific selector to avoid conflicts with hero slider and navigation
+      // Target sections within main#main-content, including nested sections
+      // This handles both direct children and sections inside PageTemplate/article
       const mainContent = document.querySelector("main#main-content");
       if (!mainContent) return;
 
-      // Get all sections
+      // Get all sections within main (including nested ones in articles, etc.)
       const allSections = Array.from(mainContent.querySelectorAll("section"));
 
       if (allSections.length === 0) {
@@ -76,6 +94,62 @@ export default function ScrollAnimations() {
         // Exclude hero section and any section containing hero carousel
         const hasHeroCarousel = section.querySelector(".hero-carousel-wrapper");
         return !hasHeroCarousel;
+      });
+
+      // Animate header elements with background images (location pages, etc.)
+      const headerElements = mainContent.querySelectorAll("header[style*='background-image']");
+      headerElements.forEach((header) => {
+        // Skip if it's part of hero carousel
+        if (header.closest(".hero-carousel-wrapper")) {
+          return;
+        }
+
+        // Set initial state with blur
+        gsap.set(header, {
+          opacity: 0,
+          filter: "blur(10px)",
+          willChange: "opacity, filter",
+        });
+
+        // Function to animate the header
+        const animateHeader = () => {
+          gsap.to(header, {
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 1.2,
+            ease: "power2.out",
+            willChange: "auto",
+          });
+        };
+
+        // Check if background image is loaded by creating an image element
+        const style = window.getComputedStyle(header);
+        const bgImage = style.backgroundImage;
+        if (bgImage && bgImage !== "none") {
+          // Extract URL from background-image style
+          const urlMatch = bgImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+          if (urlMatch && urlMatch[1]) {
+            const imgUrl = urlMatch[1];
+            const img = new Image();
+            img.onload = animateHeader;
+            img.onerror = () => {
+              // If image fails to load, animate anyway after a delay
+              setTimeout(animateHeader, 100);
+            };
+            img.src = imgUrl;
+            
+            // Fallback: if image is already cached, animate immediately
+            if (img.complete) {
+              animateHeader();
+            }
+          } else {
+            // If we can't extract URL, animate immediately
+            animateHeader();
+          }
+        } else {
+          // No background image, animate immediately
+          animateHeader();
+        }
       });
 
       // Animate the first section's images (program header or similar)

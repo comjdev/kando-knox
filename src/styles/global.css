@@ -81,3 +81,50 @@ h6 {
     opacity: 1;
   }
 }
+
+/* SEO & Accessibility: Ensure content is visible without JavaScript */
+/* This ensures search engines and users without JS can see all content */
+noscript main#main-content section,
+noscript main#main-content header,
+noscript main#main-content img {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Ensure content is visible immediately for reduced motion users */
+  main#main-content section,
+  main#main-content header,
+  main#main-content img {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+}
+
+/* Ensure critical content (headings, text) is always visible */
+/* This helps with SEO and ensures content is crawlable */
+main#main-content h1,
+main#main-content h2,
+main#main-content h3,
+main#main-content h4,
+main#main-content h5,
+main#main-content h6,
+main#main-content p,
+main#main-content li,
+main#main-content span:not([aria-hidden="true"]) {
+  opacity: 1 !important;
+  visibility: visible !important;
+}

@@ -200,15 +200,43 @@ const pageDescription = description || SITE_CONFIG.description;
     <main id="main-content">
       <slot />
     </main>
+    <!-- Noscript fallback: Ensure content is visible without JavaScript for SEO -->
+    <noscript>
+      <style>
+        main#main-content section,
+        main#main-content header,
+        main#main-content img {
+          opacity: 1 !important;
+          filter: none !important;
+          transform: none !important;
+          visibility: visible !important;
+        }
+      </style>
+    </noscript>
     <Footer />
     <SnowParticles />
     <!-- Prevent flash of images before GSAP animations - runs immediately -->
     <script is:inline>
       (function() {
+        // Respect user's motion preferences - skip hiding if reduced motion is preferred
+        const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (prefersReducedMotion) {
+          return; // Don't hide content if user prefers reduced motion
+        }
+
         // Hide first section images immediately to prevent flash
         function hideFirstSectionImages() {
           const mainContent = document.querySelector("main#main-content");
           if (mainContent) {
+            // Hide header elements with background images (location pages)
+            const headerElements = mainContent.querySelectorAll("header[style*='background-image']");
+            headerElements.forEach(header => {
+              if (!header.closest(".hero-carousel-wrapper")) {
+                header.style.opacity = "0";
+                header.style.filter = "blur(10px)";
+              }
+            });
+
             const sections = Array.from(mainContent.querySelectorAll("section"));
             const firstNonHeroSection = sections.find(section => 
               !section.querySelector(".hero-carousel-wrapper")
