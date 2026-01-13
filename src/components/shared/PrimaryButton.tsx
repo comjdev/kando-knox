@@ -8,6 +8,7 @@ interface PrimaryButtonProps {
   rel?: string;
   onClick?: () => void;
   children: React.ReactNode;
+  "aria-label"?: string;
 }
 
 export default function PrimaryButton({
@@ -18,34 +19,35 @@ export default function PrimaryButton({
   rel,
   onClick,
   children,
+  "aria-label": ariaLabel,
 }: PrimaryButtonProps) {
   const baseClasses =
     "inline-block text-white bg-primary-500 dark:bg-primary-600 hover:bg-primary-600 dark:hover:bg-primary-700 focus:ring-4 focus:ring-primary-500 shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none transition-colors";
   const combinedClasses = `${baseClasses} ${className}`.trim();
 
   if (href) {
-    return React.createElement(
-      "a",
-      {
-        href,
-        className: combinedClasses,
-        target,
-        rel,
-        onClick,
-        "aria-label": typeof children === "string" ? children : undefined,
-      },
-      children
+    return (
+      <a
+        href={href}
+        className={combinedClasses}
+        target={target}
+        rel={rel}
+        onClick={onClick}
+        aria-label={ariaLabel || (typeof children === "string" ? children : undefined)}
+      >
+        {children}
+      </a>
     );
   }
 
-  return React.createElement(
-    "button",
-    {
-      type,
-      className: combinedClasses,
-      onClick,
-      "aria-label": typeof children === "string" ? children : undefined,
-    },
-    children
+  return (
+    <button
+      type={type}
+      className={combinedClasses}
+      onClick={onClick}
+      aria-label={ariaLabel || (typeof children === "string" ? children : undefined)}
+    >
+      {children}
+    </button>
   );
 }

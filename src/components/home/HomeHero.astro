@@ -726,29 +726,5 @@ const slidesWithAssets = slides.map((slide) => {
     } else {
       initOrReinit();
     }
-
-    // Reinitialize on Astro page load (ViewTransitions)
-    document.addEventListener("astro:page-load", () => {
-      // Reset element references
-      state.nextBtn = null;
-      state.prevBtn = null;
-      state.carousel = null;
-      state.list = null;
-      state.items = [];
-      state.runningTimeBar = null;
-      state.progressBar = null;
-
-      // Wait for ViewTransitions to complete
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          retryInitialization();
-        });
-      });
-    });
-
-    // Also check before page swap to cleanup
-    document.addEventListener("astro:before-swap", () => {
-      cleanupSlider();
-    });
   }
 </script>

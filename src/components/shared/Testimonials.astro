@@ -161,8 +161,8 @@ const selectedReviews = shuffled.slice(0, 5);
       ensureFirstItemVisible();
     }
 
-    // Ensure structure is correct after ViewTransitions
-    document.addEventListener("astro:page-load", () => {
+    // Ensure structure is correct on DOM ready
+    document.addEventListener("DOMContentLoaded", () => {
       setTimeout(ensureFirstItemVisible, 150);
     });
   }

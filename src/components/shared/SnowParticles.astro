@@ -241,8 +241,8 @@
       checkAndInit();
     }
 
-    // Reinitialize on Astro page load (ViewTransitions)
-    document.addEventListener("astro:page-load", () => {
+    // Reinitialize on DOM ready
+    document.addEventListener("DOMContentLoaded", () => {
       // Check date first
       checkDateAndShowCanvas();
       

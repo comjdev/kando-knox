@@ -9,7 +9,6 @@ A modern, high-performance website for Kando Martial Arts Knox, built with Astro
 - **Responsive Design**: Mobile-first design with Tailwind CSS and Flowbite
 - **Interactive Components**: React components for dynamic navigation and filters
 - **Image Optimization**: Automatic WebP/AVIF conversion with Sharp
-- **View Transitions**: Smooth page transitions with Astro ViewTransitions
 - **Dark Mode**: Built-in theme switching
 - **Accessibility**: WCAG compliant with semantic HTML
 
@@ -212,14 +211,6 @@ Content is managed through Astro Content Collections:
 - Verify GitHub secrets are set correctly
 - Check AWS IAM permissions
 - Review GitHub Actions logs for errors
-
-### ViewTransitions Errors
-
-The project includes compatibility fixes for React 18 and Astro ViewTransitions. If you encounter `unstable_now` errors:
-
-1. Ensure Header component uses `client:idle`
-2. Check that polyfills are loaded before ClientRouter
-3. See `src/layouts/Layout.astro` for implementation details
 
 ## 🤝 Contributing
 

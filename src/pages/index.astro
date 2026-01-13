@@ -7,6 +7,7 @@ import Benefits from "../components/home/Benefits.astro";
 import Testimonials from "../components/shared/Testimonials.astro";
 import LatestPosts from "../components/shared/LatestPosts.astro";
 import HomeHero from "../components/home/HomeHero.astro";
+import ScrollAnimations from "../components/home/ScrollAnimations";
 import {
   getSportsActivityLocationSchema,
   getReviewSchema,
@@ -97,4 +98,7 @@ const pageImage = "/img/about.jpg"; // Use a good homepage image
   <section aria-label="Testimonials">
     <Testimonials />
   </section>
+
+  <!-- Scroll animations - loads after page is interactive to avoid conflicts -->
+  <ScrollAnimations client:idle />
 </Layout>

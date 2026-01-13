@@ -50,25 +50,6 @@ export default function Header() {
 
     syncTheme();
 
-    // Sync theme during ViewTransitions
-    const handlePageLoad = () => {
-      // Read from DOM first (set by inline script)
-      const htmlHasDark = document.documentElement.classList.contains("dark");
-      const htmlHasLight = document.documentElement.classList.contains("light");
-      if (htmlHasDark || htmlHasLight) {
-        setTheme(htmlHasDark ? "dark" : "light");
-      } else {
-        syncTheme();
-      }
-
-      // CRITICAL: Reset mobile menu and dropdown states on navigation
-      // This prevents menus from staying open after ViewTransitions navigation
-      setIsMobileMenuOpen(false);
-      setIsDropdownOpen(false);
-    };
-
-    document.addEventListener("astro:page-load", handlePageLoad);
-
     // Handle scroll event - check initial scroll position after mount
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
@@ -80,7 +61,6 @@ export default function Header() {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      document.removeEventListener("astro:page-load", handlePageLoad);
     };
   }, []);
 
@@ -115,7 +95,7 @@ export default function Header() {
     window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("scroll", handleScrollCloseMenu);
+      window.removeEventListener("scroll", handleScrollCloseMenu, { passive: true });
       window.removeEventListener("resize", handleResize);
     };
   }, []);
@@ -199,10 +179,6 @@ export default function Header() {
     // Don't prevent default - let the link navigate normally
     setIsMobileMenuOpen(false);
     setIsDropdownOpen(false);
-    // Log for debugging
-    if (e?.currentTarget instanceof HTMLAnchorElement) {
-      console.debug("[Header] Closing menus, navigating to:", e.currentTarget.href);
-    }
   };
 
   const ThemeToggleButton = ({ className = "" }: { className?: string }) => (
@@ -368,7 +344,6 @@ export default function Header() {
                 href="/about"
                 onClick={(e) => {
                   closeMenus(e);
-                  // Let ViewTransitions handle navigation
                 }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
@@ -380,7 +355,6 @@ export default function Header() {
                 href="/blog"
                 onClick={(e) => {
                   closeMenus(e);
-                  // Let ViewTransitions handle navigation
                 }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
@@ -392,7 +366,6 @@ export default function Header() {
                 href="/academy"
                 onClick={(e) => {
                   closeMenus(e);
-                  // Let ViewTransitions handle navigation
                 }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
@@ -418,7 +391,6 @@ export default function Header() {
                 href="/contact"
                 onClick={(e) => {
                   closeMenus(e);
-                  // Let ViewTransitions handle navigation
                 }}
                 className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
               >
