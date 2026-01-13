@@ -16,6 +16,10 @@ export default function Header() {
     // Mark as mounted to prevent hydration mismatch
     setMounted(true);
 
+    // Throttle scroll handler using requestAnimationFrame for better performance
+    let rafId: number | null = null;
+    let lastScrollY = window.scrollY;
+
     // Sync theme state with DOM and ensure consistency
     const syncTheme = () => {
       try {
@@ -69,55 +73,96 @@ export default function Header() {
 
     syncTheme();
 
-    // Handle scroll event - check initial scroll position after mount
+    // Handle scroll event - throttled using requestAnimationFrame
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
+      const currentScrollY = window.scrollY;
+      // Only update if scroll position actually changed
+      if (currentScrollY !== lastScrollY) {
+        setIsScrolled(currentScrollY > 0);
+        lastScrollY = currentScrollY;
+      }
+    };
+
+    // Throttled scroll handler
+    const throttledScrollHandler = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          handleScroll();
+          rafId = null;
+        });
+      }
     };
 
     // Set initial scroll state after mount to prevent hydration mismatch
     handleScroll();
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", throttledScrollHandler, {
+      passive: true,
+    });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", throttledScrollHandler);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
     };
   }, []);
 
   // Separate effect for closing menus on scroll and resize
   useEffect(() => {
-    // Close mobile menu on scroll (common mobile UX pattern)
-    const handleScrollCloseMenu = () => {
-      setIsMobileMenuOpen((prev) => {
-        if (prev) {
-          setIsDropdownOpen(false);
-          return false;
-        }
-        return prev;
-      });
-    };
+    let scrollRafId: number | null = null;
+    let resizeTimeoutId: NodeJS.Timeout | null = null;
 
-    // Close menus when viewport changes (e.g., device rotation)
-    const handleResize = () => {
-      // Close mobile menu if viewport becomes desktop size
-      if (window.innerWidth >= 768) {
-        setIsMobileMenuOpen((prev) => {
-          if (prev) {
-            setIsDropdownOpen(false);
-            return false;
-          }
-          return prev;
+    // Close mobile menu on scroll (common mobile UX pattern)
+    // Throttled to avoid excessive state updates
+    const handleScrollCloseMenu = () => {
+      if (scrollRafId === null) {
+        scrollRafId = requestAnimationFrame(() => {
+          setIsMobileMenuOpen((prev) => {
+            if (prev) {
+              setIsDropdownOpen(false);
+              return false;
+            }
+            return prev;
+          });
+          scrollRafId = null;
         });
       }
     };
 
+    // Close menus when viewport changes (e.g., device rotation)
+    // Debounced to avoid excessive calls during resize
+    const handleResize = () => {
+      if (resizeTimeoutId) {
+        clearTimeout(resizeTimeoutId);
+      }
+
+      resizeTimeoutId = setTimeout(() => {
+        // Close mobile menu if viewport becomes desktop size
+        if (window.innerWidth >= 768) {
+          setIsMobileMenuOpen((prev) => {
+            if (prev) {
+              setIsDropdownOpen(false);
+              return false;
+            }
+            return prev;
+          });
+        }
+        resizeTimeoutId = null;
+      }, 150); // 150ms debounce
+    };
+
     window.addEventListener("scroll", handleScrollCloseMenu, { passive: true });
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScrollCloseMenu, {
-        passive: true,
-      });
+      window.removeEventListener("scroll", handleScrollCloseMenu);
       window.removeEventListener("resize", handleResize);
+      if (scrollRafId !== null) {
+        cancelAnimationFrame(scrollRafId);
+      }
+      if (resizeTimeoutId) {
+        clearTimeout(resizeTimeoutId);
+      }
     };
   }, []);
 
