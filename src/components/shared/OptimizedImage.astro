@@ -74,6 +74,61 @@ if (finalIsAsset && typeof finalSrc === "object" && "src" in finalSrc) {
 
 // Check if className contains a height class (h-*)
 const hasHeightClass = /h-\d+|h-full|h-screen|h-auto/.test(className);
+
+// Calculate display width based on sizes attribute for responsive images
+// Astro's Image component will automatically generate srcset (1x, 2x) based on this width
+let displayWidth: number | undefined;
+let displayHeight: number | undefined;
+
+if (finalIsAsset && typeof finalSrc === "object" && "src" in finalSrc) {
+  if (sizes && !width) {
+    // Parse sizes attribute to determine max display width
+    // Examples:
+    // "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" -> ~400px (33vw of 1280px desktop)
+    // "(max-width: 768px) 50vw, 400px" -> 400px
+    // "100vw" -> 1920px (full width)
+    
+    // Extract all size values from sizes and use the largest reasonable one
+    // This handles cases like "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+    const sizeValues: number[] = [];
+    const vwMatches = sizes.matchAll(/(\d+(?:\.\d+)?)\s*vw/g);
+    const pxMatches = sizes.matchAll(/(\d+(?:\.\d+)?)\s*px/g);
+    
+    // Calculate vw values assuming 1280px viewport (common desktop size)
+    for (const match of vwMatches) {
+      const value = parseFloat(match[1]);
+      sizeValues.push(Math.ceil((value / 100) * 1280));
+    }
+    
+    // Add px values directly
+    for (const match of pxMatches) {
+      sizeValues.push(parseFloat(match[1]));
+    }
+    
+    if (sizeValues.length > 0) {
+      // Use the maximum value, but cap at 800px for cards (2x for 400px display = 800px)
+      // This ensures we generate appropriate srcset without over-sizing
+      displayWidth = Math.min(Math.max(...sizeValues), 800);
+      
+      // For very small sizes, ensure we have at least 400px for quality
+      if (displayWidth < 400) {
+        displayWidth = 400;
+      }
+    } else {
+      // Fallback: use common card width
+      displayWidth = 800;
+    }
+    
+    // Calculate height maintaining aspect ratio if original dimensions available
+    if (displayWidth && finalSrc.width && finalSrc.height) {
+      displayHeight = Math.round((displayWidth / finalSrc.width) * finalSrc.height);
+    }
+  } else if (width) {
+    // If width is explicitly provided, use it (Astro will generate 1x and 2x srcset)
+    displayWidth = width;
+    displayHeight = height;
+  }
+}
 ---
 
 {
@@ -87,8 +142,8 @@ const hasHeightClass = /h-\d+|h-full|h-screen|h-auto/.test(className);
         loading={loading}
         decoding={decoding}
         sizes={sizes}
-        width={width}
-        height={height}
+        width={displayWidth || width}
+        height={displayHeight || height}
         quality={quality}
         format={format}
       />
@@ -117,8 +172,8 @@ const hasHeightClass = /h-\d+|h-full|h-screen|h-auto/.test(className);
           loading={loading}
           decoding={decoding}
           sizes={sizes}
-          width={width}
-          height={height}
+          width={displayWidth || width}
+          height={displayHeight || height}
           quality={quality}
           format={format}
         />

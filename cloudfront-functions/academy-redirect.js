@@ -3,23 +3,22 @@
 // Associate it with a Viewer Request event for the /academy path
 
 function handler(event) {
-  var request = event.request;
-  var uri = request.uri;
+  let request = event.request;
+  let uri = request.uri;
 
   // Check if the request is for /academy
-  if (uri === '/academy' || uri === '/academy/') {
+  if (uri === "/academy" || uri === "/academy/") {
     return {
       statusCode: 301,
-      statusDescription: 'Moved Permanently',
+      statusDescription: "Moved Permanently",
       headers: {
         location: {
-          value: 'https://kandoknox.myclickfunnels.com/courses/online-academy'
-        }
-      }
+          value: "https://kandoknox.myclickfunnels.com/courses/online-academy",
+        },
+      },
     };
   }
 
   // Return the request unchanged for all other paths
   return request;
 }
-
