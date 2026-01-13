@@ -77,19 +77,24 @@ const featuredImagePath =
   post.frontmatter.featuredImage ||
   "/img/default.jpg";
 
-// Resolve to optimized image asset and get WebP URL
+// Resolve to optimized image asset
 const featuredImageAsset = getImageAsset(featuredImagePath);
-let featuredImage: string;
+let featuredImageForDisplay: string | typeof featuredImageAsset;
+let featuredImageUrl: string; // For schema and meta tags
+
 if (typeof featuredImageAsset === "object" && "src" in featuredImageAsset) {
-  // Get optimized WebP version
+  // Use the asset directly for OptimizedImage component
+  featuredImageForDisplay = featuredImageAsset;
+  // Get URL for schema and meta tags
   const optimizedImage = await getImage({
     src: featuredImageAsset,
     format: "webp",
     quality: 80,
   });
-  featuredImage = optimizedImage.src.toString();
+  featuredImageUrl = optimizedImage.src.toString();
 } else {
-  featuredImage = featuredImagePath;
+  featuredImageForDisplay = featuredImagePath;
+  featuredImageUrl = featuredImagePath;
 }
 
 // Format date for schema (ISO format)
@@ -107,14 +112,14 @@ const schema = getBlogPostingSchema(
     ? formatDateForSchema(post.frontmatter.date)
     : undefined,
   undefined, // dateModified - can be added later if needed
-  featuredImage
+  featuredImageUrl
 );
 ---
 
 <Layout
   title={pageTitle}
   description={pageDescription}
-  image={featuredImage}
+  image={featuredImageUrl}
   type="article"
   url={currentUrl}
   publishedTime={post.frontmatter.date
@@ -125,10 +130,32 @@ const schema = getBlogPostingSchema(
 >
   <main class="pb-16 lg:pb-24 bg-white dark:bg-gray-900 antialiased">
     <header
-      class="w-full h-[460px] xl:h-[537px] bg-no-repeat bg-cover bg-center relative"
-      style={`background-image: url('${featuredImage}'); background-size: cover; background-position: center;`}
+      class="w-full h-[460px] xl:h-[537px] relative overflow-hidden"
       transition:name={`blog-image-${post.frontmatter.slug}`}
     >
+      {typeof featuredImageForDisplay === "object" && "src" in featuredImageForDisplay ? (
+        <OptimizedImage
+          src={featuredImageForDisplay}
+          alt={post.frontmatter.title}
+          class="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+          decoding="sync"
+          fetchpriority="high"
+          width={1920}
+          height={1080}
+          quality={85}
+          noBackground={true}
+        />
+      ) : (
+        <img
+          src={featuredImageForDisplay}
+          alt={post.frontmatter.title}
+          class="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+          decoding="sync"
+          fetchpriority="high"
+        />
+      )}
       <div class="absolute inset-0 bg-black/50 z-10"></div>
 
       <div
