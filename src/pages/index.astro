@@ -16,9 +16,6 @@ import googleReviews from "../content/testimonials/google-reviews.json";
 import { SITE_CONFIG } from "../config";
 import { formatMetaDescription } from "../utils/descriptions";
 import { generatePageTitle } from "../utils/titles";
-import heroSliderData from "../content/heroSlider.json";
-import { getImageAsset } from "../utils/imageMap";
-
 // Get all location names from location files
 // TODO: Migrate to getCollection("locations") once fully tested
 const allLocations = Object.values(
@@ -60,20 +57,6 @@ const pageDescription = formatMetaDescription(
   ]
 );
 const pageImage = "/img/about.jpg"; // Use a good homepage image
-
-// Get first two hero images for LCP preload (both are visible on initial load)
-const firstSlide = heroSliderData[0];
-const secondSlide = heroSliderData[1];
-
-const firstSlideAsset = getImageAsset(firstSlide.image);
-const secondSlideAsset = getImageAsset(secondSlide.image);
-
-const firstSlideUrl =
-  typeof firstSlideAsset === "object" ? firstSlideAsset.src : firstSlide.image;
-const secondSlideUrl =
-  typeof secondSlideAsset === "object"
-    ? secondSlideAsset.src
-    : secondSlide.image;
 ---
 
 <Layout
@@ -83,10 +66,6 @@ const secondSlideUrl =
   type="website"
   schemas={schemas}
 >
-  {/* Preload LCP images for faster loading */}
-  <link rel="preload" as="image" href={firstSlideUrl} fetchpriority="high" />
-  <link rel="preload" as="image" href={secondSlideUrl} fetchpriority="high" />
-  
   <!-- H1 for SEO - visually hidden but accessible -->
   <h1 class="sr-only">
     {SITE_CONFIG.title} - Karate & Brazilian Jiu-Jitsu Classes in Knox, Boronia

@@ -71,55 +71,76 @@ const pageDescription = description || SITE_CONFIG.description;
     <link rel="manifest" href="/icons/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     
-    {/* Async CSS Loading - Convert render-blocking CSS to async loading */}
-    <script is:inline>
-      // Convert stylesheet links to async loading using media="print" trick
-      // This prevents CSS from blocking initial render
-      (function() {
-        function makeAsync(link) {
-          if (link.hasAttribute('data-async')) return;
-          
-          const href = link.href || link.getAttribute('href');
-          if (!href) return;
-          
-          // Mark as processed
-          link.setAttribute('data-async', 'true');
-          
-          // Change media to print to make it non-blocking
-          link.media = 'print';
-          
-          // Switch back to 'all' once loaded
-          link.onload = function() {
-            this.media = 'all';
-            this.onload = null;
-          };
-          
-          // Fallback: switch after a short delay if onload doesn't fire
-          setTimeout(function() {
-            if (link.media === 'print') {
-              link.media = 'all';
-            }
-          }, 100);
-        }
-        
-        function processStylesheets() {
-          const stylesheets = document.querySelectorAll('head link[rel="stylesheet"]:not([data-async])');
-          stylesheets.forEach(makeAsync);
-        }
-        
-        // Process immediately if head exists
-        if (document.head) {
-          processStylesheets();
-          
-          // Watch for new stylesheets added by Astro
-          const observer = new MutationObserver(processStylesheets);
-          observer.observe(document.head, { childList: true });
-        } else {
-          // Wait for head
-          document.addEventListener('DOMContentLoaded', processStylesheets);
-        }
-      })();
-    </script>
+    {/* Critical CSS - Inline to prevent layout shifts */}
+    <style is:inline>
+      /* Critical above-the-fold styles to prevent CLS */
+      body {
+        margin: 0;
+        font-family: "Teachers", sans-serif;
+        background-color: #ffffff;
+        color: #111827;
+      }
+      html.dark body {
+        background-color: #111827;
+        color: #f9fafb;
+      }
+      /* Prevent layout shift for hero carousel */
+      .hero-carousel-wrapper {
+        background-color: #111111;
+      }
+      /* Prevent layout shift for navigation */
+      nav {
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+      html.dark nav {
+        background-color: rgba(31, 41, 55, 0.9);
+      }
+      /* Prevent layout shift for buttons */
+      .hero-button {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: #c39519;
+        color: #ffffff;
+        border-radius: 0.25rem;
+        text-decoration: none;
+        font-weight: 500;
+        margin-top: 1.25rem;
+      }
+      .hero-button.hidden {
+        display: none;
+      }
+      /* Ensure buttons on active slides don't cause shifts */
+      .list .item:nth-child(1) .content .hero-button,
+      .list .item:nth-child(2) .content .hero-button {
+        display: inline-block;
+      }
+      /* Prevent layout shift for program cards */
+      .bg-white {
+        background-color: #ffffff;
+      }
+      html.dark .bg-white,
+      html.dark .dark\:bg-gray-900 {
+        background-color: #111827;
+      }
+      html.dark .dark\:bg-gray-800 {
+        background-color: #1f2937;
+      }
+      /* Prevent layout shift for text colors */
+      .text-gray-900 {
+        color: #111827;
+      }
+      html.dark .dark\:text-white {
+        color: #f9fafb;
+      }
+      .text-gray-500 {
+        color: #6b7280;
+      }
+      html.dark .dark\:text-gray-400 {
+        color: #9ca3af;
+      }
+    </style>
     
     {/* Resource Hints for Performance - Critical for faster loading */}
     {/* Preconnect to Google Fonts (early connection for faster font loading) */}
