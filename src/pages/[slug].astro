@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import ScrollAnimations from "../components/home/ScrollAnimations";
 import PageTemplate from "../components/shared/PageTemplate.astro";
 import Program from "../components/shared/Program.astro";
 import Team from "../components/home/Team.astro";
@@ -84,4 +85,6 @@ const metaDesc = formatMetaDescription(
   <Team />
 
   <Program />
+
+  <ScrollAnimations client:idle />
 </Layout>

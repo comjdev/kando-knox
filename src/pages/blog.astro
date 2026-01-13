@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import BlogGrid from "../components/shared/BlogGrid.astro";
 import CategoryFilter from "../components/shared/CategoryFilter";
+import ScrollAnimations from "../components/home/ScrollAnimations";
 import { getCustomPageTitle } from "../utils/titles";
 import { SITE_CONFIG } from "../config";
 import { formatMetaDescription } from "../utils/descriptions";
@@ -77,4 +78,6 @@ const pageDescription = formatMetaDescription(
       <BlogGrid />
     </div>
   </section>
+
+  <ScrollAnimations client:idle />
 </Layout>

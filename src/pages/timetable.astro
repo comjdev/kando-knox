@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import ScrollAnimations from "../components/home/ScrollAnimations";
 import { SITE_CONFIG } from "../config";
 import TimetableComponent from "../components/shared/Timetable.astro";
 import { getCustomPageTitle } from "../utils/titles";
@@ -75,4 +76,6 @@ const pageDescription = formatMetaDescription(
   url={`${SITE_CONFIG.url}/timetable`}
 >
   <TimetableComponent schedule={allSchedules} useDualFilter={true} />
+
+  <ScrollAnimations client:idle />
 </Layout>

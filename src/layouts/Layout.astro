@@ -220,8 +220,22 @@ const pageDescription = description || SITE_CONFIG.description;
                 if (img.alt && img.alt.toLowerCase().includes("bear cave")) return;
                 if (img.src && img.src.toLowerCase().includes("bear-cave")) return;
                 
-                img.style.opacity = "0";
-                img.style.filter = "blur(10px)";
+                // Check if this is a team photo
+                const section = img.closest("section");
+                const isTeamPhoto = section && (
+                  section.querySelector("h2")?.textContent?.toLowerCase().includes("people make us great") ||
+                  section.querySelector("h2")?.textContent?.toLowerCase().includes("our team")
+                );
+                
+                if (isTeamPhoto) {
+                  // Team photos use scale animation, not blur
+                  img.style.opacity = "0";
+                  img.style.transform = "scale(0.95)";
+                } else {
+                  // Other images use blur
+                  img.style.opacity = "0";
+                  img.style.filter = "blur(10px)";
+                }
               });
             }
           }

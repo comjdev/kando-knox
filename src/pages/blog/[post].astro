@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import ScrollAnimations from "../../components/home/ScrollAnimations";
 import { getBlogPostingSchema } from "../../utils/schema";
 import { getBlogPostTitle } from "../../utils/titles";
 import { SITE_CONFIG } from "../../config";
@@ -449,4 +450,6 @@ const schema = getBlogPostingSchema(
       </aside>
     </div>
   </main>
+
+  <ScrollAnimations client:idle />
 </Layout>

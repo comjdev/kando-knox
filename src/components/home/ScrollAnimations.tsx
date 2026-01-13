@@ -29,10 +29,24 @@ export default function ScrollAnimations() {
           if (img.alt?.toLowerCase().includes("bear cave") || 
               img.src?.toLowerCase().includes("bear-cave")) return;
           
-          // Set inline style immediately to prevent flash
-          img.style.setProperty("opacity", "0", "important");
-          img.style.setProperty("filter", "blur(10px)", "important");
-          img.style.setProperty("will-change", "opacity, filter", "important");
+          // Check if this is a team photo (in team section)
+          const section = img.closest("section");
+          const isTeamPhoto = section && (
+            section.querySelector("h2")?.textContent?.toLowerCase().includes("people make us great") ||
+            section.querySelector("h2")?.textContent?.toLowerCase().includes("our team")
+          );
+          
+          if (isTeamPhoto) {
+            // Team photos use scale animation, not blur
+            img.style.setProperty("opacity", "0", "important");
+            img.style.setProperty("transform", "scale(0.95)", "important");
+            img.style.setProperty("will-change", "opacity, transform", "important");
+          } else {
+            // Other first section images use blur
+            img.style.setProperty("opacity", "0", "important");
+            img.style.setProperty("filter", "blur(10px)", "important");
+            img.style.setProperty("will-change", "opacity, filter", "important");
+          }
         });
       }
     };
@@ -81,37 +95,68 @@ export default function ScrollAnimations() {
             return;
           }
 
-          // Ensure initial state is set (in case it wasn't set earlier)
-          gsap.set(img, {
-            opacity: 0,
-            filter: "blur(10px)",
-            willChange: "opacity, filter",
-          });
+          // Check if this is a team photo
+          const section = img.closest("section");
+          const isTeamPhoto = section && (
+            section.querySelector("h2")?.textContent?.toLowerCase().includes("people make us great") ||
+            section.querySelector("h2")?.textContent?.toLowerCase().includes("our team")
+          );
 
-          // Function to animate the image
-          const animateImage = () => {
+          if (isTeamPhoto) {
+            // Team photos use scale animation (same as other section images)
+            gsap.set(img, {
+              opacity: 0,
+              scale: 0.95,
+              willChange: "opacity, transform",
+            });
+
             gsap.to(img, {
               opacity: 1,
-              filter: "blur(0px)",
-              duration: 1.2,
+              scale: 1,
+              duration: 0.8,
               ease: "power2.out",
               willChange: "auto",
+              scrollTrigger: {
+                trigger: img,
+                start: "top 85%",
+                toggleActions: "play none none none",
+                invalidateOnRefresh: true,
+              },
             });
-          };
-
-          // Check if image is already loaded
-          if (img.complete && img.naturalHeight !== 0) {
-            // Image is already loaded, animate immediately
-            animateImage();
           } else {
-            // Wait for image to load, then animate
-            img.addEventListener("load", animateImage, { once: true });
-            // Fallback: if load event doesn't fire (e.g., cached images), check after a delay
-            setTimeout(() => {
-              if (img.complete && img.naturalHeight !== 0) {
-                animateImage();
-              }
-            }, 100);
+            // Other first section images use blur animation
+            // Ensure initial state is set (in case it wasn't set earlier)
+            gsap.set(img, {
+              opacity: 0,
+              filter: "blur(10px)",
+              willChange: "opacity, filter",
+            });
+
+            // Function to animate the image
+            const animateImage = () => {
+              gsap.to(img, {
+                opacity: 1,
+                filter: "blur(0px)",
+                duration: 1.2,
+                ease: "power2.out",
+                willChange: "auto",
+              });
+            };
+
+            // Check if image is already loaded
+            if (img.complete && img.naturalHeight !== 0) {
+              // Image is already loaded, animate immediately
+              animateImage();
+            } else {
+              // Wait for image to load, then animate
+              img.addEventListener("load", animateImage, { once: true });
+              // Fallback: if load event doesn't fire (e.g., cached images), check after a delay
+              setTimeout(() => {
+                if (img.complete && img.naturalHeight !== 0) {
+                  animateImage();
+                }
+              }, 100);
+            }
           }
         });
       }
@@ -211,22 +256,7 @@ export default function ScrollAnimations() {
     };
   }, []);
 
-  return (
-    <style>
-      {`
-        /* Hide images in first non-hero section initially to prevent flash */
-        /* GSAP will animate them after they load */
-        /* Exclude bear cave logo */
-        main#main-content > section:first-of-type img:not(.hero-carousel-wrapper img):not([alt*="Bear Cave"]):not([src*="bear-cave"]) {
-          opacity: 0;
-          filter: blur(10px);
-        }
-        /* On program pages, the first section is the header with the big image */
-        main#main-content > section:nth-of-type(2) img:not(.hero-carousel-wrapper img):not([alt*="Bear Cave"]):not([src*="bear-cave"]) {
-          opacity: 0;
-          filter: blur(10px);
-        }
-      `}
-    </style>
-  );
+  // No need to return style tag - we handle initial hiding via JavaScript
+  // This prevents hydration mismatches
+  return null;
 }
