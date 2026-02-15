@@ -1,0 +1,20 @@
+{
+  "Id": "S3-knoxmartialarts.com.au",
+  "DomainName": "knoxmartialarts.com.au.s3-website-ap-southeast-2.amazonaws.com",
+  "OriginPath": "",
+  "CustomHeaders": {"Quantity": 0},
+  "CustomOriginConfig": {
+    "HTTPPort": 80,
+    "HTTPSPort": 443,
+    "OriginProtocolPolicy": "http-only",
+    "OriginReadTimeout": 30,
+    "OriginKeepaliveTimeout": 5,
+    "OriginSslProtocols": {
+      "Quantity": 1,
+      "Items": ["TLSv1.2"]
+    }
+  },
+  "ConnectionAttempts": 3,
+  "ConnectionTimeout": 10,
+  "OriginShield": {"Enabled": false}
+}

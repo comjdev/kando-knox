@@ -52,6 +52,7 @@ const programs = defineCollection({
         value: z.number(),
         unlimitedClasses: z.boolean().optional(),
         freeGi: z.boolean().optional(),
+        copy: z.string().optional(),
       })
       .optional(),
   }),

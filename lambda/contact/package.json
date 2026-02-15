@@ -1,0 +1,9 @@
+{
+  "name": "knoxmartialarts-contact",
+  "version": "1.0.0",
+  "description": "Lambda function to handle contact form submissions and send emails via SES",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.700.0"
+  }
+}

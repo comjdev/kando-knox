@@ -1,3 +1,8 @@
+/**
+ * Form API endpoints - set via environment variables at build time.
+ * e.g. PUBLIC_TRIAL_API_URL=https://xxx.lambda-url.ap-southeast-2.on.aws/
+ *      PUBLIC_CONTACT_API_URL=https://xxx.lambda-url.ap-southeast-2.on.aws/
+ */
 export const SITE_CONFIG = {
   title: "Kando Martial Arts Knox",
   description: "Martial arts training in Knox",
@@ -22,6 +27,10 @@ export const SITE_CONFIG = {
     longitude: 145.2531667,
   },
   googleBusinessUrl: "https://maps.app.goo.gl/iNSWgGtT8VPqmy516", // Google Business Profile/Maps URL
+  /** Lambda/API URL for trial form submissions. Set PUBLIC_TRIAL_API_URL at build. */
+  trialApiUrl: import.meta.env.PUBLIC_TRIAL_API_URL || "",
+  /** Lambda/API URL for contact form submissions. Set PUBLIC_CONTACT_API_URL at build. */
+  contactApiUrl: import.meta.env.PUBLIC_CONTACT_API_URL || "",
 } as const;
 
 export interface Program {
@@ -65,7 +74,7 @@ export const PROGRAMS: Program[] = [
   },
   {
     group: "Self-Defence",
-    label: "Women's Self-Defence",
+    label: "Women's Self-Protection",
     href: "/programs/womens-self-defence-knox",
     description: "Women's Self-Defence",
   },

@@ -29,6 +29,9 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          PUBLIC_TRIAL_API_URL: ${{ secrets.PUBLIC_TRIAL_API_URL }}
+          PUBLIC_CONTACT_API_URL: ${{ secrets.PUBLIC_CONTACT_API_URL }}
         # Astro automatically optimizes images during build using Sharp
         # Images in src/assets/ are converted to WebP/AVIF
         # Images in public/ are served as-is (not optimized)
