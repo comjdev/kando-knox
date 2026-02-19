@@ -113,11 +113,24 @@ export function getBlogPostTitle(postTitle: string): string {
 }
 
 /**
+ * Generate title for home page
+ * Uses a custom format without duplicating the site name
+ * @returns Formatted title (e.g. "Kando Martial Arts Knox | Karate | BJJ | Knox Martial Arts")
+ */
+export function getHomePageTitle(): string {
+  const maxLength = 70;
+  const fullTitle = `${SITE_CONFIG.title} | Karate | BJJ | Knox Martial Arts`;
+  return fullTitle.length > maxLength
+    ? fullTitle.substring(0, maxLength).trim()
+    : fullTitle;
+}
+
+/**
  * Generate title for about page
  * @returns Formatted title
  */
 export function getAboutPageTitle(): string {
-  return generatePageTitle("About Kando Martial Arts Knox");
+  return "About Kando Knox | Kando Martial Arts Knox | Karate | BJJ";
 }
 
 /**

@@ -15,7 +15,7 @@ import {
 import googleReviews from "../content/testimonials/google-reviews.json";
 import { SITE_CONFIG } from "../config";
 import { formatMetaDescription } from "../utils/descriptions";
-import { generatePageTitle } from "../utils/titles";
+import { getHomePageTitle } from "../utils/titles";
 // Get all location names from location files
 // TODO: Migrate to getCollection("locations") once fully tested
 const allLocations = Object.values(
@@ -43,8 +43,8 @@ const reviewSchema = getReviewSchema(googleReviews, googleBusinessUrl);
 // Combine schemas
 const schemas = [sportsActivitySchema, reviewSchema];
 
-// Homepage title - use generatePageTitle for consistent formatting
-const pageTitle = generatePageTitle(SITE_CONFIG.title, ["Karate", "BJJ"]);
+// Homepage title - custom format to avoid duplicating site name
+const pageTitle = getHomePageTitle();
 const pageDescription = formatMetaDescription(
   SITE_CONFIG.description,
   undefined,
