@@ -185,6 +185,15 @@ export default function Header() {
       if (clickedLink && dropdown?.contains(clickedLink)) {
         return;
       }
+      // On mobile, also don't close when tapping a link inside the mobile menu
+      // (those links are in mega-menu-full-cta, not in the desktop dropdown)
+      if (
+        clickedLink &&
+        mobileMenu?.contains(clickedLink) &&
+        window.innerWidth < 768
+      ) {
+        return;
+      }
 
       // Don't close if click is from the hero slider buttons (user clicking slider controls)
       // But allow closing if clicking elsewhere in the slider area
