@@ -53,6 +53,7 @@ const programs = defineCollection({
         unlimitedClasses: z.boolean().optional(),
         freeGi: z.boolean().optional(),
         copy: z.string().optional(),
+        term: z.enum(["program", "trial"]).optional(),
       })
       .optional(),
   }),

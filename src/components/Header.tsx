@@ -429,7 +429,8 @@ export default function Header() {
             </li>
             <li>
               <a
-                href="/academy"
+                href={SITE_CONFIG.academyUrl}
+                target="_blank"
                 onClick={(e) => {
                   closeMenus(e);
                 }}

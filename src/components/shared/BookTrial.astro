@@ -7,6 +7,8 @@ interface Props {
     unlimitedClasses?: boolean;
     freeGi?: boolean;
     weeks: number;
+    copy?: string;
+    term?: "program" | "trial";
   };
   title?: string;
 }
@@ -20,12 +22,21 @@ const { action = "#", trial, title } = Astro.props;
       <h2
         class="mb-4 text-4xl tracking-tight font-extrabold leading-tight text-gray-900 dark:text-white"
       >
-        Book Your {trial.weeks} Weeks Trial
+        Book Your {trial.weeks} Weeks {
+          trial.term === "program" ? "Program" : "Trial"
+        }
       </h2>
       <p class="mb-2 font-light text-gray-500 dark:text-gray-400 md:text-lg">
-        Experience the benefits of {title} training at Kando Martial Arts Knox. Join
-        us for a {trial.weeks} weeks trial and discover how we can help you or your
-        child develop confidence, discipline, and physical fitness.
+        {
+          trial.copy ?? (
+            <>
+              Experience the benefits of {title} training at Kando Martial Arts
+              Knox. Join us for a {trial.weeks} weeks trial and discover how we
+              can help you or your child develop confidence, discipline, and
+              physical fitness.
+            </>
+          )
+        }
       </p>
     </div>
   </div>
@@ -34,7 +45,14 @@ const { action = "#", trial, title } = Astro.props;
     class="gap-8 items-center pb-8 px-4 mx-auto max-w-7xl lg:grid lg:grid-cols-2 xl:gap-16 sm:pb-16 sm:pt-8 lg:px-6"
   >
     <div class="mb-4 w-full lg:mb-0">
-      <form action={action} class="space-y-6" aria-label="Trial booking form">
+      <form
+        data-form-type="trial"
+        method="post"
+        action={action}
+        class="space-y-6"
+        aria-label="Trial booking form"
+      >
+        {title && <input type="hidden" name="program" value={title} />}
         <div>
           <label
             for="first-name"
@@ -147,7 +165,9 @@ const { action = "#", trial, title } = Astro.props;
           </div>
           <div>
             <h3 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">
-              {trial.weeks} weeks trial
+              {trial.weeks} weeks {
+                trial.term === "program" ? "Program" : "Trial"
+              }
             </h3>
             <p class="mb-2 font-light text-gray-500 dark:text-gray-400">
               Get your first {trial.weeks} weeks of {title} training at Kando Martial
@@ -226,7 +246,7 @@ const { action = "#", trial, title } = Astro.props;
                 </h3>
                 <p class="mb-2 font-light  text-gray-500 dark:text-gray-400">
                   Get a free uniform when you book your 4 weeks trial. This
-                  starter uniform is worth $70. You can keep it after the trial.
+                  starter uniform is worth $80. You can keep it after the trial.
                 </p>
               </div>
             </div>
@@ -238,8 +258,18 @@ const { action = "#", trial, title } = Astro.props;
         >
           By opting in, you agree to receive periodic text messages & emails
           from Kando Martial Arts. Your information will never be shared. Reply
-          STOP to cancel. Standard rates may apply. View our Terms of Service &
-          Privacy Policy.
+          STOP to cancel. Standard rates may apply. View our{" "}
+          <a
+            href="/terms-of-service"
+            class="text-primary-600 hover:underline dark:text-primary-500"
+            >Terms of Service</a
+          >
+          {" & "}
+          <a
+            href="/privacy-policy"
+            class="text-primary-600 hover:underline dark:text-primary-500"
+            >Privacy Policy</a
+          >.
         </p>
       </div>
     </div>

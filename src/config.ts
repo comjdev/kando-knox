@@ -9,8 +9,9 @@ export const SITE_CONFIG = {
   facebook: "https://www.facebook.com/kandoknox",
   instagram: "https://www.instagram.com/kandoknox",
   url: "https://knoxmartialarts.com.au",
-  shopUrl: "https://shop.knoxmartialarts.com",
-  academyUrl: "https://kandoknox.myclickfunnels.com/courses/online-academy",
+  shopUrl: "https://shop.knoxmartialarts.com.au",
+  academyUrl: "https://cf.knoxmartialarts.com.au/membership-area",
+  // academyUrl: "https://kandoknox.myclickfunnels.com/courses/online-academy",
   googleAnalyticsId: "G-XXXXXXXXXX", // Replace with your actual GA4 Measurement ID
   // author: "Your Name",
   address: {

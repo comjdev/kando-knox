@@ -73,7 +73,7 @@
     }
   ],
   "trial": {
-    "type": "program",
+    "term": "program",
     "weeks": 6,
     "cost": 50,
     "value": 99,

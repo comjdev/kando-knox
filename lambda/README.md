@@ -95,6 +95,13 @@ aws lambda get-function-url-config --function-name knoxmartialarts-book-trial
 aws lambda get-function-url-config --function-name knoxmartialarts-contact
 ```
 
+**Important – add public invoke permission** (prevents 403 Forbidden from browser):
+
+```bash
+aws lambda add-permission --function-name knoxmartialarts-book-trial --statement-id FunctionURLAllowPublicAccess --action lambda:InvokeFunctionUrl --principal '*' --function-url-auth-type NONE --profile kando-knox --region ap-southeast-2
+aws lambda add-permission --function-name knoxmartialarts-contact --statement-id FunctionURLAllowPublicAccess --action lambda:InvokeFunctionUrl --principal '*' --function-url-auth-type NONE --profile kando-knox --region ap-southeast-2
+```
+
 ### 5. Configure the Website
 
 **Current Lambda Function URLs** (created 2026-02):
@@ -146,8 +153,8 @@ Or manually zip and update each function.
 
 | Variable    | Default                         | Description                |
 | ---------- | ------------------------------- | -------------------------- |
-| `TO_EMAIL` | kando@knoxmartialarts.com.au     | Recipient for form emails  |
-| `FROM_EMAIL` | noreply@knoxmartialarts.com.au | SES verified sender        |
+| `TO_EMAIL` | knox@kandomartialarts.com.au     | Recipient for form emails  |
+| `FROM_EMAIL` | kando@knoxmartialarts.com.au | SES verified sender        |
 | `AWS_REGION` | ap-southeast-2                | AWS region for SES         |
 
 ### GitHub Secrets (for Lambda deploy)

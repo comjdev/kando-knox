@@ -20,10 +20,17 @@ function showMessage(container: HTMLElement, message: string, isError: boolean) 
   if (existing) existing.remove();
 
   const el = document.createElement("div");
-  el.className = `form-feedback mt-4 p-4 rounded-lg text-sm ${
-    isError ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400" : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+  el.setAttribute("role", "alert");
+  el.className = `form-feedback p-4 mb-4 text-sm rounded-base ${
+    isError
+      ? "text-fg-danger-strong bg-danger-soft dark:text-red-400 dark:bg-red-900/30"
+      : "text-fg-success-strong bg-success-soft dark:text-green-400 dark:bg-green-900/30"
   }`;
-  el.textContent = message;
+  const strong = document.createElement("span");
+  strong.className = "font-medium";
+  strong.textContent = isError ? "Error. " : "Thank you! ";
+  el.appendChild(strong);
+  el.appendChild(document.createTextNode(message));
   container.appendChild(el);
 
   setTimeout(() => el.remove(), 8000);
@@ -35,7 +42,7 @@ async function handleSubmit(e: Event, form: HTMLFormElement, apiUrl: string, for
   const originalText = submitBtn?.textContent;
 
   if (!apiUrl) {
-    showMessage(form, "Form is not configured. Please contact us directly at knox@kandomartialarts.com.au", true);
+    showMessage(form, "Form is not configured. Please contact us directly at knox@kandomartialarts.com.au.", true);
     return;
   }
 
@@ -55,13 +62,13 @@ async function handleSubmit(e: Event, form: HTMLFormElement, apiUrl: string, for
     const json = await res.json().catch(() => ({}));
 
     if (res.ok && json.success) {
-      showMessage(form, json.message || "Thank you! We'll be in touch soon.", false);
+      showMessage(form, "We'll be in touch soon.", false);
       form.reset();
     } else {
-      showMessage(form, json.error || `Failed to submit. Please try again or contact us directly.`, true);
+      showMessage(form, json.error || "Please try again or contact us directly.", true);
     }
   } catch {
-    showMessage(form, "Network error. Please check your connection and try again.", true);
+    showMessage(form, "Please check your connection and try again.", true);
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;

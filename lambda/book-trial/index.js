@@ -2,15 +2,12 @@ const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 
 const ses = new SESClient({ region: process.env.AWS_REGION || "ap-southeast-2" });
 
-const TO_EMAIL = process.env.TO_EMAIL || "kando@knoxmartialarts.com.au";
-const FROM_EMAIL = process.env.FROM_EMAIL || "noreply@knoxmartialarts.com.au";
+const TO_EMAIL = process.env.TO_EMAIL || "knox@kandomartialarts.com.au";
+const FROM_EMAIL = process.env.FROM_EMAIL || "kando@knoxmartialarts.com.au";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Content-Type": "application/json",
-};
+// Don't add CORS headers - Lambda Function URL CORS config handles them.
+// Duplicate Access-Control-* headers cause "multiple values" CORS errors.
+const jsonHeaders = { "Content-Type": "application/json" };
 
 function parseBody(body, contentType) {
   if (!body) return {};
@@ -72,14 +69,23 @@ Submitted at: ${new Date().toISOString()}
   `.trim();
 
   const bodyHtml = `
-    <h2>New Trial Booking Request</h2>
-    <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-    <p><strong>Email:</strong> ${email}</p>
-    <p><strong>Mobile:</strong> ${mobile}</p>
-    ${program ? `<p><strong>Program:</strong> ${program}</p>` : ""}
-    ${source ? `<p><strong>Source:</strong> ${source}</p>` : ""}
-    <hr>
-    <p style="color:#666;font-size:12px;">Submitted at: ${new Date().toISOString()}</p>
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#111827;background:#f3f4f6;">
+  <div style="max-width:560px;margin:0 auto;padding:32px;background:#ffffff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+    <h2 style="margin:0 0 24px 0;padding-bottom:12px;font-size:20px;font-weight:600;color:#111827;border-bottom:3px solid #c39519;">New Trial Booking Request</h2>
+    <p style="margin:0 0 12px 0;font-size:15px;line-height:1.5;"><strong style="color:#374151;">Name:</strong> ${firstName} ${lastName}</p>
+    <p style="margin:0 0 12px 0;font-size:15px;line-height:1.5;"><strong style="color:#374151;">Email:</strong> <a href="mailto:${email}" style="color:#c39519;text-decoration:none;">${email}</a></p>
+    <p style="margin:0 0 12px 0;font-size:15px;line-height:1.5;"><strong style="color:#374151;">Mobile:</strong> ${mobile}</p>
+    ${program ? `<p style="margin:0 0 12px 0;font-size:15px;line-height:1.5;"><strong style="color:#374151;">Program:</strong> ${program}</p>` : ""}
+    ${source ? `<p style="margin:0 0 12px 0;font-size:15px;line-height:1.5;"><strong style="color:#374151;">Source:</strong> ${source}</p>` : ""}
+    <hr style="margin:24px 0;border:none;border-top:1px solid #e5e7eb;">
+    <p style="margin:0;font-size:12px;color:#6b7280;">Submitted at: ${new Date().toISOString()}</p>
+    <p style="margin:8px 0 0 0;font-size:12px;color:#6b7280;">Kando Martial Arts Knox</p>
+  </div>
+</body>
+</html>
   `;
 
   await ses.send(
@@ -105,14 +111,14 @@ function getMethod(event) {
 exports.handler = async (event) => {
   const method = getMethod(event);
   if (method === "OPTIONS") {
-    return { statusCode: 204, headers: corsHeaders, body: "" };
+    return { statusCode: 204, headers: jsonHeaders, body: "" };
   }
 
   try {
     if (method !== "POST") {
       return {
         statusCode: 405,
-        headers: corsHeaders,
+        headers: jsonHeaders,
         body: JSON.stringify({ success: false, error: "Method not allowed" }),
       };
     }
@@ -125,14 +131,14 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: corsHeaders,
+      headers: jsonHeaders,
       body: JSON.stringify({ success: true, message: "Thank you! We'll be in touch soon." }),
     };
   } catch (err) {
     console.error("Trial form error:", err);
     return {
       statusCode: err.name === "ValidationError" ? 400 : 500,
-      headers: corsHeaders,
+      headers: jsonHeaders,
       body: JSON.stringify({
         success: false,
         error: err.message || "Failed to submit trial request",
