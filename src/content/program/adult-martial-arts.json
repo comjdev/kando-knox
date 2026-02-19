@@ -8,8 +8,8 @@
   "schedule": [
     {
       "day": "Monday",
-      "timeFrom": "11:00 AM",
-      "timeTo": "12:00 PM",
+      "timeFrom": "12:00 PM",
+      "timeTo": "1:00 PM",
       "className": "Teen & Adult Martial Arts",
       "beltRank": "All Belts",
       "instructor": "Sensei Andy"
