@@ -72,10 +72,27 @@ export default defineConfig({
       changefreq: "weekly",
       priority: 0.7,
       lastmod: new Date(),
-      // Exclude any pages you don't want in the sitemap
-      filter: (page) => {
-        // Include all pages by default
-        return true;
+      filter: (page) => true,
+      // Per-page priority and changefreq for better Google crawl hints
+      serialize(item) {
+        const url = item.url;
+        if (url === "https://knoxmartialarts.com.au/") {
+          item.priority = 1;
+          item.changefreq = "daily";
+        } else if (
+          url.includes("/privacy-policy/") ||
+          url.includes("/terms-of-service/")
+        ) {
+          item.priority = 0.3;
+          item.changefreq = "yearly";
+        } else if (url.includes("/blog/")) {
+          item.priority = 0.8;
+          item.changefreq = "weekly";
+        } else {
+          item.priority = 0.9;
+          item.changefreq = "weekly";
+        }
+        return item;
       },
     }),
   ],

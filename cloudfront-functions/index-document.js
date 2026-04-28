@@ -1,6 +1,10 @@
 // CloudFront Function: Rewrite directory URLs to index.html
 // S3 REST API doesn't support directory indexes - /about/ must become /about/index.html
 // This enables Astro's static site routing (each route = folder/index.html)
+//
+// NOTE: This logic is now COMBINED into www-to-apex-redirect-with-legacy.js
+// (and www-to-apex-redirect.js) because CloudFront allows only 1 viewer-request function.
+// Kept here as reference.
 
 function handler(event) {
   var request = event.request;

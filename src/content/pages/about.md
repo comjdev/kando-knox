@@ -26,6 +26,6 @@ Sensei Andy has been planning to open his own dojo for such a long time, he knew
 
 He has studied Exercise and Sports Science from Victoria University and holds a Bachelor of Business from Monash University in preparation for the administration side of running his own club.
 
-Sensei Andy is an experienced Martial Artist. He currently holds a 4th Degree Black Belt in Kando, as well as a Purple Belt in Brazilian Jiu-Jitsu. He has also trained in both Freestyle and Greco-Roman Wrestling for 6 years with Team Takedown and Coach Chris Shen. He has also had experience training in Boxing, Kickboxing and Mixed Martial Arts.
+Sensei Andy is an experienced Martial Artist. He currently holds a 4th Degree Black Belt in Kando, as well as a Brown Belt in Brazilian Jiu-Jitsu. He has also trained in both Freestyle and Greco-Roman Wrestling for 6 years with Team Takedown and Coach Chris Shen. He has also had experience training in Boxing, Kickboxing and Mixed Martial Arts.
 
 Sensei Andy knows that continuing to train in both Martial Arts and other aspects of life is very important to keep a balanced life and to continue to grow.

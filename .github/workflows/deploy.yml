@@ -48,8 +48,21 @@ jobs:
           aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
             --exclude "*" \
             --include "*.html" \
+            --content-type "text/html; charset=UTF-8" \
+            --cache-control "public, max-age=86400, s-maxage=86400" \
+            --delete
+      - name: Upload XML and TXT files to S3 (1 day cache)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*" \
             --include "*.xml" \
+            --content-type "application/xml" \
+            --cache-control "public, max-age=86400, s-maxage=86400" \
+            --delete
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --exclude "*" \
             --include "*.txt" \
+            --content-type "text/plain; charset=UTF-8" \
             --cache-control "public, max-age=86400, s-maxage=86400" \
             --delete
           # Note: CloudFront invalidation ensures fresh content after deployments

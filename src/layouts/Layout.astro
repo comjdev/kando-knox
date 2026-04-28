@@ -251,6 +251,8 @@ const pageDescription = description || SITE_CONFIG.description;
       rel="canonical"
       href={url || `${SITE_CONFIG.url}${Astro.url.pathname}`}
     />
+    {/* Sitemap - helps crawlers discover the sitemap */}
+    <link rel="sitemap" type="application/xml" href={`${SITE_CONFIG.url}/sitemap-index.xml`} />
     {/* SEO Meta Tags */}
     <SEO
       title={pageTitle}

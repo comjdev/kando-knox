@@ -14,5 +14,14 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "typescript.validate.enable": true,
-  "typescript.preferences.includePackageJsonAutoImports": "off"
+  "typescript.preferences.includePackageJsonAutoImports": "off",
+  "terminal.integrated.env.osx": {
+    "AWS_PROFILE": "kando-knox"
+  },
+  "terminal.integrated.env.linux": {
+    "AWS_PROFILE": "kando-knox"
+  },
+  "terminal.integrated.env.windows": {
+    "AWS_PROFILE": "kando-knox"
+  }
 }
