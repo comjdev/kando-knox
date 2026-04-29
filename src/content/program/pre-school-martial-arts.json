@@ -236,8 +236,8 @@
   ],
   "trial": {
     "weeks": 4,
-    "cost": 69.95,
-    "value": 170,
+    "cost": 67,
+    "value": 280,
     "unlimitedClasses": false,
     "freeGi": true
   }

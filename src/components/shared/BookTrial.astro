@@ -175,8 +175,9 @@ const { action = "#", trial, title } = Astro.props;
                 trial.cost !== false && (
                   <>
                     {" "}
-                    for only <span class="font-bold">${trial.cost}</span> ($
-                    {trial.value} Value)
+                    for only{" "}
+                    <span class="font-bold">${trial.cost}</span>{" "}
+                    (${trial.value} Value)
                   </>
                 )
               }{"."}
