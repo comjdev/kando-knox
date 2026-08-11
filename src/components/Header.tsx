@@ -473,6 +473,17 @@ export default function Header() {
                 Contact
               </a>
             </li>
+            <li className="md:hidden">
+              <a
+                href="/timetable"
+                onClick={(e) => {
+                  closeMenus(e);
+                }}
+                className="block py-2 px-3 text-heading hover:text-primary border-b border-light hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0"
+              >
+                Timetable
+              </a>
+            </li>
             <li className="mt-4 mb-4 px-3 md:hidden">
               <PrimaryButton
                 href="#footer-book-trial"
