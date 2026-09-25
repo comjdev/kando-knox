@@ -13,7 +13,7 @@
   "faqs": "faqs-bjj.json",
   "intro": {
     "heading": "Brazilian Jiu-Jitsu & BJJ Training Near Bayswater",
-    "description": "Our Brazilian Jiu-Jitsu programs welcome families from Bayswater looking for professional BJJ training for kids, teens, and adults. Conveniently located in Boronia and serving the wider Knox area."
+    "description": "Our Brazilian Jiu-Jitsu programs welcome families from Bayswater looking for professional BJJ training for kids, teens, and adults. Conveniently located in Boronia and serving the wider Knox area. We also offer <a href=\"/locations/karate-bayswater\" class=\"text-primary hover:underline\">karate classes in Bayswater</a>."
   },
   "kandoInfo": {
     "heading": "Bear Cave Brazilian Jiu-Jitsu",
@@ -43,12 +43,12 @@
     {
       "id": "junior-bjj-bear-cave-knox",
       "heading": "Junior Brazilian Jiu-Jitsu for Bayswater Families",
-      "description": "For children aged 7-12, this junior BJJ program introduces Brazilian Jiu-Jitsu fundamentals through fun, structured activities. Families from Bayswater value the confidence, coordination, and self-defense skills their children develop through BJJ training."
+      "description": "For children aged 7-12, this <a href=\"/programs/junior-bjj-bear-cave-knox\" class=\"text-primary hover:underline\">junior BJJ program</a> introduces Brazilian Jiu-Jitsu fundamentals through fun, structured activities. Families from Bayswater value the confidence, coordination, and self-defense skills their children develop through BJJ training."
     },
     {
       "id": "teen-adult-bjj-brazilian-jiu-jitsu-knox",
       "heading": "Teen & Adult BJJ Training for Bayswater Residents",
-      "description": "Our teen and adult Brazilian Jiu-Jitsu classes are suitable for students aged 13 and above from Bayswater. Training focuses on practical self-defense, ground fighting techniques, and personal development in a respectful environment."
+      "description": "Our <a href=\"/programs/teen-adult-bjj-brazilian-jiu-jitsu-knox\" class=\"text-primary hover:underline\">teen and adult Brazilian Jiu-Jitsu classes</a> are suitable for students aged 13 and above from Bayswater. Training focuses on <a href=\"/blog/why-brazilian-jiu-jitsu-is-one-of-the-most-effective-martial-arts-for-self-defence\" class=\"text-primary hover:underline\">practical self-defense</a>, ground fighting techniques, and personal development in a respectful environment."
     }
   ],
   "whyChooseUs": {

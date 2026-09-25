@@ -13,7 +13,7 @@
   "faqs": "faqs-bjj.json",
   "intro": {
     "heading": "Brazilian Jiu-Jitsu and BJJ Classes in Wantirna",
-    "description": "Professional Brazilian Jiu-Jitsu classes in Wantirna for kids, teens, and adults. Located in Boronia, serving Wantirna and surrounding areas. Book your trial class today!"
+    "description": "Professional Brazilian Jiu-Jitsu classes in Wantirna for kids, teens, and adults. Located in Boronia, serving Wantirna and surrounding areas. We also offer <a href=\"/locations/karate-wantirna\" class=\"text-primary hover:underline\">karate classes in Wantirna</a>. Book your trial class today!"
   },
   "kandoInfo": {
     "heading": "Bear Cave Brazilian Jiu-Jitsu",
@@ -43,12 +43,12 @@
     {
       "id": "junior-bjj-bear-cave-knox",
       "heading": "Junior Brazilian Jiu-Jitsu for Kids",
-      "description": "Designed for children aged 7–12, our junior Brazilian Jiu-Jitsu program introduces the fundamentals of BJJ through fun, age-appropriate activities. Families from Wantirna and the Knox area love how this program helps young children build confidence, listening skills, respect, and coordination in a safe and supportive environment."
+      "description": "Designed for children aged 7–12, our <a href=\"/programs/junior-bjj-bear-cave-knox\" class=\"text-primary hover:underline\">junior Brazilian Jiu-Jitsu program</a> introduces the fundamentals of BJJ through fun, age-appropriate activities. Families from Wantirna and the Knox area love how this program helps young children build <a href=\"/blog/top-10-benefits-of-martial-arts-for-kids\" class=\"text-primary hover:underline\">confidence, listening skills, respect, and coordination</a> in a safe and supportive environment."
     },
     {
       "id": "teen-adult-bjj-brazilian-jiu-jitsu-knox",
       "heading": "Teen & Adult BJJ Classes for Wantirna",
-      "description": "Perfect for students aged 13 and above, our teen and adult Brazilian Jiu-Jitsu classes build strong foundations in BJJ technique, discipline, and focus. Popular with families from Wantirna and surrounding Knox suburbs, this program supports confidence, teamwork, and personal growth in a positive training environment."
+      "description": "Perfect for students aged 13 and above, our <a href=\"/programs/teen-adult-bjj-brazilian-jiu-jitsu-knox\" class=\"text-primary hover:underline\">teen and adult Brazilian Jiu-Jitsu classes</a> build strong foundations in BJJ technique, discipline, and focus. Popular with families from Wantirna and surrounding Knox suburbs, this program supports confidence, teamwork, and personal growth in a positive training environment."
     }
   ],
   "whyChooseUs": {

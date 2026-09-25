@@ -13,7 +13,7 @@
   "faqs": "faqs-karate.json",
   "intro": {
     "heading": "Karate and Martial Arts Classes in Wantirna",
-    "description": "Professional karate classes in Wantirna for kids, teens, and adults. Located in Boronia, serving Wantirna and surrounding areas. Book your trial class today!"
+    "description": "Professional karate classes in Wantirna for kids, teens, and adults. Located in Boronia, serving Wantirna and surrounding areas. We also offer <a href=\"/locations/bjj-wantirna\" class=\"text-primary hover:underline\">Brazilian Jiu-Jitsu in Wantirna</a>. Book your trial class today!"
   },
   "kandoInfo": {
     "heading": "Kando Martial Arts Knox",
@@ -41,17 +41,17 @@
     {
       "id": "pre-school-martial-arts",
       "heading": "Pre-School Karate for Kids",
-      "description": "Designed for children aged 3–5, our pre-school karate program introduces the fundamentals of karate through fun, age-appropriate activities. Families from Wantirna and the Knox area love how this program helps young children build confidence, listening skills, respect, and coordination in a safe and supportive environment."
+      "description": "Designed for children aged 3–5, our <a href=\"/programs/pre-school-martial-arts-karate-knox\" class=\"text-primary hover:underline\">pre-school karate program</a> introduces the fundamentals of karate through fun, age-appropriate activities. Families from Wantirna and the Knox area love how this program helps young children build <a href=\"/blog/top-10-benefits-of-martial-arts-for-kids\" class=\"text-primary hover:underline\">confidence, listening skills, respect, and coordination</a> in a safe and supportive environment."
     },
     {
       "id": "junior-martial-arts",
       "heading": "Junior Karate Classes for Wantirna Kids",
-      "description": "Perfect for children aged 7–12, our junior karate classes build strong foundations in karate technique, discipline, and focus. Popular with families from Wantirna and surrounding Knox suburbs, this program supports confidence, teamwork, and personal growth in a positive training environment."
+      "description": "Perfect for children aged 7–12, our <a href=\"/programs/junior-martial-arts-karate-knox\" class=\"text-primary hover:underline\">junior karate classes</a> build strong foundations in karate technique, discipline, and focus. Popular with families from Wantirna and surrounding Knox suburbs, this program supports confidence, teamwork, and personal growth in a positive training environment."
     },
     {
       "id": "adult-martial-arts",
       "heading": "Teen & Adult Karate Training",
-      "description": "Our teen and adult karate program is ideal for students aged 13 and above who want to improve fitness, focus, and self-defence skills. Welcoming students from Wantirna and across the Knox area, these karate classes offer structured training in a safe, respectful, and supportive setting."
+      "description": "Our <a href=\"/programs/adult-martial-arts-karate-knox\" class=\"text-primary hover:underline\">teen and adult karate program</a> is ideal for students aged 13 and above who want to improve fitness, focus, and self-defence skills. Welcoming students from Wantirna and across the Knox area, these karate classes offer structured training in a safe, respectful, and supportive setting."
     }
   ],
   "whyChooseUs": {

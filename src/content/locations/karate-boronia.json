@@ -13,7 +13,7 @@
   "faqs": "faqs-karate.json",
   "intro": {
     "heading": "Karate & Martial Arts Training Near Boronia",
-    "description": "Our karate programs welcome families from Boronia looking for professional training for kids, teens, and adults. Conveniently located in Boronia and serving the wider Knox area."
+    "description": "Our karate programs welcome families from Boronia looking for professional training for kids, teens, and adults. Conveniently located in Boronia and serving the wider Knox area. We also offer <a href=\"/locations/bjj-boronia\" class=\"text-primary hover:underline\">Brazilian Jiu-Jitsu in Boronia</a>."
   },
   "kandoInfo": {
     "heading": "Kando Martial Arts Knox",
@@ -27,7 +27,7 @@
   },
   "servingArea": {
     "heading": "Serving Boronia and nearby Knox suburbs",
-    "description": "Our Boronia-based karate dojo welcomes students from Boronia and surrounding areas such as <a href=\"/locations/karate-wantirna\" class=\"text-primary hover:underline\">Wantirna</a>, <a href=\"/locations/karate-bayswater\" class=\"text-primary hover:underline\">Bayswater</a>, <a href=\"/locations/karate-rowville\" class=\"text-primary hover:underline\">Rowville</a>, and <a href=\"/locations/karate-ferntree-gully\" class=\"text-primary hover:underline\">Ferntree Gully</a>. We provide a supportive, family-friendly training environment."
+    "description": "Our Boronia-based karate dojo welcomes students from Boronia and surrounding areas such as <a href=\"/locations/karate-wantirna\" class=\"text-primary hover:underline\">Wantirna</a>, <a href=\"/locations/karate-bayswater\" class=\"text-primary hover:underline\">Bayswater</a>, Rowville, and <a href=\"/locations/karate-ferntree-gully\" class=\"text-primary hover:underline\">Ferntree Gully</a>. We provide a supportive, family-friendly training environment."
   },
   "getToKando": {
     "heading": "Kando Martial Arts Knox in Boronia",
@@ -41,17 +41,17 @@
     {
       "id": "pre-school-martial-arts",
       "heading": "Pre-School Karate for Boronia Families",
-      "description": "For children aged 3\u20135, this pre-school karate program introduces basic karate skills through fun, structured activities. Families from Boronia value the confidence, coordination, and listening skills their children develop."
+      "description": "For children aged 3\u20135, this <a href=\"/programs/pre-school-martial-arts-karate-knox\" class=\"text-primary hover:underline\">pre-school karate program</a> introduces basic karate skills through fun, structured activities. Families from Boronia value the <a href=\"/blog/top-10-benefits-of-martial-arts-for-kids\" class=\"text-primary hover:underline\">confidence, coordination, and listening skills</a> their children develop."
     },
     {
       "id": "junior-martial-arts",
       "heading": "Junior Karate Classes Near Boronia",
-      "description": "Ideal for children aged 7\u201312, these junior karate classes focus on technique, discipline, and focus. Many families from Boronia choose this program for its positive structure and supportive coaching."
+      "description": "Ideal for children aged 7\u201312, these <a href=\"/programs/junior-martial-arts-karate-knox\" class=\"text-primary hover:underline\">junior karate classes</a> focus on technique, discipline, and focus. Many families from Boronia choose this program for its positive structure and supportive coaching."
     },
     {
       "id": "adult-martial-arts",
       "heading": "Teen & Adult Karate Training for Boronia Residents",
-      "description": "Our teen and adult karate classes are suitable for students aged 13 and above from Boronia. Training focuses on fitness, self-defence, and personal development in a respectful environment."
+      "description": "Our <a href=\"/programs/adult-martial-arts-karate-knox\" class=\"text-primary hover:underline\">teen and adult karate classes</a> are suitable for students aged 13 and above from Boronia. Training focuses on fitness, self-defence, and personal development in a respectful environment."
     }
   ],
   "whyChooseUs": {

@@ -4,13 +4,19 @@
 // Handles:
 // 1. www → apex (permanent)
 // 2. /academy → external URL (permanent)
-// 3. Old site paths → new apex paths (TEMPORARY)
-// 4. Shop paths → shop subdomain (TEMPORARY)
-// 5. Index document: /about → /about/index.html for S3 (permanent)
+// 3. Retired pages → home (permanent — keep when legacy redirects are removed)
+// 4. Old site paths → new apex paths (TEMPORARY)
+// 5. Shop paths → shop subdomain (TEMPORARY)
+// 6. Index document: /about → /about/index.html for S3 (permanent)
 
 var APEX = "knoxmartialarts.com.au";
 var SHOP_URL = "https://shop.knoxmartialarts.com.au";
 var ACADEMY_URL = "https://cf.knoxmartialarts.com.au/membership-area";
+
+// Removed pages. Keys are paths with no trailing slash.
+var RETIRED_PATHS = {
+  "/locations/karate-rowville": "/",
+};
 
 var OLD_TO_NEW = {
   "contact-us": "/contact",
@@ -79,7 +85,12 @@ function handler(event) {
     return buildRedirect(ACADEMY_URL);
   }
 
-  // 3 & 4. Legacy redirects (temporary - remove block when Google reindexed)
+  // 3. Retired pages → home (permanent)
+  if (RETIRED_PATHS[pathNorm]) {
+    return buildRedirect("https://" + APEX + RETIRED_PATHS[pathNorm]);
+  }
+
+  // 4 & 5. Legacy redirects (temporary - remove block when Google reindexed)
   if (host === APEX) {
     if (pathNorm.indexOf("/product/") === 0 || pathNorm.indexOf("/shop/") === 0 || pathNorm.indexOf("/s/") === 0) {
       return buildRedirect(appendQuery(SHOP_URL + uri));
@@ -90,7 +101,7 @@ function handler(event) {
     }
   }
 
-  // 5. Index document: rewrite /about → /about/index.html for S3 (no directory indexes)
+  // 6. Index document: rewrite /about → /about/index.html for S3 (no directory indexes)
   if (uri === "/" || uri === "") {
     request.uri = "/index.html";
   } else if (uri.endsWith("/")) {

@@ -4,9 +4,16 @@
 // Handles:
 // 1. www → apex (301)
 // 2. /academy → external URL (301)
-// 3. Index document: /about → /about/index.html for S3
+// 3. Retired pages → home (301). Keep these after legacy redirects are removed.
+// 4. Index document: /about → /about/index.html for S3
 
+var APEX = "knoxmartialarts.com.au";
 var ACADEMY_URL = "https://cf.knoxmartialarts.com.au/membership-area";
+
+// Removed pages. Keys are paths with no trailing slash.
+var RETIRED_PATHS = {
+  "/locations/karate-rowville": "/",
+};
 
 function handler(event) {
   var request = event.request;
@@ -44,7 +51,12 @@ function handler(event) {
     return buildRedirect(ACADEMY_URL);
   }
 
-  // 3. Index document: rewrite for S3 (no directory indexes)
+  // 3. Retired pages → home (permanent)
+  if (RETIRED_PATHS[pathNorm]) {
+    return buildRedirect("https://" + APEX + RETIRED_PATHS[pathNorm]);
+  }
+
+  // 4. Index document: rewrite for S3 (no directory indexes)
   if (uri === "/" || uri === "") {
     request.uri = "/index.html";
   } else if (uri.endsWith("/")) {

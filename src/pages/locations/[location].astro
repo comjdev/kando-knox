@@ -164,9 +164,10 @@ const metaDesc = formatMetaDescription(
             </h2>
           )}
           {location.intro.description && (
-            <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-              {location.intro.description}
-            </p>
+            <p
+              class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
+              set:html={location.intro.description}
+            />
           )}
         </section>
       )
