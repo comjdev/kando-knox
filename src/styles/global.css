@@ -34,6 +34,18 @@ body {
   font-family: var(--font-body);
 }
 
+/* In-article links match the paragraph until hover. */
+.blog-copy a {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.blog-copy a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 h1,
 h2,
 h3,
