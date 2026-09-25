@@ -26,7 +26,7 @@ Through punching, kicking, and controlled movement drills, children develop bett
 
 ## 5. Promotes Physical Fitness
 
-Martial arts training at Kando Martial Arts improves strength, flexibility, endurance, and overall physical health, helping children stay active in a fun, engaging way.
+[Martial arts training](/programs/junior-martial-arts-karate-knox) at Kando Martial Arts improves strength, flexibility, endurance, and overall physical health, helping children stay active in a fun, engaging way.
 
 ## 6. Boosts Social Skills
 
@@ -34,7 +34,7 @@ Students learn to cooperate, encourage peers, and work in teams. Martial arts of
 
 ## 7. Teaches Self-Defence Basics
 
-Children gain practical self-defence skills appropriate for their age. They learn how to stay safe, set boundaries, and respond confidently in potentially unsafe situations.
+Children gain [practical self-defence skills](/blog/why-brazilian-jiu-jitsu-is-one-of-the-most-effective-martial-arts-for-self-defence) appropriate for their age. They learn how to stay safe, set boundaries, and respond confidently in potentially unsafe situations.
 
 ## 8. Increases Resilience
 

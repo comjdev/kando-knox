@@ -40,15 +40,15 @@ A major advantage of Brazilian Jiu-Jitsu is its suitability for all ages. At Kan
 
 ### **Kids**
 
-Children benefit from improved coordination, problem-solving skills and confidence. BJJ teaches them how to stay safe, how to break free from holds and how to avoid risky situations.
+Children benefit from improved coordination, problem-solving skills and confidence. BJJ teaches them [how to stay safe](/programs/junior-bjj-bear-cave-knox), how to break free from holds and how to avoid risky situations.
 
 ### **Teens**
 
-Teenagers often find BJJ particularly empowering. It helps them manage emotions, stay active, build self-assurance and develop a non-aggressive but highly effective form of self-defence.
+Teenagers often find BJJ particularly empowering. It helps them manage emotions, stay active, [build self-assurance](/blog/how-martial-arts-helps-teens-build-confidence-and-resilience) and develop a non-aggressive but highly effective form of self-defence.
 
 ### **Adults**
 
-Adults appreciate that BJJ is low-impact, strategic and mentally engaging. It offers a full-body workout while teaching practical skills. Many adults find BJJ to be a powerful stress reliever and an excellent way to stay fit.
+Adults appreciate that BJJ is low-impact, strategic and mentally engaging. It offers a full-body workout while teaching practical skills. Many adults find [BJJ](/programs/teen-adult-bjj-brazilian-jiu-jitsu-knox) to be a powerful stress reliever and an excellent way to stay fit.
 
 ## Control, Safety and Smart Decision-Making
 

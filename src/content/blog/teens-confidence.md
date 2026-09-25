@@ -8,7 +8,7 @@ imageAlt: "Teens building confidence and resilience through martial arts"
 category: "Kids & Teens"
 ---
 
-Teenagers face unique challenges—from school pressures to social dynamics. Martial arts provides a structured and supportive environment where teens can develop confidence, resilience, and healthy habits that benefit every area of their life.
+Teenagers face unique challenges—from school pressures to social dynamics. Martial arts provides a structured and supportive environment where [teens can develop confidence, resilience, and healthy habits](/programs/adult-martial-arts-karate-knox) that benefit every area of their life.
 
 ## Boosts Self-Confidence
 

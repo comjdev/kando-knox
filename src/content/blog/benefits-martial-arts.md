@@ -65,7 +65,7 @@ Children learn how to manage their time, stay organised and remain calm under pr
 
 Every child experiences setbacks—a tough test, a difficult social situation, or a moment of self-doubt. Martial arts teaches resilience by showing kids that improvement comes from effort, not perfection.
 
-They learn to get back up after making mistakes, try again after struggling with a technique and stay positive even when progress feels slow. This mindset becomes one of the most valuable life lessons they carry into adolescence and adulthood.
+They learn to get back up after making mistakes, try again after struggling with a technique and stay positive even when progress feels slow. This mindset becomes one of the most valuable life lessons they carry into [adolescence](/blog/how-martial-arts-helps-teens-build-confidence-and-resilience) and adulthood.
 
 ## A Safe, Supportive Environment
 
@@ -79,4 +79,4 @@ Martial arts offers far more than physical fitness for kids. It builds confidenc
 
 Through consistent practice, children discover what they are capable of achieving. They develop resilience, self-belief and a sense of pride that shapes their growth for years to come.
 
-If you’re interested in helping your child build confidence, stay active and develop positive habits that last a lifetime, martial arts may be the perfect place to start.
+If you’re interested in helping your child [build confidence, stay active and develop positive habits](/programs/junior-martial-arts-karate-knox) that last a lifetime, martial arts may be the perfect place to start.

@@ -12,11 +12,11 @@ Learning self-defence is about much more than physical techniques; it’s about 
 
 ## Builds Confidence & Assertiveness
 
-Women’s self-defence classes provide empowering skills that boost confidence in everyday life. Participants learn to trust their instincts, assert themselves in challenging situations, and carry themselves with greater assurance. This confidence translates into professional, social, and personal environments.
+[Women’s self-defence classes](/programs/womens-self-defence-knox) provide empowering skills that boost confidence in everyday life. Participants learn to trust their instincts, assert themselves in challenging situations, and carry themselves with greater assurance. This confidence translates into professional, social, and personal environments.
 
 ## Practical Techniques
 
-The focus of training is on effective, practical skills. Women learn how to escape holds, maintain leverage, control distance, and respond efficiently to potential threats. These techniques prioritise safety, effectiveness, and adaptability for real-world scenarios.
+The focus of training is on effective, practical skills. Women learn how to [escape holds](/blog/why-brazilian-jiu-jitsu-is-one-of-the-most-effective-martial-arts-for-self-defence), maintain leverage, control distance, and respond efficiently to potential threats. These techniques prioritise safety, effectiveness, and adaptability for real-world scenarios.
 
 ## Situational Awareness
 
