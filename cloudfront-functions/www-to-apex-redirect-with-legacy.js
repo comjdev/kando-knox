@@ -4,7 +4,7 @@
 // Handles:
 // 1. www → apex (permanent)
 // 2. /academy → external URL (permanent)
-// 3. Retired pages → home (permanent — keep when legacy redirects are removed)
+// 3. Retired pages → replacement pages (permanent — keep when legacy redirects are removed)
 // 4. Old site paths → new apex paths (TEMPORARY)
 // 5. Shop paths → shop subdomain (TEMPORARY)
 // 6. Index document: /about → /about/index.html for S3 (permanent)
@@ -15,7 +15,8 @@ var ACADEMY_URL = "https://cf.knoxmartialarts.com.au/membership-area";
 
 // Removed pages. Keys are paths with no trailing slash.
 var RETIRED_PATHS = {
-  "/locations/karate-rowville": "/",
+  "/locations/karate-rowville": "/programs/adult-martial-arts-karate-knox",
+  "/locations/bjj-rowville": "/programs/teen-adult-bjj-brazilian-jiu-jitsu-knox",
 };
 
 var OLD_TO_NEW = {
@@ -85,7 +86,7 @@ function handler(event) {
     return buildRedirect(ACADEMY_URL);
   }
 
-  // 3. Retired pages → home (permanent)
+  // 3. Retired pages → replacement pages (permanent)
   if (RETIRED_PATHS[pathNorm]) {
     return buildRedirect("https://" + APEX + RETIRED_PATHS[pathNorm]);
   }
